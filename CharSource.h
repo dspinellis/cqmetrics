@@ -24,9 +24,8 @@ private:
 	OnEof *eof_handler;
 
 public:
-	CharSource(OnEof *eh = new DefaultHandler()) :
-		in(std::cin), eof_handler(eh) {}
-	CharSource(std::istream &s, OnEof *eh = new DefaultHandler()) :
+	CharSource(std::istream &s = std::cin,
+			OnEof *eh = new DefaultHandler()) :
 		in(s), eof_handler(eh) {}
 
 	/** Obtain the next character from the source */

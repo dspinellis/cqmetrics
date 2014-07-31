@@ -19,6 +19,7 @@
 #include "BolStateTest.h"
 #include "CharSourceTest.h"
 #include "DescriptiveTest.h"
+#include "HalsteadTest.h"
 
 int
 main(int argc, char *argv[])
@@ -28,6 +29,7 @@ main(int argc, char *argv[])
 	runner.addTest(BolStateTest::suite());
 	runner.addTest(CharSourceTest::suite());
 	runner.addTest(DescriptiveTest::suite());
+	runner.addTest(HalsteadTest::suite());
 
 	runner.run();
 	return 0;

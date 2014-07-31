@@ -14,6 +14,7 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testPush);
 	CPPUNIT_TEST(testEof);
 	CPPUNIT_TEST(testEofPush);
+	CPPUNIT_TEST(testNchar);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -88,5 +89,17 @@ public:
 		(void)s.get();
 		CPPUNIT_ASSERT(s.eof());
 	}
+
+	void testNchar() {
+		std::stringstream str("he");
+
+		CharSource s(str);
+		CPPUNIT_ASSERT(s.get() == 'h');
+		CPPUNIT_ASSERT(s.get() == 'e');
+		// EOF
+		(void)s.get();
+		CPPUNIT_ASSERT(s.get_nchar() == 2);
+	}
+
 };
 #endif /*  CHARSOURCETEST_H */

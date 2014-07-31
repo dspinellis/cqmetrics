@@ -13,22 +13,28 @@ class CharSource {
 private:
 	std::stack<char> st;
 	std::istream &in;
+	int nchar;		// Number of characters read
 
 public:
-	CharSource(std::istream &s = std::cin) : in(s) {}
+	CharSource(std::istream &s = std::cin) : in(s), nchar(0) {}
 
 	/** Obtain the next character from the source */
 	char get() {
 		char c;
 
-		if (st.empty())
+		if (st.empty()) {
 			in.get(c);
-		else {
+			if (!in.eof())
+				nchar++;
+		} else {
 			c = st.top();
 			st.pop();
 		}
 		return (c);
 	}
+
+	/** Return number of characters read */
+	int get_nchar() const { return nchar; }
 
 	/** Return true if the input has reached its end */
 	bool eof() const {

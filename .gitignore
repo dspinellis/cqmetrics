@@ -1,2 +1,4 @@
 UnitTests.exe
 *.swp
+*.o
+*.stackdump

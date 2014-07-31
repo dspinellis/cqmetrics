@@ -17,10 +17,12 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 #include "BolStateTest.h"
+#include "CMetricsCalculatorTest.h"
 #include "CharSourceTest.h"
 #include "CyclomaticTest.h"
 #include "DescriptiveTest.h"
 #include "HalsteadTest.h"
+#include "QualityMetricsTest.h"
 
 int
 main(int argc, char *argv[])
@@ -28,10 +30,12 @@ main(int argc, char *argv[])
 	CppUnit::TextUi::TestRunner runner;
 
 	runner.addTest(BolStateTest::suite());
+	runner.addTest(CMetricsCalculatorTest::suite());
 	runner.addTest(CharSourceTest::suite());
 	runner.addTest(CyclomaticTest::suite());
 	runner.addTest(DescriptiveTest::suite());
 	runner.addTest(HalsteadTest::suite());
+	runner.addTest(QualityMetricsTest::suite());
 
 	runner.run();
 	return 0;

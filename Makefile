@@ -1,4 +1,5 @@
 LDFLAGS=-g
+CXXFLAGS=-g
 
 all: test
 

@@ -1,0 +1,44 @@
+/*-
+ * Copyright 2014 Diomidis Spinellis
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+#ifndef QUALITYMETRICSTEST_H
+#define QUALITYMETRICSTEST_H
+
+#include <cppunit/extensions/HelperMacros.h>
+
+#include "QualityMetrics.h"
+
+class QualityMetricsTest : public CppUnit::TestFixture {
+	CPPUNIT_TEST_SUITE(QualityMetricsTest);
+	CPPUNIT_TEST(testCtor);
+	CPPUNIT_TEST(testNline);
+	CPPUNIT_TEST_SUITE_END();
+public:
+	void testCtor() {
+		QualityMetrics q;
+		CPPUNIT_ASSERT(q.get_nchar() == 0);
+		CPPUNIT_ASSERT(q.get_nline() == 0);
+	}
+
+	void testNline() {
+		QualityMetrics q;
+
+		q.add_line();
+		q.add_line();
+		CPPUNIT_ASSERT(q.get_nline() == 2);
+	}
+};
+#endif /*  QUALITYMETRICSTEST_H */

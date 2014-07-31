@@ -22,11 +22,14 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "CMetricsCalculator.h"
+#include "Halstead.h"
 
 class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(CMetricsCalculatorTest);
 	CPPUNIT_TEST(testCtor);
-	CPPUNIT_TEST(testLine);
+	CPPUNIT_TEST(testNFunction);
+	CPPUNIT_TEST(testNStatement);
+	CPPUNIT_TEST(testHalsteadOperator);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -45,5 +48,31 @@ public:
 		CPPUNIT_ASSERT(qm.get_nchar() == 3);
 		CPPUNIT_ASSERT(qm.get_nline() == 1);
 	}
+
+	void testNFunction() {
+		std::stringstream str("foo()\n{((??}\nstruct bar {}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_nfunction() == 1);
+	}
+
+	void testHalsteadOperator() {
+		std::stringstream str("foo()\n{((??}\nstruct bar {}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 1);
+		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
+	}
+
+	void testNStatement() {
+		std::stringstream str("foo()\n{a;b;c;}\nint a;");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_nstatement() == 3);
+	}
+
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

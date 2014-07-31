@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "CharSource.h"
+#include "BolState.h"
 #include "QualityMetrics.h"
 
 /** Collect quality metrics from C-like source code */
@@ -27,10 +28,15 @@ class CMetricsCalculator {
 private:
 	CharSource src;
 	QualityMetrics qm;
+	BolState bol;
+	int top_level_depth;		// 0 for C, 1 for Java
+	int current_depth;
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
+	bool in_function;			// True when scanning functions
 public:
-	CMetricsCalculator(std::istream &s = std::cin) : src(s) {}
+	CMetricsCalculator(std::istream &s = std::cin) : src(s),
+	top_level_depth(0), current_depth(0), in_function(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		qm.set_nchar(src.get_nchar());

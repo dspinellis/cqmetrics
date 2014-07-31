@@ -19,27 +19,21 @@ public:
 	CharSource(std::istream &s = std::cin) : in(s), nchar(0) {}
 
 	/** Obtain the next character from the source */
-	char get() {
-		char c;
-
+	bool get(char &c) {
 		if (st.empty()) {
-			in.get(c);
-			if (!in.eof())
+			if (in.get(c))
 				nchar++;
+			else
+				return false;
 		} else {
 			c = st.top();
 			st.pop();
 		}
-		return (c);
+		return true;
 	}
 
 	/** Return number of characters read */
 	int get_nchar() const { return nchar; }
-
-	/** Return true if the input has reached its end */
-	bool eof() const {
-		return (st.empty() && in.eof());
-	}
 
 	/** Push the specified character back into the source */
 	void push(char c) {

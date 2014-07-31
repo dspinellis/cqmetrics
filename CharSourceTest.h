@@ -12,8 +12,6 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testStrCtor);
 	CPPUNIT_TEST(testPush);
-	CPPUNIT_TEST(testEof);
-	CPPUNIT_TEST(testEofPush);
 	CPPUNIT_TEST(testNchar);
 	CPPUNIT_TEST_SUITE_END();
 public:
@@ -25,30 +23,32 @@ public:
 		std::stringstream str("hi");
 
 		CharSource s(str);
-		CPPUNIT_ASSERT(s.get() == 'h');
-		CPPUNIT_ASSERT(s.get() == 'i');
+		char c;
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.get(c) && c == 'i');
 	}
 
 	void testPush() {
 		std::stringstream str("he");
 
 		CharSource s(str);
-		CPPUNIT_ASSERT(s.get() == 'h');
+		char c;
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
 		// Push one
 		s.push('o');
-		CPPUNIT_ASSERT(s.get() == 'o');
+		CPPUNIT_ASSERT(s.get(c) && c == 'o');
 		// Again
 		s.push('p');
-		CPPUNIT_ASSERT(s.get() == 'p');
+		CPPUNIT_ASSERT(s.get(c) && c == 'p');
 		// Two
 		s.push('q');
 		s.push('r');
-		CPPUNIT_ASSERT(s.get() == 'r');
-		CPPUNIT_ASSERT(s.get() == 'q');
-		CPPUNIT_ASSERT(s.get() == 'e');
+		CPPUNIT_ASSERT(s.get(c) && c == 'r');
+		CPPUNIT_ASSERT(s.get(c) && c == 'q');
+		CPPUNIT_ASSERT(s.get(c) && c == 'e');
 		// Push at EOF
 		s.push('s');
-		CPPUNIT_ASSERT(s.get() == 's');
+		CPPUNIT_ASSERT(s.get(c) && c == 's');
 	}
 
 	struct StateHandler {
@@ -62,42 +62,14 @@ public:
 		}
 	};
 
-	void testEof() {
-		std::stringstream str("he");
-
-		CharSource s(str);
-		CPPUNIT_ASSERT(!s.eof());
-		CPPUNIT_ASSERT(s.get() == 'h');
-		CPPUNIT_ASSERT(!s.eof());
-		CPPUNIT_ASSERT(s.get() == 'e');
-		CPPUNIT_ASSERT(!s.eof());
-		// EOF
-		(void)s.get();
-		CPPUNIT_ASSERT(s.eof());
-	}
-
-	void testEofPush() {
-		std::stringstream str("a");
-
-		CharSource s(str);
-		CPPUNIT_ASSERT(s.get() == 'a');
-		CPPUNIT_ASSERT(!s.eof());
-		s.push('s');
-		CPPUNIT_ASSERT(s.get() == 's');
-		CPPUNIT_ASSERT(!s.eof());
-		// EOF
-		(void)s.get();
-		CPPUNIT_ASSERT(s.eof());
-	}
-
 	void testNchar() {
 		std::stringstream str("he");
 
 		CharSource s(str);
-		CPPUNIT_ASSERT(s.get() == 'h');
-		CPPUNIT_ASSERT(s.get() == 'e');
-		// EOF
-		(void)s.get();
+		char c;
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT(!s.get(c));
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
 

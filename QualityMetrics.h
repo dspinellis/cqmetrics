@@ -17,17 +17,50 @@
 #ifndef QUALITYMETRICS_H
 #define QUALITYMETRICS_H
 
+#include <string>
+
+#include "Cyclomatic.h"
+#include "Descriptive.h"
+#include "Halstead.h"
+
 /** Keep taly of quality metrics */
 class QualityMetrics {
 private:
 	int nchar;
 	int nline;
+	int ncomment;
+	int nfunction;				// Number of functions
+	int nstatement;				// Number of statements
+	Descriptive<double> halstead;		// Halstead complexity
+	Halstead halstead_tracker;
+	Descriptive<double> cyclomatic;		// Cyclomatic complexity
+	Cyclomatic cyclomatic_tracker;
 public:
 	QualityMetrics() :
-		nchar(0), nline(0) {}
+		nchar(0), nline(0), ncomment(0), nfunction(0),
+		nstatement(0) {}
+
 	void add_line() {nline++; }
+	void add_statement() {nstatement++; }
+	void begin_function() {
+		halstead_tracker.reset();
+		nfunction++;
+	}
+	void end_function() {
+		halstead.add(halstead_tracker.complexity());
+	}
 	void set_nchar(int n) { nchar = n; }
+	void add_operator(const std::string &s) {
+		halstead_tracker.add(s);
+	}
+	void add_operator(char c) {
+		add_operator(std::string(1, c));
+	}
+
 	int get_nchar() const { return nchar; }
 	int get_nline() const { return nline; }
+	int get_nfunction() const { return nfunction; }
+	int get_nstatement() const { return nstatement; }
+	const Descriptive<double>& get_halstead() const { return halstead; }
 };
 #endif /* QUALITYMETRICS_H */

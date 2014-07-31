@@ -24,11 +24,9 @@ CMetricsCalculator::calculate_metrics_switch()
 {
 	int n;
 	char c0, c1;
-	BolState bol;
 
 #define GET(x) do { \
-	x = src.get(); \
-	if (src.eof()) \
+	if (!src.get(x)) \
 		return false; \
 } while (0)
 
@@ -41,6 +39,38 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '\n':
 		bol.saw_newline();
 		qm.add_line();
+		break;
+	case ' ': case '\t': case '\v': case '\f': case '\r':
+		bol.saw_space();
+		break;
+	case '[': case '(': case '~': case '?': case ',':
+		bol.saw_non_space();
+		qm.add_operator(c0);
+		break;
+	case ']': case ')': case ':':
+		bol.saw_non_space();
+		break;
+	case '{':
+		// Heuristic: functions begin with { at first column
+		if (bol.at_bol() && current_depth == top_level_depth) {
+			qm.begin_function();
+			in_function = true;
+		}
+		bol.saw_non_space();
+		current_depth++;
+		break;
+	case '}':
+		bol.saw_non_space();
+		current_depth--;
+		if (in_function && current_depth == top_level_depth) {
+			qm.end_function();
+			in_function = false;
+		}
+		break;
+	case ';':
+		bol.saw_non_space();
+		if (in_function)
+			qm.add_statement();
 		break;
 	}
 	return true;

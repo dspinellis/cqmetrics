@@ -26,17 +26,19 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testAdd);
 	CPPUNIT_TEST(testMean);
+	CPPUNIT_TEST(testMeanDouble);
 	CPPUNIT_TEST(testMinMax);
+	CPPUNIT_TEST(testMinMaxDouble);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
-		Descriptive a;
+		Descriptive<int> a;
 		CPPUNIT_ASSERT(a.get_count() == 0);
 		CPPUNIT_ASSERT(a.get_sum() == 0);
 	}
 
 	void testAdd() {
-		Descriptive a;
+		Descriptive<int> a;
 		a.add(12);
 		CPPUNIT_ASSERT(a.get_sum() == 12);
 		CPPUNIT_ASSERT(a.get_count() == 1);
@@ -46,19 +48,35 @@ public:
 	}
 
 	void testMean() {
-		Descriptive a;
-		a.add(2);
+		Descriptive<int> a;
+		a.add(3);
 		a.add(12);
-		CPPUNIT_ASSERT(a.get_mean() == 7.0);
+		CPPUNIT_ASSERT(a.get_mean() == 7.5);
+	}
+
+	void testMeanDouble() {
+		Descriptive<double> a;
+		a.add(3);
+		a.add(1.5);
+		a.add(1.5);
+		CPPUNIT_ASSERT(a.get_mean() == 2);
 	}
 
 	void testMinMax() {
-		Descriptive a;
+		Descriptive<int> a;
 		a.add(5);
 		a.add(2);
 		a.add(12);
 		CPPUNIT_ASSERT(a.get_min() == 2);
 		CPPUNIT_ASSERT(a.get_max() == 12);
+	}
+	void testMinMaxDouble() {
+		Descriptive<double> a;
+		a.add(5.1);
+		a.add(2.5);
+		a.add(12.5);
+		CPPUNIT_ASSERT(a.get_min() == 2.5);
+		CPPUNIT_ASSERT(a.get_max() == 12.5);
 	}
 };
 #endif /*  DescriptiveTEST_H */

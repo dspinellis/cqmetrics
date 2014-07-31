@@ -20,19 +20,20 @@
 #include <limits>
 
 /** Maintain simple descriptive statistics values */
+template <typename T>
 class Descriptive {
 private:
-	int sum;
+	T sum;
 	int count;
-	int min, max;
+	T min, max;
 public:
 	Descriptive() :
 		sum(0), count(0),
-		min(std::numeric_limits<int>::max()),
-		max(std::numeric_limits<int>::min())
+		min(std::numeric_limits<T>::max()),
+		max(std::numeric_limits<T>::min())
 	{}
 
-	int get_sum() const {
+	T get_sum() const {
 		return (sum);
 	}
 
@@ -40,11 +41,11 @@ public:
 		return (count);
 	}
 
-	int get_min() const {
+	T get_min() const {
 		return (min);
 	}
 
-	int get_max() const {
+	T get_max() const {
 		return (max);
 	}
 
@@ -53,7 +54,7 @@ public:
 		return ((double)sum / count);
 	}
 
-	void add(int v) {
+	void add(T v) {
 		sum += v;
 		count++;
 		if (v > max)

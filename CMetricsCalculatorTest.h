@@ -30,6 +30,12 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNFunction);
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testHalsteadOperator);
+	CPPUNIT_TEST(testNLineComment);
+	CPPUNIT_TEST(testNBlockComment);
+	CPPUNIT_TEST(testNBlockCommentChar);
+	CPPUNIT_TEST(testNLineCommentChar);
+	CPPUNIT_TEST(testNCommentChar);
+	CPPUNIT_TEST(testCyclomaticBoolean);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -74,5 +80,71 @@ public:
 		CPPUNIT_ASSERT(qm.get_nstatement() == 3);
 	}
 
+	void testNBlockComment() {
+		std::stringstream str("/* hi\n * / */\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+
+		std::stringstream str2("/* hi\n * / */ /**//* */");
+		CMetricsCalculator calc2(str2);
+		calc2.calculate_metrics();
+		const QualityMetrics& qm2(calc2.get_metrics());
+		CPPUNIT_ASSERT(qm2.get_ncomment() == 3);
+	}
+
+	void testNLineComment() {
+		std::stringstream str(" // hi\n / /\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+
+		std::stringstream str2(" // hi\n //\n");
+		CMetricsCalculator calc2(str2);
+		calc2.calculate_metrics();
+		const QualityMetrics& qm2(calc2.get_metrics());
+		CPPUNIT_ASSERT(qm2.get_ncomment() == 2);
+	}
+
+	void testNBlockCommentChar() {
+		std::stringstream str("/* hi\n * / */ /  there !\n");
+		//                       123 456789
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+		CPPUNIT_ASSERT(qm.get_ncomment_char() == 9);
+	}
+
+	void testNLineCommentChar() {
+		std::stringstream str("// hi  * /  there */\n");
+		//                       123456789012345678
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+		CPPUNIT_ASSERT(qm.get_ncomment_char() == 18);
+	}
+
+	void testNCommentChar() {
+		std::stringstream str("/* hi\n * / */ // there /*\n");
+		//                       123 456789     012345678
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
+		CPPUNIT_ASSERT(qm.get_ncomment_char() == 18);
+	}
+
+	void testCyclomaticBoolean() {
+		std::stringstream str("foo()\n{a && b && d || c (?}\nstruct bar { a = d && e}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 1);
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 5);
+	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

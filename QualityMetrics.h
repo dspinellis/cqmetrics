@@ -28,7 +28,8 @@ class QualityMetrics {
 private:
 	int nchar;
 	int nline;
-	int ncomment;
+	int ncomment;				// Number of comments
+	int ncomment_char;			// Number of comment characters
 	int nfunction;				// Number of functions
 	int nstatement;				// Number of statements
 	Descriptive<double> halstead;		// Halstead complexity
@@ -37,21 +38,29 @@ private:
 	Cyclomatic cyclomatic_tracker;
 public:
 	QualityMetrics() :
-		nchar(0), nline(0), ncomment(0), nfunction(0),
+		nchar(0), nline(0), ncomment(0), ncomment_char(0), nfunction(0),
 		nstatement(0) {}
 
-	void add_line() {nline++; }
-	void add_statement() {nstatement++; }
+	void add_line() { nline++; }
+	void add_statement() { nstatement++; }
+	void add_comment() { ncomment++; }
+	void add_comment_char() { ncomment_char++; }
 	void begin_function() {
 		halstead_tracker.reset();
+		cyclomatic_tracker.reset();
 		nfunction++;
 	}
 	void end_function() {
 		halstead.add(halstead_tracker.complexity());
+		cyclomatic.add(cyclomatic_tracker.extended_complexity());
 	}
 	void set_nchar(int n) { nchar = n; }
 	void add_operator(const std::string &s) {
 		halstead_tracker.add(s);
+	}
+	void add_short_circuit_operator(const std::string &s) {
+		halstead_tracker.add(s);
+		cyclomatic_tracker.add_boolean_branch();
 	}
 	void add_operator(char c) {
 		add_operator(std::string(1, c));
@@ -61,6 +70,9 @@ public:
 	int get_nline() const { return nline; }
 	int get_nfunction() const { return nfunction; }
 	int get_nstatement() const { return nstatement; }
+	int get_ncomment() const { return ncomment; }
+	int get_ncomment_char() const { return ncomment_char; }
 	const Descriptive<double>& get_halstead() const { return halstead; }
+	const Descriptive<double>& get_cyclomatic() const { return cyclomatic; }
 };
 #endif /* QUALITYMETRICS_H */

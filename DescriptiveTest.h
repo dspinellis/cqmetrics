@@ -14,8 +14,8 @@
  *   limitations under the License.
  */
 
-#ifndef DescriptiveTEST_H
-#define DescriptiveTEST_H
+#ifndef DESCRIPTIVETEST_H
+#define DESCRIPTIVETEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -79,4 +79,4 @@ public:
 		CPPUNIT_ASSERT(a.get_max() == 12.5);
 	}
 };
-#endif /*  DescriptiveTEST_H */
+#endif /*  DESCRIPTIVETEST_H */

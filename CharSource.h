@@ -5,42 +5,34 @@
 #include <iostream>
 #include <stack>
 
-struct DefaultHandler {
-	void operator()() {
-		std::cerr << "EOF encountered" << std::endl;
-		exit(1);
-	}
-};
-
 /**
  * A source of characters coming from standard input with
  * infinite push back capability.
  */
-template <class OnEof=DefaultHandler>
 class CharSource {
 private:
 	std::stack<char> st;
 	std::istream &in;
-	OnEof *eof_handler;
 
 public:
-	CharSource(std::istream &s = std::cin,
-			OnEof *eh = new DefaultHandler()) :
-		in(s), eof_handler(eh) {}
+	CharSource(std::istream &s = std::cin) : in(s) {}
 
 	/** Obtain the next character from the source */
 	char get() {
 		char c;
 
-		if (st.empty()) {
+		if (st.empty())
 			in.get(c);
-			if (in.eof())
-				(*eof_handler)();
-		} else {
+		else {
 			c = st.top();
 			st.pop();
 		}
 		return (c);
+	}
+
+	/** Return true if the input has reached its end */
+	bool eof() const {
+		return (st.empty() && in.eof());
 	}
 
 	/** Push the specified character back into the source */

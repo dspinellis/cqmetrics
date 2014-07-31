@@ -12,17 +12,18 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testStrCtor);
 	CPPUNIT_TEST(testPush);
-	CPPUNIT_TEST(testEofHandler);
+	CPPUNIT_TEST(testEof);
+	CPPUNIT_TEST(testEofPush);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
-		CharSource<> s;
+		CharSource s;
 	}
 
 	void testStrCtor() {
 		std::stringstream str("hi");
 
-		CharSource<> s(str);
+		CharSource s(str);
 		CPPUNIT_ASSERT(s.get() == 'h');
 		CPPUNIT_ASSERT(s.get() == 'i');
 	}
@@ -30,7 +31,7 @@ public:
 	void testPush() {
 		std::stringstream str("he");
 
-		CharSource<> s(str);
+		CharSource s(str);
 		CPPUNIT_ASSERT(s.get() == 'h');
 		// Push one
 		s.push('o');
@@ -60,19 +61,32 @@ public:
 		}
 	};
 
-	void testEofHandler() {
+	void testEof() {
 		std::stringstream str("he");
-		StateHandler *sh = new StateHandler(12);
 
-		CharSource<StateHandler> s(str, sh);
-		CPPUNIT_ASSERT(sh->get_state() == 12);
+		CharSource s(str);
+		CPPUNIT_ASSERT(!s.eof());
 		CPPUNIT_ASSERT(s.get() == 'h');
-		CPPUNIT_ASSERT(sh->get_state() == 12);
+		CPPUNIT_ASSERT(!s.eof());
 		CPPUNIT_ASSERT(s.get() == 'e');
-		CPPUNIT_ASSERT(sh->get_state() == 12);
+		CPPUNIT_ASSERT(!s.eof());
 		// EOF
 		(void)s.get();
-		CPPUNIT_ASSERT(sh->get_state() == 42);
+		CPPUNIT_ASSERT(s.eof());
+	}
+
+	void testEofPush() {
+		std::stringstream str("a");
+
+		CharSource s(str);
+		CPPUNIT_ASSERT(s.get() == 'a');
+		CPPUNIT_ASSERT(!s.eof());
+		s.push('s');
+		CPPUNIT_ASSERT(s.get() == 's');
+		CPPUNIT_ASSERT(!s.eof());
+		// EOF
+		(void)s.get();
+		CPPUNIT_ASSERT(s.eof());
 	}
 };
 #endif /*  CHARSOURCETEST_H */

@@ -45,7 +45,7 @@ public:
 	}
 
 	/** Return the Halstead complexity */
-	double complexity() {
+	double complexity() const {
 		if (total == 0)
 			return 0;
 		else

@@ -9,10 +9,10 @@ public:
 	BolState() { saw_newline(); }
 
 	/** True at the beginning of a line */
-	bool at_bol() { return bol_state; }
+	bool at_bol() const { return bol_state; }
 
 	/** True at the beginning of a line, possibly with spaces */
-	bool at_bol_space() { return bol_space_state; }
+	bool at_bol_space() const { return bol_space_state; }
 
 	/** Called when processing a newline */
 	void saw_newline() {

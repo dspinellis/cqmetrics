@@ -27,7 +27,7 @@ public:
 		BRANCH_PATH,	// Keywords that introduce branch path
 		GOTO,		// goto
 		OTHER,		// All other keywords
-		IDENTIFIER,		// Not a keyword
+		IDENTIFIER,	// Plain identifier (not a keyword)
 	};
 private:
 	// Keyword map

@@ -17,6 +17,7 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 #include "BolStateTest.h"
+#include "CKeywordTest.h"
 #include "CMetricsCalculatorTest.h"
 #include "CharSourceTest.h"
 #include "CyclomaticTest.h"
@@ -30,6 +31,7 @@ main(int argc, char *argv[])
 	CppUnit::TextUi::TestRunner runner;
 
 	runner.addTest(BolStateTest::suite());
+	runner.addTest(CKeywordTest::suite());
 	runner.addTest(CMetricsCalculatorTest::suite());
 	runner.addTest(CharSourceTest::suite());
 	runner.addTest(CyclomaticTest::suite());

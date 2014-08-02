@@ -67,7 +67,8 @@ public:
 };
 
 template <typename T>
-std::ostream& operator <<(std::ostream& o, const Descriptive<T> &d) {
+std::ostream&
+operator <<(std::ostream& o, const Descriptive<T> &d) {
 	o << d.get_count() << '\t' << d.get_min() << '\t' << d.get_mean() <<
 		'\t' << d.get_max();
 	return o;

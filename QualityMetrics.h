@@ -17,8 +17,9 @@
 #ifndef QUALITYMETRICS_H
 #define QUALITYMETRICS_H
 
-#include <string>
+#include <ostream>
 #include <set>
+#include <string>
 
 #include "Cyclomatic.h"
 #include "Descriptive.h"
@@ -141,4 +142,31 @@ public:
 		return unique_identifier_length;
 	}
 };
+
+std::ostream&
+operator <<(std::ostream& o, const QualityMetrics &q) {
+	o <<
+		q.get_nchar() <<
+		q.get_line_length() <<
+		q.get_nfunction() <<
+		q.get_statement_nesting() <<
+		q.get_ngoto() <<
+		q.get_ntypedef() <<
+		q.get_ncomment() <<
+		q.get_ncomment_char() <<
+		q.get_nfun_comment() <<
+
+		q.get_ncpp_directive() <<
+		q.get_ncpp_include() <<
+		q.get_ncpp_conditional() <<
+		q.get_nfun_cpp_directive() <<
+		q.get_nfun_cpp_conditional() <<
+
+		q.get_halstead() <<
+		q.get_cyclomatic() <<
+		q.get_identifier_length() <<
+		q.get_unique_identifier_length();
+
+	return o;
+}
 #endif /* QUALITYMETRICS_H */

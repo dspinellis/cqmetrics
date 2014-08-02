@@ -37,6 +37,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNCommentChar);
 	CPPUNIT_TEST(testCyclomaticBoolean);
 	CPPUNIT_TEST(testCyclomaticLogical);
+	CPPUNIT_TEST(testCyclomaticLogicalTwoFunctions);
 	CPPUNIT_TEST(testCyclomaticCombined);
 	CPPUNIT_TEST(testCppDirective);
 	CPPUNIT_TEST(testCKeyword);
@@ -162,9 +163,21 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		// One path plus four additional ones
+		// One path plus five additional ones
 		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 6);
 	}
+
+	void testCyclomaticLogicalTwoFunctions() {
+		std::stringstream str("foo()\n{for (;;) {while () switch () {case 2: default:}} if (); do }"
+			"bar()\n{ if }");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		// ((1 + 5) + (1 + 1))
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 2);
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 4);
+	}
+
 
 	void testCyclomaticCombined() {
 		std::stringstream str("foo()\n{for while case default}"

@@ -18,6 +18,7 @@
 #define QUALITYMETRICS_H
 
 #include <string>
+#include <set>
 
 #include "Cyclomatic.h"
 #include "Descriptive.h"
@@ -43,6 +44,10 @@ private:
 	int ncpp_conditional;		// Number of C preprocessor conditionals
 	int nfun_cpp_conditional;	// Number of C preprocessor conditionals
 					// in functions
+
+	std::set <std::string> identifier;	// Unique identifiers
+	Descriptive<int> identifier_length;
+	Descriptive<int> unique_identifier_length;
 
 	Descriptive<double> halstead;	// Halstead complexity
 	Halstead halstead_tracker;
@@ -96,6 +101,13 @@ public:
 	void add_operand(char c) {
 		add_operand(std::string(1, c));
 	}
+	void add_identifier(const std::string s) {
+		if (identifier.find(s) == identifier.end()) {
+			unique_identifier_length.add(s.length());
+			identifier.insert(s);
+		}
+		identifier_length.add(s.length());
+	}
 
 	int get_nchar() const { return nchar; }
 	int get_nline() const { return nline; }
@@ -120,5 +132,11 @@ public:
 
 	const Descriptive<double>& get_halstead() const { return halstead; }
 	const Descriptive<double>& get_cyclomatic() const { return cyclomatic; }
+	const Descriptive<int>& get_identifier_length() const {
+		return identifier_length;
+	}
+	const Descriptive<int>& get_unique_identifier_length() const {
+		return unique_identifier_length;
+	}
 };
 #endif /* QUALITYMETRICS_H */

@@ -40,6 +40,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCyclomaticCombined);
 	CPPUNIT_TEST(testCppDirective);
 	CPPUNIT_TEST(testCKeyword);
+	CPPUNIT_TEST(testIdentifierLength);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -176,7 +177,6 @@ public:
 		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 4);
 	}
 
-
 	void testCppDirective() {
 		std::stringstream str("#include <stdio.h>\n\t #define a #b\n#ifdef foo\n#if bar\n#elif k\n#endif\n"
 			"foo()\n{\n#if FOO\n#undef a\n}");
@@ -197,6 +197,19 @@ public:
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_ngoto() == 2);
 		CPPUNIT_ASSERT(qm.get_ntypedef() == 3);
+	}
+
+	void testIdentifierLength() {
+		std::stringstream str("#define aa bab(123)\n if (aa == b)");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_identifier_length().get_count() == 4);
+		// 2 + 3 + 2 + 1 == 8; 8 / 4 = 2
+		CPPUNIT_ASSERT(qm.get_identifier_length().get_mean() == 2);
+		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_count() == 3);
+		// 2 + 3 + 1 == 6; 6 / 3 = 2
+		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_mean() == 2);
 	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

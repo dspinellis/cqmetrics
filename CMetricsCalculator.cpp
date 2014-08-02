@@ -363,8 +363,10 @@ CMetricsCalculator::calculate_metrics_switch()
 			goto plain_identifier;
 		case CKeyword::IDENTIFIER:
 		plain_identifier:
-			// XXX Handle identifier length etc.
-			qm.add_operand(val);
+			if (!scan_cpp_directive) {
+				qm.add_operand(val);
+				qm.add_identifier(val);
+			}
 			break;
 		}
 		scan_cpp_directive = false;

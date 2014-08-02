@@ -17,6 +17,8 @@
 #ifndef DESCRIPTIVETEST_H
 #define DESCRIPTIVETEST_H
 
+#include <sstream>
+
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "Descriptive.h"
@@ -29,6 +31,7 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testMeanDouble);
 	CPPUNIT_TEST(testMinMax);
 	CPPUNIT_TEST(testMinMaxDouble);
+	CPPUNIT_TEST(testOutput);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -77,6 +80,15 @@ public:
 		a.add(12.5);
 		CPPUNIT_ASSERT(a.get_min() == 2.5);
 		CPPUNIT_ASSERT(a.get_max() == 12.5);
+	}
+
+	void testOutput() {
+		std::stringstream str;
+		Descriptive<int> a;
+		a.add(3);
+		a.add(12);
+		str << a;
+		CPPUNIT_ASSERT(str.str() == "2\t3\t7.5\t12");
 	}
 };
 #endif /*  DESCRIPTIVETEST_H */

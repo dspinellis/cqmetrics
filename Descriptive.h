@@ -18,6 +18,7 @@
 #define DESCRIPTIVE_H
 
 #include <limits>
+#include <ostream>
 
 /** Maintain simple descriptive statistics values */
 template <typename T>
@@ -62,5 +63,13 @@ public:
 		if (v < min)
 			min = v;
 	}
+
 };
+
+template <typename T>
+std::ostream& operator <<(std::ostream& o, const Descriptive<T> &d) {
+	o << d.get_count() << '\t' << d.get_min() << '\t' << d.get_mean() <<
+		'\t' << d.get_max();
+	return o;
+}
 #endif /* DESCRIPTIVE_H */

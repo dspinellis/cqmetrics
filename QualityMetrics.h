@@ -27,8 +27,7 @@
 /** Keep taly of quality metrics */
 class QualityMetrics {
 private:
-	int nchar;
-	int nline;
+	Descriptive<int> line_length;	// Line lengths
 	int ncomment;			// Number of comments
 	int ncomment_char;		// Number of comment characters
 	int nfunction;			// Number of functions
@@ -55,12 +54,12 @@ private:
 	Cyclomatic cyclomatic_tracker;
 public:
 	QualityMetrics() :
-		nchar(0), nline(0), ncomment(0), ncomment_char(0), nfunction(0),
+		ncomment(0), ncomment_char(0), nfunction(0),
 		ncpp_directive(0), ncpp_include(0), ngoto(0),
 		ntypedef(0), nfun_comment(0), nfun_cpp_directive(0),
 		ncpp_conditional(0), nfun_cpp_conditional(0) {}
 
-	void add_line() { nline++; }
+	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
 	void add_goto() { ngoto++; }
 	void add_typedef() { ntypedef++; }
@@ -81,7 +80,6 @@ public:
 		halstead.add(halstead_tracker.complexity());
 		cyclomatic.add(cyclomatic_tracker.extended_complexity());
 	}
-	void set_nchar(int n) { nchar = n; }
 	void add_operator(const std::string &s) {
 		halstead_tracker.add(s);
 	}
@@ -109,8 +107,10 @@ public:
 		identifier_length.add(s.length());
 	}
 
-	int get_nchar() const { return nchar; }
-	int get_nline() const { return nline; }
+	const Descriptive<int>& get_line_length() const { return line_length; }
+	int get_nchar() const {
+		return line_length.get_sum() + line_length.get_count();
+	}
 	int get_nfunction() const { return nfunction; }
 	const Descriptive<int> &get_statement_nesting() const {
 		return statement_nesting;

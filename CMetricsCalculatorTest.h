@@ -53,16 +53,17 @@ public:
 
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_nchar() == 0);
-		CPPUNIT_ASSERT(qm.get_nline() == 0);
+		CPPUNIT_ASSERT(qm.get_line_length().get_count() == 0);
+		CPPUNIT_ASSERT(qm.get_line_length().get_sum() == 0);
 	}
 
 	void testLine() {
-		std::stringstream str("hi\n");
+		std::stringstream str("hi\nt-\naa");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nchar() == 3);
-		CPPUNIT_ASSERT(qm.get_nline() == 1);
+		CPPUNIT_ASSERT(qm.get_nchar() == 8);
+		CPPUNIT_ASSERT(qm.get_line_length().get_count() == 3);
 	}
 
 	void testNFunction() {

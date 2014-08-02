@@ -30,15 +30,15 @@ public:
 	void testCtor() {
 		QualityMetrics q;
 		CPPUNIT_ASSERT(q.get_nchar() == 0);
-		CPPUNIT_ASSERT(q.get_nline() == 0);
+		CPPUNIT_ASSERT(q.get_ntypedef() == 0);
 	}
 
 	void testNline() {
 		QualityMetrics q;
 
-		q.add_line();
-		q.add_line();
-		CPPUNIT_ASSERT(q.get_nline() == 2);
+		q.add_line(10);
+		q.add_line(12);
+		CPPUNIT_ASSERT(q.get_line_length().get_count() == 2);
 	}
 };
 #endif /*  QUALITYMETRICSTEST_H */

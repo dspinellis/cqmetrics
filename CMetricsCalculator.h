@@ -35,14 +35,18 @@ private:
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
 	bool in_function;		// True when scanning functions
+	int chars_read_at_bol;		// Characters that were read
+					// at the beginning of a line
 	CKeyword ckeyword;
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
-	scan_cpp_directive(false) {}
+	scan_cpp_directive(false), chars_read_at_bol(0) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
-		qm.set_nchar(src.get_nchar());
+		// No newline at EOF
+		if (chars_read_at_bol != src.get_nchar())
+			qm.add_line(src.get_nchar() - chars_read_at_bol);
 	}
 	const QualityMetrics& get_metrics() const { return qm; }
 };

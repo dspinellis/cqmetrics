@@ -41,7 +41,9 @@ CMetricsCalculator::calculate_metrics_switch()
 	 */
 	case '\n':
 		bol.saw_newline();
-		qm.add_line();
+		// Line length minus the newline
+		qm.add_line(src.get_nchar() - chars_read_at_bol - 1);
+		chars_read_at_bol = src.get_nchar();
 		break;
 	case ' ': case '\t': case '\v': case '\f': case '\r':
 		bol.saw_space();

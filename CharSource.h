@@ -33,7 +33,7 @@ public:
 	}
 
 	/** Return number of characters read */
-	int get_nchar() const { return nchar; }
+	int get_nchar() const { return nchar - st.size(); }
 
 	/** Push the specified character back into the source */
 	void push(char c) {

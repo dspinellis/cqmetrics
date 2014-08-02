@@ -31,6 +31,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testHalsteadOperator);
 	CPPUNIT_TEST(testHalsteadOperand);
+	CPPUNIT_TEST(testHalsteadOperandTwoFunctions);
 	CPPUNIT_TEST(testNLineComment);
 	CPPUNIT_TEST(testNBlockComment);
 	CPPUNIT_TEST(testNBlockCommentChar);
@@ -85,6 +86,15 @@ public:
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 1);
+		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
+	}
+
+	void testHalsteadOperandTwoFunctions() {
+		std::stringstream str("foo()\n{a a b b}bar()\n{a a b b}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 2);
 		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
 	}
 

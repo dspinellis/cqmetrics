@@ -30,13 +30,16 @@ private:
 	QualityMetrics qm;
 	BolState bol;
 	int top_level_depth;		// 0 for C, 1 for Java
-	int current_depth;
+	int current_depth;		// Keeps track of { }
+	bool scan_cpp_directive;	// After a C preprocessor #
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
-	bool in_function;			// True when scanning functions
+	bool in_function;		// True when scanning functions
+	CKeyword ckeyword;
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
-	top_level_depth(0), current_depth(0), in_function(false) {}
+	top_level_depth(0), current_depth(0), in_function(false),
+	scan_cpp_directive(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		qm.set_nchar(src.get_nchar());

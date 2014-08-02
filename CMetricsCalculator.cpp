@@ -172,6 +172,12 @@ CMetricsCalculator::calculate_metrics_switch()
 		}
 		break;
 	case '#':
+		if (bol.at_bol_space()) {
+			qm.add_cpp_directive();
+			if (in_function)
+				qm.add_fun_cpp_directive();
+			scan_cpp_directive = true;
+		}
 		bol.saw_non_space();
 		break;
 	/* Operators starting with < or > */
@@ -229,6 +235,8 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case '*':				/* Block comment */
 			qm.add_comment();
+			if (in_function)
+				qm.add_fun_comment();
 			GET(c0);
 			for (;;) {
 				while (c0 != '*') {
@@ -244,6 +252,8 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case '/':				/* Line comment */
 			qm.add_comment();
+			if (in_function)
+				qm.add_fun_comment();
 			for (;;) {
 				GET(c0);
 				if (c0 == '\n')
@@ -264,7 +274,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		GET(c0);
 		if (isdigit(c0)) {
 			val = std::string(".") + (char)(c0);
-			// XXX goto pp_number;
+			goto number;
 		}
 		if (c0 != '.') {
 			src.push(c0);
@@ -279,6 +289,152 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		}
 		// Elipsis
+		break;
+	/* Could be a long character or string */
+	case 'L':
+		bol.saw_non_space();
+		GET(c1);
+		switch (c1) {
+		case '\'':
+			goto char_literal;
+		case '"':
+			goto string_literal;
+		default:
+			src.push(c1);
+			goto identifier;
+		}
+	case '_': case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+	case 'g': case 'h': case 'i': case 'j': case 'k': case 'l': case 'm':
+	case 'n': case 'o': case 'p': case 'q': case 'r': case 's': case 't':
+	case 'u': case 'v': case 'w': case 'x': case 'y': case 'z':
+	case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G':
+	case 'H': case 'I': case 'J': case 'K': case 'M': case 'N': case 'O':
+	case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U': case 'V':
+	case 'W': case 'X': case 'Y': case 'Z':
+	identifier:
+		bol.saw_non_space();
+		val = c0;
+		for (;;) {
+			GET(c0);
+			if (!isalnum(c0) && c0 != '_')
+				break;
+			val += c0;
+		}
+		src.push(c0);
+		switch (ckeyword.identifier_type(val)) {
+		case CKeyword::WHILE:
+		case CKeyword::FOR:
+		case CKeyword::DEFAULT:
+		case CKeyword::CASE:
+			qm.add_path();
+			break;
+		case CKeyword::GOTO:
+			qm.add_goto();
+			break;
+		case CKeyword::TYPEDEF:
+			qm.add_typedef();
+			break;
+		case CKeyword::OTHER:
+			break;
+		case CKeyword::INCLUDE:
+			if (scan_cpp_directive) {
+				qm.add_cpp_include();
+				break;
+			}
+			goto identifier;
+		case CKeyword::IF:
+			if (scan_cpp_directive) {
+				qm.add_cpp_conditional();
+				if (in_function)
+					qm.add_fun_cpp_conditional();
+			} else
+				qm.add_path();
+			break;
+		case CKeyword::IFDEF:
+		case CKeyword::ELIF:
+			if (scan_cpp_directive) {
+				// #if
+				if (in_function)
+					qm.add_fun_cpp_conditional();
+				else
+					qm.add_cpp_conditional();
+				break;
+			}
+			goto plain_identifier;
+		case CKeyword::IDENTIFIER:
+		plain_identifier:
+			// XXX Handle identifier length etc.
+			qm.add_operand(val);
+			break;
+		}
+		scan_cpp_directive = false;
+		break;
+	case '\'':
+		bol.saw_non_space();
+	char_literal:
+		val = "";
+		for (;;) {
+			GET(c0);
+			if (c0 == '\\') {
+				// Consume one character after the backslash
+				// ... to deal with the '\'' problem
+				val += '\\';
+				GET(c0);
+				val += c0;
+				continue;
+			}
+			if (c0 == '\'')
+				break;
+			val += c0;
+		}
+		qm.add_operand(val);
+		break;
+	case '"':
+		bol.saw_non_space();
+	string_literal:
+		val = "";
+		for (;;) {
+			GET(c0);
+			if (c0 == '\\') {
+				val += '\\';
+				// Consume one character after the backslash
+				GET(c0);
+				if (c0 == '\n')
+					break;
+				val += c0;
+				// We will deal with escapes later
+				continue;
+			}
+			if (c0 == '\n' || c0 == '"')
+				break;
+			val += c0;
+		}
+		qm.add_operand(val);
+		break;
+	/* Various numbers */
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+		bol.saw_non_space();
+		val = c0;
+	number:
+		for (;;) {
+			GET(c0);
+			if (c0 == 'e' || c0 == 'E') {
+				val += c0;
+				GET(c0);
+				if (c0 == '+' || c0 == '-') {
+					val += c0;
+					continue;
+				}
+			}
+			if (!isalnum(c0) && c0 != '.' && c0 != '_')
+				break;
+			val += c0;
+		}
+		src.push(c0);
+		qm.add_operand(val);
+		break;
+	default:
 		break;
 	}
 	return true;

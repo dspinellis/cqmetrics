@@ -1,10 +1,13 @@
 #ifndef BOLSTATE_H
 #define BOLSTATE_H
 
+#include "CKeyword.h"
+
 class BolState {
 private:
 	bool bol_state;
 	bool bol_space_state;
+	CKeyword ckeyword;		// Can identify keywords from identifiers
 public:
 	BolState() { saw_newline(); }
 

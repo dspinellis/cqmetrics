@@ -24,8 +24,16 @@
 class CKeyword {
 public:
 	enum IdentifierType {
-		BRANCH_PATH,	// Keywords that introduce branch path
-		GOTO,		// goto
+		WHILE,
+		IF,
+		FOR,
+		DEFAULT,
+		CASE,
+		GOTO,
+		TYPEDEF,
+		ELIF,
+		IFDEF,
+		INCLUDE,
 		OTHER,		// All other keywords
 		IDENTIFIER,	// Plain identifier (not a keyword)
 	};
@@ -37,20 +45,23 @@ public:
 	CKeyword() {
 		km["auto"] = OTHER;
 		km["break"] = OTHER;
-		km["case"] = BRANCH_PATH;
+		km["case"] = CASE;
 		km["char"] = OTHER;
 		km["const"] = OTHER;
 		km["continue"] = OTHER;
-		km["default"] = BRANCH_PATH;
-		km["do"] = OTHER;	// Counter through while
+		km["default"] = DEFAULT;
+		km["do"] = OTHER;
 		km["double"] = OTHER;
+		km["elif"] = ELIF;		// Preprocessor only
 		km["else"] = OTHER;
 		km["enum"] = OTHER;
 		km["extern"] = OTHER;
 		km["float"] = OTHER;
-		km["for"] = BRANCH_PATH;
+		km["for"] = FOR;
 		km["goto"] = GOTO;
-		km["if"] = BRANCH_PATH;
+		km["if"] = IF;
+		km["ifdef"] = IFDEF;		// Preprocessor only
+		km["include"] = INCLUDE;	// Preprocessor only
 		km["int"] = OTHER;
 		km["long"] = OTHER;
 		km["register"] = OTHER;
@@ -61,12 +72,12 @@ public:
 		km["static"] = OTHER;
 		km["struct"] = OTHER;
 		km["switch"] = OTHER;
-		km["typedef"] = OTHER;
+		km["typedef"] = TYPEDEF;
 		km["union"] = OTHER;
 		km["unsigned"] = OTHER;
 		km["void"] = OTHER;
 		km["volatile"] = OTHER;
-		km["while"] = BRANCH_PATH;
+		km["while"] = WHILE;
 	}
 
 	enum IdentifierType identifier_type(const std::string &s) {

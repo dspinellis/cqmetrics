@@ -25,20 +25,32 @@ class CKeywordTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(CKeywordTest);
 	CPPUNIT_TEST(testBranch);
 	CPPUNIT_TEST(testGoto);
+	CPPUNIT_TEST(testTypedef);
 	CPPUNIT_TEST(testOther);
 	CPPUNIT_TEST(testId);
+	CPPUNIT_TEST(testInclude);
 	CPPUNIT_TEST_SUITE_END();
 	CKeyword ck;
 public:
 	void testBranch() {
-		CPPUNIT_ASSERT(ck.identifier_type("if") == CKeyword::BRANCH_PATH);
-		CPPUNIT_ASSERT(ck.identifier_type("for") == CKeyword::BRANCH_PATH);
-		CPPUNIT_ASSERT(ck.identifier_type("while") == CKeyword::BRANCH_PATH);
-		CPPUNIT_ASSERT(ck.identifier_type("case") == CKeyword::BRANCH_PATH);
+		CPPUNIT_ASSERT(ck.identifier_type("if") == CKeyword::IF);
+		CPPUNIT_ASSERT(ck.identifier_type("elif") == CKeyword::ELIF);
+		CPPUNIT_ASSERT(ck.identifier_type("ifdef") == CKeyword::IFDEF);
+		CPPUNIT_ASSERT(ck.identifier_type("for") == CKeyword::FOR);
+		CPPUNIT_ASSERT(ck.identifier_type("while") == CKeyword::WHILE);
+		CPPUNIT_ASSERT(ck.identifier_type("case") == CKeyword::CASE);
+		CPPUNIT_ASSERT(ck.identifier_type("default") == CKeyword::DEFAULT);
 	}
 
 	void testGoto() {
 		CPPUNIT_ASSERT(ck.identifier_type("goto") == CKeyword::GOTO);
+	}
+	void testInclude() {
+		CPPUNIT_ASSERT(ck.identifier_type("include") == CKeyword::INCLUDE);
+	}
+
+	void testTypedef() {
+		CPPUNIT_ASSERT(ck.identifier_type("typedef") == CKeyword::TYPEDEF);
 	}
 
 	void testOther() {

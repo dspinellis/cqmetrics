@@ -36,6 +36,10 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNLineCommentChar);
 	CPPUNIT_TEST(testNCommentChar);
 	CPPUNIT_TEST(testCyclomaticBoolean);
+	CPPUNIT_TEST(testCyclomaticLogical);
+	CPPUNIT_TEST(testCyclomaticCombined);
+	CPPUNIT_TEST(testCppDirective);
+	CPPUNIT_TEST(testCKeyword);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -81,11 +85,13 @@ public:
 	}
 
 	void testNBlockComment() {
-		std::stringstream str("/* hi\n * / */\n");
+		std::stringstream str("/* hi\n * / */\n"
+			"fun()\n{\n/* block */\n}\n");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
+		CPPUNIT_ASSERT(qm.get_nfun_comment() == 1);
 
 		std::stringstream str2("/* hi\n * / */ /**//* */");
 		CMetricsCalculator calc2(str2);
@@ -95,11 +101,13 @@ public:
 	}
 
 	void testNLineComment() {
-		std::stringstream str(" // hi\n / /\n");
+		std::stringstream str(" // hi\n / /\n"
+			"fun()\n{\n f // line /* */\n}\n");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
+		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
+		CPPUNIT_ASSERT(qm.get_nfun_comment() == 1);
 
 		std::stringstream str2(" // hi\n //\n");
 		CMetricsCalculator calc2(str2);
@@ -144,7 +152,51 @@ public:
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 1);
+		// One path plus four additional ones
 		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 5);
+	}
+
+	void testCyclomaticLogical() {
+		std::stringstream str("foo()\n{for while case default if do switch}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		// One path plus four additional ones
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 6);
+	}
+
+	void testCyclomaticCombined() {
+		std::stringstream str("foo()\n{for while case default}"
+			"bar()\n{a && b && d}\nstruct bar { a = d && e}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 2);
+		// ((4 + 1) + (2 + 1)) / 2
+		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 4);
+	}
+
+
+	void testCppDirective() {
+		std::stringstream str("#include <stdio.h>\n\t #define a #b\n#ifdef foo\n#if bar\n#elif k\n#endif\n"
+			"foo()\n{\n#if FOO\n#undef a\n}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ncpp_directive() == 8);
+		CPPUNIT_ASSERT(qm.get_nfun_cpp_directive() == 2);
+		CPPUNIT_ASSERT(qm.get_ncpp_conditional() == 4);
+		CPPUNIT_ASSERT(qm.get_nfun_cpp_conditional() == 1);
+		CPPUNIT_ASSERT(qm.get_ncpp_include() == 1);
+	}
+
+	void testCKeyword() {
+		std::stringstream str("typedef int a; typedef double b; typedef short s;\ngoto c; goto d;");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ngoto() == 2);
+		CPPUNIT_ASSERT(qm.get_ntypedef() == 3);
 	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

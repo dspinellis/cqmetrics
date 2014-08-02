@@ -146,25 +146,25 @@ public:
 std::ostream&
 operator <<(std::ostream& o, const QualityMetrics &q) {
 	o <<
-		q.get_nchar() <<
-		q.get_line_length() <<
-		q.get_nfunction() <<
-		q.get_statement_nesting() <<
-		q.get_ngoto() <<
-		q.get_ntypedef() <<
-		q.get_ncomment() <<
-		q.get_ncomment_char() <<
-		q.get_nfun_comment() <<
+		q.get_nchar() << '\t' <<
+		q.get_line_length() << '\t' <<
+		q.get_nfunction() << '\t' <<
+		q.get_statement_nesting() << '\t' <<
+		q.get_ngoto() << '\t' <<
+		q.get_ntypedef() << '\t' <<
+		q.get_ncomment() << '\t' <<
+		q.get_ncomment_char() << '\t' <<
+		q.get_nfun_comment() << '\t' <<
 
-		q.get_ncpp_directive() <<
-		q.get_ncpp_include() <<
-		q.get_ncpp_conditional() <<
-		q.get_nfun_cpp_directive() <<
-		q.get_nfun_cpp_conditional() <<
+		q.get_ncpp_directive() << '\t' <<
+		q.get_ncpp_include() << '\t' <<
+		q.get_ncpp_conditional() << '\t' <<
+		q.get_nfun_cpp_directive() << '\t' <<
+		q.get_nfun_cpp_conditional() << '\t' <<
 
-		q.get_halstead() <<
-		q.get_cyclomatic() <<
-		q.get_identifier_length() <<
+		q.get_halstead() << '\t' <<
+		q.get_cyclomatic() << '\t' <<
+		q.get_identifier_length() << '\t' <<
 		q.get_unique_identifier_length();
 
 	return o;

@@ -77,7 +77,7 @@ CMetricsCalculator::calculate_metrics_switch()
 	case ';':
 		bol.saw_non_space();
 		if (in_function)
-			qm.add_statement();
+			qm.add_statement(current_depth);
 		break;
 	/*
 	 * Double character C tokens with more than 2 different outcomes

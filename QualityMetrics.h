@@ -32,7 +32,6 @@ private:
 	int ncomment;			// Number of comments
 	int ncomment_char;		// Number of comment characters
 	int nfunction;			// Number of functions
-	int nstatement;			// Number of statements
 	int ncpp_directive;		// Number of C preprocessor directives
 
 	int ncpp_include;		// Number of include directives
@@ -49,19 +48,20 @@ private:
 	Descriptive<int> identifier_length;
 	Descriptive<int> unique_identifier_length;
 
-	Descriptive<double> halstead;	// Halstead complexity
+	Descriptive<int> statement_nesting;	// Statement nesting
+	Descriptive<double> halstead;		// Halstead complexity
 	Halstead halstead_tracker;
-	Descriptive<double> cyclomatic;	// Cyclomatic complexity
+	Descriptive<double> cyclomatic;		// Cyclomatic complexity
 	Cyclomatic cyclomatic_tracker;
 public:
 	QualityMetrics() :
 		nchar(0), nline(0), ncomment(0), ncomment_char(0), nfunction(0),
-		nstatement(0), ncpp_directive(0), ncpp_include(0), ngoto(0),
+		ncpp_directive(0), ncpp_include(0), ngoto(0),
 		ntypedef(0), nfun_comment(0), nfun_cpp_directive(0),
 		ncpp_conditional(0), nfun_cpp_conditional(0) {}
 
 	void add_line() { nline++; }
-	void add_statement() { nstatement++; }
+	void add_statement(int nesting) { statement_nesting.add(nesting); }
 	void add_goto() { ngoto++; }
 	void add_typedef() { ntypedef++; }
 	void add_comment() { ncomment++; }
@@ -112,7 +112,9 @@ public:
 	int get_nchar() const { return nchar; }
 	int get_nline() const { return nline; }
 	int get_nfunction() const { return nfunction; }
-	int get_nstatement() const { return nstatement; }
+	const Descriptive<int> &get_statement_nesting() const {
+		return statement_nesting;
+	}
 	int get_ngoto() const { return ngoto; }
 	int get_ntypedef() const { return ntypedef; }
 

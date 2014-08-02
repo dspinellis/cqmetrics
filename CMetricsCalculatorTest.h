@@ -29,6 +29,8 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testNFunction);
 	CPPUNIT_TEST(testNStatement);
+	CPPUNIT_TEST(testStatementNesting);
+	CPPUNIT_TEST(testStatementNestingTwoFunction);
 	CPPUNIT_TEST(testHalsteadOperator);
 	CPPUNIT_TEST(testHalsteadOperand);
 	CPPUNIT_TEST(testHalsteadOperandTwoFunctions);
@@ -103,7 +105,28 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nstatement() == 3);
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 3);
+	}
+
+	void testStatementNesting() {
+		std::stringstream str("foo()\n{a;{b;{c;}}}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 3);
+		// (1 + 2 + 3) / 3 == 2
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 2);
+	}
+
+	void testStatementNestingTwoFunction() {
+		std::stringstream str("foo()\n{a;{{c;}}}"
+			"bar()\n{{a;{b;{{{c;}}} d; }}}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 6);
+		// (1 + 3 + 2 + 3 + 6 + 3)  == 18; 18 / 6 == 3
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 3);
 	}
 
 	void testNBlockComment() {

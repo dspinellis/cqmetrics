@@ -5,7 +5,7 @@ else
 CXXFLAGS=-O2
 endif
 
-all: test qmcalc
+all: qmcalc
 
 HFILES=$(wildcard *.h)
 OFILES=CMetricsCalculator.o QualityMetrics.o

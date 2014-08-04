@@ -16,7 +16,8 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testNcharPush);
 	CPPUNIT_TEST(testCharAfter);
 	CPPUNIT_TEST(testCharBefore);
-	CPPUNIT_TEST(testCharBeforeNl);
+	CPPUNIT_TEST(testCharBeforeN);
+	CPPUNIT_TEST(testCharBeforeNewline);
 	CPPUNIT_TEST(testCharBeforePush);
 	CPPUNIT_TEST(testCharBeforeQueueShrink);
 	CPPUNIT_TEST_SUITE_END();
@@ -131,7 +132,7 @@ public:
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
 
-	void testCharBeforeNl() {
+	void testCharBeforeNewline() {
 		std::stringstream str("h\ne");
 
 		CharSource s(str);
@@ -170,6 +171,27 @@ public:
 		CPPUNIT_ASSERT(s.char_after() == 0);
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
+
+	void testCharBeforeN() {
+		std::stringstream str("hat");
+
+		CharSource s(str);
+		char c;
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'h');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.char_before() == 0);
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'a');
+		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT(s.char_before(2) == 0);
+
+		CPPUNIT_ASSERT(s.get(c) && c == 't');
+		CPPUNIT_ASSERT(s.char_before() == 'a');
+		CPPUNIT_ASSERT(s.char_before(2) == 'h');
+	}
+
 
 	void testCharBeforeQueueShrink() {
 		std::stringstream str("abcdefghijklmnopqrstuvwxyz");

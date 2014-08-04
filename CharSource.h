@@ -57,14 +57,14 @@ public:
 	}
 
 	/**
-	 * Return the character before the one returned
+	 * Return the nth character before the one returned
 	 * Return 0 if no such character is available.
 	 */
-	char char_before() {
-		size_t s = returned_char.size();
+	char char_before(int n = 1) {
+		int index = returned_char.size() - n - 1;
 
-		if (s >= 2)
-			return returned_char[s - 2];
+		if (index >= 0)
+			return returned_char[index];
 		else
 			return 0;
 	}

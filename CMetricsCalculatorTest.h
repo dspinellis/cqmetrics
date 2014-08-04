@@ -46,6 +46,10 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCppDirective);
 	CPPUNIT_TEST(testCKeyword);
 	CPPUNIT_TEST(testIdentifierLength);
+	CPPUNIT_TEST(testStyle);
+	CPPUNIT_TEST(testBinaryOperatorStyle);
+	CPPUNIT_TEST(testKeywordStyle);
+	CPPUNIT_TEST(testKeywordStyleLeft);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -267,6 +271,172 @@ public:
 		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_count() == 3);
 		// 2 + 3 + 1 == 6; 6 / 3 = 2
 		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_mean() == 2);
+	}
+
+	void testBinaryOperatorStyle() {
+		const char *binary_operator[] = {
+			// By order of precedence from manual, to verify we
+			// got them all. (Excluding those we can't handle.)
+			"/", "%", "<<", ">>", "<", "<=", ">", ">=", "==", "!=",
+			"^", "|", "&&", "||", "?", "=", "+=", "-=", "*=", "/=",
+			"%=", "<<=", ">>=", "&=", "^=", "|=",
+			NULL
+		};
+
+		struct Test {
+			const char *prefix;
+			const char *suffix;
+			enum QualityMetrics::StyleError e;
+			int result;
+		} test[] = {
+		  { "a ", " b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
+		  { "a ", "b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
+		  { "a ", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
+		  { "a", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 1 },
+		  NULL
+		};
+
+		for (const char **o = binary_operator; *o; o++)
+			for (struct Test *t = test; t->prefix; t++) {
+				std::string code(t->prefix);
+				code.append(*o);
+				code.append(t->suffix);
+				std::stringstream str(code);
+				CMetricsCalculator calc(str);
+				calc.calculate_metrics();
+				const QualityMetrics& qm(calc.get_metrics());
+				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+			}
+	}
+
+	void testKeywordStyle() {
+		const char *keyword[] = {
+			// By alphabetic order from manual, to verify we
+			// got them all. (Excluding those we can't handle.)
+			"case", "do", "else", "enum", "for", "goto", "if",
+			"struct", "switch", "union", "while",
+			NULL
+		};
+
+		struct Test {
+			const char *prefix;
+			const char *suffix;
+			enum QualityMetrics::StyleError e;
+			int result;
+		} test[] = {
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { ";",  " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 1 },
+		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  NULL
+		};
+
+		for (const char **k = keyword; *k; k++)
+			for (struct Test *t = test; t->prefix; t++) {
+				std::string code(t->prefix);
+				code.append(*k);
+				code.append(t->suffix);
+				std::stringstream str(code);
+				CMetricsCalculator calc(str);
+				calc.calculate_metrics();
+				const QualityMetrics& qm(calc.get_metrics());
+				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+			}
+	}
+
+	void testKeywordStyleLeft() {
+		const char *keyword[] = {
+			// By alphabetic order from manual, to verify we
+			// got them all. (Excluding those we can't handle.)
+			"break", "continue", "default", "return",
+			NULL
+		};
+
+		struct Test {
+			const char *prefix;
+			const char *suffix;
+			enum QualityMetrics::StyleError e;
+			int result;
+		} test[] = {
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { ";",  " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  NULL
+		};
+
+		for (const char **k = keyword; *k; k++)
+			for (struct Test *t = test; t->prefix; t++) {
+				std::string code(t->prefix);
+				code.append(*k);
+				code.append(t->suffix);
+				std::stringstream str(code);
+				CMetricsCalculator calc(str);
+				calc.calculate_metrics();
+				const QualityMetrics& qm(calc.get_metrics());
+				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+			}
+	}
+
+	void testStyle() {
+		struct Test {
+			const char *code;
+			enum QualityMetrics::StyleError e;
+			int result;
+		} test[] = {
+{ "a[4]", QualityMetrics::SPACE_BEFORE_OPENING_SQUARE_BRACKET, 0 },
+{ "a [4]", QualityMetrics::SPACE_BEFORE_OPENING_SQUARE_BRACKET, 1 },
+{ "a[4]", QualityMetrics::SPACE_AFTER_OPENING_SQUARE_BRACKET, 0 },
+{ "a[ 4]", QualityMetrics::SPACE_AFTER_OPENING_SQUARE_BRACKET, 1 },
+{ "~0xff", QualityMetrics::SPACE_AFTER_UNARY_OP, 0 },
+{ "~ 0xff", QualityMetrics::SPACE_AFTER_UNARY_OP, 1 },
+{ "a, b", QualityMetrics::SPACE_BEFORE_COMMA, 0 },
+{ "a , b", QualityMetrics::SPACE_BEFORE_COMMA, 1 },
+{ "a, b", QualityMetrics::NO_SPACE_AFTER_COMMA, 0 },
+{ "a,b", QualityMetrics::NO_SPACE_AFTER_COMMA, 1 },
+{ "foo(int a)", QualityMetrics::SPACE_BEFORE_CLOSING_BRACKET, 0 },
+{ "foo(int a )", QualityMetrics::SPACE_BEFORE_CLOSING_BRACKET, 1 },
+{ "foo()\n{x;\n}", QualityMetrics::NO_SPACE_BEFORE_OPENING_BRACE, 0 },
+{ "foo()\n{\nif (1){x;}}\n", QualityMetrics::NO_SPACE_BEFORE_OPENING_BRACE, 1 },
+{ "foo()\n{\nx;\n}", QualityMetrics::NO_SPACE_AFTER_OPENING_BRACE, 0 },
+{ "foo()\n{\nif (1){x;}}\n", QualityMetrics::NO_SPACE_AFTER_OPENING_BRACE, 1 },
+{ "foo()\n{x;\n}", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACE, 0 },
+{ "foo()\n{\nx;}\n", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACE, 1 },
+{ "foo()\n{x;\n}\n", QualityMetrics::NO_SPACE_AFTER_CLOSING_BRACE, 0 },
+{ "foo()\n{\nif(1){foo;}}\n", QualityMetrics::NO_SPACE_AFTER_CLOSING_BRACE, 1 },
+{ "int a;", QualityMetrics::SPACE_BEFORE_SEMICOLON, 0 },
+{ " \t;", QualityMetrics::SPACE_BEFORE_SEMICOLON, 0 },
+{ "int a; int b;\n", QualityMetrics::NO_SPACE_AFTER_SEMICOLON, 0 },
+{ "int a;int b;\n", QualityMetrics::NO_SPACE_AFTER_SEMICOLON, 1 },
+{ "a->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a ->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a->b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
+{ "a-> b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
+{ "a.b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a .b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a.b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
+{ "a. b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
+{ "a ? b : c", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
+{ "a ? b :c", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
+{ "case 42:\n", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
+{ "!a", QualityMetrics::SPACE_AFTER_UNARY_OP, 0 },
+{ "! a", QualityMetrics::SPACE_AFTER_UNARY_OP, 1 },
+{ "\nreturn;", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+{ ";return;", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
+		  NULL
+		};
+
+		for (struct Test *t = test; t->code; t++) {
+			std::stringstream str(t->code);
+			CMetricsCalculator calc(str);
+			calc.calculate_metrics();
+			const QualityMetrics& qm(calc.get_metrics());
+			CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+		}
 	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

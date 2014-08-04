@@ -24,16 +24,25 @@
 class CKeyword {
 public:
 	enum IdentifierType {
-		WHILE,
-		IF,
-		FOR,
-		DEFAULT,
+		BREAK,
 		CASE,
-		GOTO,
-		TYPEDEF,
+		CONTINUE,
+		DEFAULT,
+		DO,
 		ELIF,
+		ELSE,
+		ENUM,
+		FOR,
+		GOTO,
+		IF,
 		IFDEF,
 		INCLUDE,
+		RETURN,
+		STRUCT,
+		SWITCH,
+		TYPEDEF,
+		UNION,
+		WHILE,
 		OTHER,		// All other keywords
 		IDENTIFIER,	// Plain identifier (not a keyword)
 	};
@@ -44,17 +53,17 @@ private:
 public:
 	CKeyword() {
 		km["auto"] = OTHER;
-		km["break"] = OTHER;
+		km["break"] = BREAK;
 		km["case"] = CASE;
 		km["char"] = OTHER;
 		km["const"] = OTHER;
-		km["continue"] = OTHER;
+		km["continue"] = CONTINUE;
 		km["default"] = DEFAULT;
-		km["do"] = OTHER;
+		km["do"] = DO;
 		km["double"] = OTHER;
 		km["elif"] = ELIF;		// Preprocessor only
-		km["else"] = OTHER;
-		km["enum"] = OTHER;
+		km["else"] = ELSE;
+		km["enum"] = ENUM;
 		km["extern"] = OTHER;
 		km["float"] = OTHER;
 		km["for"] = FOR;
@@ -65,15 +74,15 @@ public:
 		km["int"] = OTHER;
 		km["long"] = OTHER;
 		km["register"] = OTHER;
-		km["return"] = OTHER;
+		km["return"] = RETURN;
 		km["short"] = OTHER;
 		km["signed"] = OTHER;
 		km["sizeof"] = OTHER;
 		km["static"] = OTHER;
-		km["struct"] = OTHER;
-		km["switch"] = OTHER;
+		km["struct"] = STRUCT;
+		km["switch"] = SWITCH;
 		km["typedef"] = TYPEDEF;
-		km["union"] = OTHER;
+		km["union"] = UNION;
 		km["unsigned"] = OTHER;
 		km["void"] = OTHER;
 		km["volatile"] = OTHER;

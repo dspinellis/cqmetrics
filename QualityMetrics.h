@@ -17,9 +17,11 @@
 #ifndef QUALITYMETRICS_H
 #define QUALITYMETRICS_H
 
+#include <iostream>
 #include <ostream>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "Cyclomatic.h"
 #include "Descriptive.h"
@@ -27,6 +29,8 @@
 
 /** Keep taly of quality metrics */
 class QualityMetrics {
+public:
+	typedef std::vector <int> StyleErrorContainer;
 private:
 	Descriptive<int> line_length;	// Line lengths
 	int ncomment;			// Number of comments
@@ -53,12 +57,39 @@ private:
 	Halstead halstead_tracker;
 	Descriptive<double> cyclomatic;		// Cyclomatic complexity
 	Cyclomatic cyclomatic_tracker;
+	StyleErrorContainer nstyle_error;
 public:
+	enum StyleError {
+		NO_SPACE_AFTER_BINARY_OP,
+		NO_SPACE_AFTER_CLOSING_BRACE,
+		NO_SPACE_AFTER_COMMA,
+		NO_SPACE_AFTER_KEYWORD,
+		NO_SPACE_AFTER_OPENING_BRACE,
+		NO_SPACE_AFTER_SEMICOLON,
+		NO_SPACE_AFTER_STRUCT_OP,
+		NO_SPACE_BEFORE_BINARY_OP,
+		NO_SPACE_BEFORE_CLOSING_BRACE,
+		NO_SPACE_BEFORE_KEYWORD,
+		NO_SPACE_BEFORE_OPENING_BRACE,
+		NO_SPACE_BEFORE_STRUCT_OP,
+		SPACE_AFTER_OPENING_SQUARE_BRACKET,
+		SPACE_AFTER_UNARY_OP,
+		SPACE_AT_END_OF_LINE,
+		SPACE_BEFORE_CLOSING_BRACKET,
+		SPACE_BEFORE_CLOSING_SQUARE_BRACKET,
+		SPACE_BEFORE_COMMA,
+		SPACE_BEFORE_OPENING_SQUARE_BRACKET,
+		SPACE_BEFORE_SEMICOLON,
+		// Add more elements here
+		STYLE_ERROR_SIZE
+	};
+
 	QualityMetrics() :
 		ncomment(0), ncomment_char(0), nfunction(0),
 		ncpp_directive(0), ncpp_include(0), ngoto(0),
 		ntypedef(0), nfun_comment(0), nfun_cpp_directive(0),
-		ncpp_conditional(0), nfun_cpp_conditional(0) {}
+		ncpp_conditional(0), nfun_cpp_conditional(0),
+		nstyle_error(STYLE_ERROR_SIZE, 0) {}
 
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
@@ -72,6 +103,15 @@ public:
 	void add_cpp_include() { ncpp_include++; }
 	void add_fun_cpp_directive() { nfun_cpp_directive++; }
 	void add_fun_cpp_conditional() { nfun_cpp_conditional++; }
+#if defined(SHOW_STYLE_ERRORS)
+	void add_style_error(const std::string& name, enum StyleError num) {
+		std::cerr << line_length.get_count() + 1 <<
+			": " << name << std::endl;
+		nstyle_error[num]++;
+	}
+#else
+	void add_style_error(enum StyleError num) { nstyle_error[num]++; }
+#endif
 	void begin_function() {
 		halstead_tracker.reset();
 		cyclomatic_tracker.reset();
@@ -141,6 +181,8 @@ public:
 	const Descriptive<int>& get_unique_identifier_length() const {
 		return unique_identifier_length;
 	}
+	int get_style_error(enum StyleError e) const { return nstyle_error[e]; }
+	const StyleErrorContainer& get_style_error() const { return nstyle_error; }
 };
 
 std::ostream& operator <<(std::ostream& o, const QualityMetrics &q);

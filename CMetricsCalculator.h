@@ -31,17 +31,26 @@ private:
 	BolState bol;
 	int top_level_depth;		// 0 for C, 1 for Java
 	int current_depth;		// Keeps track of { }
-	bool scan_cpp_directive;	// After a C preprocessor #
+	bool scan_cpp_directive;	// Keyword after a C preprocessor #
+	bool scan_cpp_line;		// Line after a C preprocessor #
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
 	bool in_function;		// True when scanning functions
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
 	CKeyword ckeyword;
+	/** Verify the coding style of binary operators */
+	void binary_style(char before);
+	/** Verify the coding style of keywords requiring spaces */
+	void keyword_style(char before);
+	void keyword_style_left_space(char before);
+	/** Called at every encountered newline */
+	void newline();
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
-	scan_cpp_directive(false), chars_read_at_bol(0) {}
+	scan_cpp_directive(false), scan_cpp_line(false),
+	chars_read_at_bol(0) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF

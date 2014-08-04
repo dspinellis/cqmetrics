@@ -1,8 +1,8 @@
 ifdef DEBUG
 LDFLAGS=-g
-CXXFLAGS=-g
+CXXFLAGS+=-g
 else
-CXXFLAGS=-O2
+CXXFLAGS+=-O2
 endif
 
 all: qmcalc

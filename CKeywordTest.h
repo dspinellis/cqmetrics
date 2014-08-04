@@ -45,6 +45,7 @@ public:
 	void testGoto() {
 		CPPUNIT_ASSERT(ck.identifier_type("goto") == CKeyword::GOTO);
 	}
+
 	void testInclude() {
 		CPPUNIT_ASSERT(ck.identifier_type("include") == CKeyword::INCLUDE);
 	}
@@ -54,7 +55,7 @@ public:
 	}
 
 	void testOther() {
-		CPPUNIT_ASSERT(ck.identifier_type("return") == CKeyword::OTHER);
+		CPPUNIT_ASSERT(ck.identifier_type("sizeof") == CKeyword::OTHER);
 		CPPUNIT_ASSERT(ck.identifier_type("int") == CKeyword::OTHER);
 		CPPUNIT_ASSERT(ck.identifier_type("static") == CKeyword::OTHER);
 	}

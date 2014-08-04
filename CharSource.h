@@ -32,6 +32,19 @@ public:
 		return true;
 	}
 
+	/**
+	 * Return the next character from source without removing it
+	 * Return 0 on EOF
+	 */
+	char peek() {
+		char c;
+		if (get(c)) {
+			push(c);
+			return c;
+		} else
+			return 0;
+	}
+
 	/** Return number of characters read */
 	int get_nchar() const { return nchar - st.size(); }
 

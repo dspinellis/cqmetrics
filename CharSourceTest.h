@@ -13,6 +13,7 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testStrCtor);
 	CPPUNIT_TEST(testPush);
 	CPPUNIT_TEST(testNchar);
+	CPPUNIT_TEST(testPeek);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -70,6 +71,20 @@ public:
 		CPPUNIT_ASSERT(s.get(c) && c == 'h');
 		CPPUNIT_ASSERT(s.get(c) && c == 'e');
 		CPPUNIT_ASSERT(!s.get(c));
+		CPPUNIT_ASSERT(s.get_nchar() == 2);
+	}
+
+	void testPeek() {
+		std::stringstream str("he");
+
+		CharSource s(str);
+		char c;
+		CPPUNIT_ASSERT(s.peek() == 'h');
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.peek() == 'e');
+		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT(!s.get(c));
+		CPPUNIT_ASSERT(s.peek() == 0);
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
 

@@ -639,13 +639,10 @@ CMetricsCalculator::calculate_metrics_switch()
 				val += '\\';
 				// Consume one character after the backslash
 				GET(c0);
-				if (c0 == '\n')
-					break;
 				val += c0;
-				// We will deal with escapes later
 				continue;
 			}
-			if (c0 == '\n' || c0 == '"')
+			if (c0 == '"')
 				break;
 			val += c0;
 		}

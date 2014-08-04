@@ -21,6 +21,26 @@ numbers.
 * Number of functions, minimum, mean, maximum cyclomatic complexity per function
 * Number of identifiers, minimum, mean, maximum identifier length
 * Number of unique identifiers, minimum, mean, maximum unique identifier length
+* No space after binary operator
+* No space after closing brace
+* No space after comma
+* No space after keyword
+* No space after opening brace
+* No space after semicolon
+* No space after struct operator
+* No space before binary operator
+* No space before closing brace
+* No space before keyword
+* No space before opening brace
+* No space before struct operator
+* Space after opening square bracket
+* Space after unary operator
+* Space at end of line
+* Space before closing bracket
+* Space before closing square bracket
+* Space before comma
+* Space before opening square bracket
+* Space before semicolon
 
 The numbers are separated by a single tab.
 

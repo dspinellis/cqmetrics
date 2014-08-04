@@ -16,6 +16,7 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testNcharPush);
 	CPPUNIT_TEST(testCharAfter);
 	CPPUNIT_TEST(testCharBefore);
+	CPPUNIT_TEST(testCharBeforeNl);
 	CPPUNIT_TEST(testCharBeforePush);
 	CPPUNIT_TEST(testCharBeforeQueueShrink);
 	CPPUNIT_TEST_SUITE_END();
@@ -128,6 +129,21 @@ public:
 		CPPUNIT_ASSERT(!s.get(c));
 		CPPUNIT_ASSERT(s.char_after() == 0);
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
+	}
+
+	void testCharBeforeNl() {
+		std::stringstream str("h\ne");
+
+		CharSource s(str);
+		char c;
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'h');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.char_before() == 0);
+
+		CPPUNIT_ASSERT(s.get(c) && c == '\n');
+		CPPUNIT_ASSERT(s.char_before() == 'h');
 	}
 
 	void testCharBeforePush() {

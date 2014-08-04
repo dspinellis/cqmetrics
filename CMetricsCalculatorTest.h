@@ -49,6 +49,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testStyle);
 	CPPUNIT_TEST(testBinaryOperatorStyle);
 	CPPUNIT_TEST(testKeywordStyle);
+	CPPUNIT_TEST(testDeclKeywordStyle);
 	CPPUNIT_TEST(testKeywordStyleLeft);
 	CPPUNIT_TEST_SUITE_END();
 public:
@@ -273,31 +274,16 @@ public:
 		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_mean() == 2);
 	}
 
-	void testBinaryOperatorStyle() {
-		const char *binary_operator[] = {
-			// By order of precedence from manual, to verify we
-			// got them all. (Excluding those we can't handle.)
-			"/", "%", "<<", ">>", "<", "<=", ">", ">=", "==", "!=",
-			"^", "|", "&&", "||", "?", "=", "+=", "-=", "*=", "/=",
-			"%=", "<<=", ">>=", "&=", "^=", "|=",
-			NULL
-		};
+	struct PSTest {
+		const char *prefix;
+		const char *suffix;
+		enum QualityMetrics::StyleError e;
+		int result;
+	};
 
-		struct Test {
-			const char *prefix;
-			const char *suffix;
-			enum QualityMetrics::StyleError e;
-			int result;
-		} test[] = {
-		  { "a ", " b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
-		  { "a ", "b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
-		  { "a ", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
-		  { "a", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 1 },
-		  NULL
-		};
-
-		for (const char **o = binary_operator; *o; o++)
-			for (struct Test *t = test; t->prefix; t++) {
+	void testPrefixSuffix(const char *strings[], struct PSTest test[]) {
+		for (const char **o = strings; *o; o++)
+			for (struct PSTest *t = test; t->prefix; t++) {
 				std::string code(t->prefix);
 				code.append(*o);
 				code.append(t->suffix);
@@ -309,21 +295,37 @@ public:
 			}
 	}
 
+	void testBinaryOperatorStyle() {
+		const char *binary_operator[] = {
+			// By order of precedence from manual, to verify we
+			// got them all. (Excluding those we can't handle.)
+			"/", "%", "<<", ">>", "<", "<=", ">", ">=", "==", "!=",
+			"^", "|", "&&", "||", "?", "=", "+=", "-=", "*=", "/=",
+			"%=", "<<=", ">>=", "&=", "^=", "|=",
+			NULL
+		};
+
+		struct PSTest test[] = {
+		  { "a ", " b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
+		  { "a ", "b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
+		  { "a ", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
+		  { "a", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 1 },
+		  NULL
+		};
+
+		testPrefixSuffix(binary_operator, test);
+	}
+
 	void testKeywordStyle() {
 		const char *keyword[] = {
 			// By alphabetic order from manual, to verify we
 			// got them all. (Excluding those we can't handle.)
-			"case", "do", "else", "enum", "for", "goto", "if",
-			"struct", "switch", "union", "while",
+			"case", "do", "else", "for", "goto", "if", "switch",
+			"while",
 			NULL
 		};
 
-		struct Test {
-			const char *prefix;
-			const char *suffix;
-			enum QualityMetrics::StyleError e;
-			int result;
-		} test[] = {
+		struct PSTest test[] = {
 		  { "; ", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 		  { ";",  " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
 		  { "; ", " (1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
@@ -333,17 +335,27 @@ public:
 		  NULL
 		};
 
-		for (const char **k = keyword; *k; k++)
-			for (struct Test *t = test; t->prefix; t++) {
-				std::string code(t->prefix);
-				code.append(*k);
-				code.append(t->suffix);
-				std::stringstream str(code);
-				CMetricsCalculator calc(str);
-				calc.calculate_metrics();
-				const QualityMetrics& qm(calc.get_metrics());
-				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
-			}
+		testPrefixSuffix(keyword, test);
+	}
+
+	void testDeclKeywordStyle() {
+		const char *keyword[] = {
+			"enum", "struct", "union",
+			NULL
+		};
+
+		struct PSTest test[] = {
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { "foo(", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { ";",  " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
+		  { "; ", " (1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 1 },
+		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  NULL
+		};
+
+		testPrefixSuffix(keyword, test);
 	}
 
 	void testKeywordStyleLeft() {
@@ -354,12 +366,7 @@ public:
 			NULL
 		};
 
-		struct Test {
-			const char *prefix;
-			const char *suffix;
-			enum QualityMetrics::StyleError e;
-			int result;
-		} test[] = {
+		struct PSTest test[] = {
 		  { "; ", " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 		  { ";",  " (1)", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
 		  { "; ", " (1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
@@ -369,17 +376,7 @@ public:
 		  NULL
 		};
 
-		for (const char **k = keyword; *k; k++)
-			for (struct Test *t = test; t->prefix; t++) {
-				std::string code(t->prefix);
-				code.append(*k);
-				code.append(t->suffix);
-				std::stringstream str(code);
-				CMetricsCalculator calc(str);
-				calc.calculate_metrics();
-				const QualityMetrics& qm(calc.get_metrics());
-				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
-			}
+		testPrefixSuffix(keyword, test);
 	}
 
 	void testStyle() {

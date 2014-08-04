@@ -42,7 +42,7 @@ private:
 	/** Verify the coding style of binary operators */
 	void binary_style(char before);
 	/** Verify the coding style of keywords requiring spaces */
-	void keyword_style(char before);
+	void keyword_style(char before, char allowed = 0);
 	void keyword_style_left_space(char before);
 	/** Called at every encountered newline */
 	void newline();

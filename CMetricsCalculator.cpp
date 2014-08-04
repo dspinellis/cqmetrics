@@ -41,11 +41,11 @@ CMetricsCalculator::binary_style(char before)
 }
 
 void
-CMetricsCalculator::keyword_style(char before)
+CMetricsCalculator::keyword_style(char before, char allowed)
 {
 	if (scan_cpp_line)
 		return;
-	if (!isspace(before))
+	if (!isspace(before) && before != allowed)
 		STYLE_ERROR(NO_SPACE_BEFORE_KEYWORD);
 	if (!isspace(src.char_after()))
 		STYLE_ERROR(NO_SPACE_AFTER_KEYWORD);
@@ -552,11 +552,13 @@ CMetricsCalculator::calculate_metrics_switch()
 		case CKeyword::TYPEDEF:
 			qm.add_typedef();
 			break;
-		case CKeyword::DO:
 		case CKeyword::ENUM:
 		case CKeyword::STRUCT:
-		case CKeyword::SWITCH:
 		case CKeyword::UNION:
+			keyword_style(before, '(');
+			break;
+		case CKeyword::DO:
+		case CKeyword::SWITCH:
 			keyword_style(before);
 			break;
 		case CKeyword::BREAK:

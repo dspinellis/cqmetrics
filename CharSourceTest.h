@@ -13,7 +13,10 @@ class CharSourceTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testStrCtor);
 	CPPUNIT_TEST(testPush);
 	CPPUNIT_TEST(testNchar);
-	CPPUNIT_TEST(testPeek);
+	CPPUNIT_TEST(testCharAfter);
+	CPPUNIT_TEST(testCharBefore);
+	CPPUNIT_TEST(testCharBeforePush);
+	CPPUNIT_TEST(testCharBeforeQueueShrink);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -74,19 +77,80 @@ public:
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
 
-	void testPeek() {
+	void testCharAfter() {
 		std::stringstream str("he");
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.peek() == 'h');
+		CPPUNIT_ASSERT(s.char_after() == 'h');
 		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.peek() == 'e');
+		CPPUNIT_ASSERT(s.char_after() == 'e');
+		s.push('p');
+		CPPUNIT_ASSERT(s.char_after() == 'p');
+		CPPUNIT_ASSERT(s.get(c) && c == 'p');
+		CPPUNIT_ASSERT(s.char_after() == 'e');
 		CPPUNIT_ASSERT(s.get(c) && c == 'e');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.peek() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 0);
 		CPPUNIT_ASSERT(s.get_nchar() == 2);
 	}
 
+	void testCharBefore() {
+		std::stringstream str("he");
+
+		CharSource s(str);
+		char c;
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'h');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'e');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT(!s.get(c));
+		CPPUNIT_ASSERT(s.char_after() == 0);
+		CPPUNIT_ASSERT(s.get_nchar() == 2);
+	}
+
+	void testCharBeforePush() {
+		std::stringstream str("he");
+
+		CharSource s(str);
+		char c;
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'h');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'e');
+		s.push('h');
+		CPPUNIT_ASSERT(s.char_after() == 'h');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT(s.char_after() == 'e');
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT(!s.get(c));
+		CPPUNIT_ASSERT(s.char_after() == 0);
+		CPPUNIT_ASSERT(s.get_nchar() == 2);
+	}
+
+	void testCharBeforeQueueShrink() {
+		std::stringstream str("abcdefghijklmnopqrstuvwxyz");
+
+		CharSource s(str);
+		char c;
+
+		CPPUNIT_ASSERT(s.get(c) && c == 'a');
+		for (char i = 'b'; i < 'z'; i++) {
+			CPPUNIT_ASSERT(s.char_after() == i);
+			CPPUNIT_ASSERT(s.get(c) && c == i);
+			CPPUNIT_ASSERT(s.char_before() == i - 1);
+		}
+	}
 };
 #endif /*  CHARSOURCETEST_H */

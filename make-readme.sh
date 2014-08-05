@@ -5,7 +5,7 @@
 # The lists are automatically derived from the source code
 #
 
-cat <<EOF
+cat <<\EOF
 # C Code Quality Metrics
 The program qmcalc will read a C source code file from its standard
 input and print on its standard output a single line with the following
@@ -29,16 +29,18 @@ sed -n '/^\tenum StyleError {/,/Add more elements here/{
 	p
 }' QualityMetrics.h
 
-cat <<EOF
+cat <<\EOF
 
 
 ## Building
 ### Prerequisites
 * C++ compiler
 * GNU make
-* [CppUnit](http://sourceforge.net/projects/cppunit/)
+* [CppUnit](http://sourceforge.net/projects/cppunit/) for running `make test`
 
-* To build type `make`
+To build type `make`. This will also generate the file `header.tab`,
+which can be used for loading the output into other programs
+for further processing.
 
 ## Further reading
 The style checks performed are based on the following guidelines.

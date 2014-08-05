@@ -1,4 +1,8 @@
-UnitTests.exe
-*.swp
 *.o
 *.stackdump
+*.swp
+UnitTests
+UnitTests.exe
+header.tab
+qmcalc
+qmcalc.exe

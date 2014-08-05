@@ -47,11 +47,11 @@ numbers separated by a single tab.
 ### Prerequisites
 * C++ compiler
 * GNU make
-* [CppUnit](http://sourceforge.net/projects/cppunit/)
+* [CppUnit](http://sourceforge.net/projects/cppunit/) for running `make test`
 
-* To build type make[1]: Entering directory '/cygdrive/c/dds/src/research/qmetrics'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/cygdrive/c/dds/src/research/qmetrics'
+To build type `make`. This will also generate the file `header.tab`,
+which can be used for loading the output into other programs
+for further processing.
 
 ## Further reading
 The style checks performed are based on the following guidelines.

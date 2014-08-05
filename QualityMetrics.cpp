@@ -26,36 +26,71 @@
 
 std::ostream&
 operator <<(std::ostream& o, const QualityMetrics &q) {
+	// Use the VAL prefix in order to have README.md correctly
+	// updated. (See make-readme.sh.)
 	o <<
+		// VAL: Number of characters
 		q.get_nchar() << '\t' <<
+
+		// VAL: Number of lines, minimum, mean, maximum line length
 		ANNOTATE(" line len: " <<)
 		q.get_line_length() << '\t' <<
+
+		// VAL: Number of functions (A function is considered to start with `{` at column 1)
 		ANNOTATE(" fun: " <<)
 		q.get_nfunction() << '\t' <<
+
+		// VAL: Number of statements, minimum, mean, maximum statement nesting
 		ANNOTATE(" nest: " <<)
 		q.get_statement_nesting() << '\t' <<
+
+		// VAL: Number of `goto` statements declarations
 		ANNOTATE(" ngoto: " <<)
 		q.get_ngoto() << '\t' <<
+
+		// VAL: Number of `typedef`
 		ANNOTATE(" ntypedef: " <<)
 		q.get_ntypedef() << '\t' <<
+
+		// VAL: Number of comments
 		ANNOTATE(" comment: " <<)
 		q.get_ncomment() << '\t' <<
+
+		// VAL: Number of comment characters
 		q.get_ncomment_char() << '\t' <<
+
+		// VAL: Number of comments inside function bodies
 		q.get_nfun_comment() << '\t' <<
 
+		// VAL: Number of C preprocessor directives
 		ANNOTATE(" cpp: " <<)
 		q.get_ncpp_directive() << '\t' <<
+
+		// VAL: Number of C preprocessor include directives
 		q.get_ncpp_include() << '\t' <<
+
+		// VAL: Number of C preprocessor conditional directives (`#if`, `#ifdef`, `#elif`)
 		q.get_ncpp_conditional() << '\t' <<
+
+		// VAL: Number of C preprocessor directives in function bodies
 		q.get_nfun_cpp_directive() << '\t' <<
+
+		// VAL: Number of C preprocessor conditional directives in function bodies
 		q.get_nfun_cpp_conditional() << '\t' <<
 
+		// VAL: Number of functions, minimum, mean, maximum Halstead complexity per function
 		ANNOTATE(" halstead: " <<)
 		q.get_halstead() << '\t' <<
+
+		// VAL: Number of functions, minimum, mean, maximum cyclomatic complexity per function
 		ANNOTATE(" cyclomatic: " <<)
 		q.get_cyclomatic() << '\t' <<
+
+		// VAL: Number of identifiers, minimum, mean, maximum identifier length
 		ANNOTATE(" id len: " <<)
 		q.get_identifier_length() << '\t' <<
+
+		// VAL: Number of unique identifiers, minimum, mean, maximum unique identifier length
 		ANNOTATE(" unique id len: " <<)
 		q.get_unique_identifier_length();
 

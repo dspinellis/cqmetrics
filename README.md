@@ -1,7 +1,7 @@
 # C Code Quality Metrics
 The program qmcalc will read a C source code file from its standard
 input and print on its standard output a single line with the following
-numbers.
+numbers separated by a single tab.
 
 * Number of characters
 * Number of lines, minimum, mean, maximum line length
@@ -21,28 +21,27 @@ numbers.
 * Number of functions, minimum, mean, maximum cyclomatic complexity per function
 * Number of identifiers, minimum, mean, maximum identifier length
 * Number of unique identifiers, minimum, mean, maximum unique identifier length
-* No space after binary operator
-* No space after closing brace
-* No space after comma
-* No space after keyword
-* No space after opening brace
-* No space after semicolon
-* No space after struct operator
-* No space before binary operator
-* No space before closing brace
-* No space before keyword
-* No space before opening brace
-* No space before struct operator
-* Space after opening square bracket
-* Space after unary operator
-* Space at end of line
-* Space before closing bracket
-* Space before closing square bracket
-* Space before comma
-* Space before opening square bracket
-* Space before semicolon
+* Number of occurences of no space after binary operator
+* Number of occurences of no space after closing brace
+* Number of occurences of no space after comma
+* Number of occurences of no space after keyword
+* Number of occurences of no space after opening brace
+* Number of occurences of no space after semicolon
+* Number of occurences of no space after struct operator
+* Number of occurences of no space before binary operator
+* Number of occurences of no space before closing brace
+* Number of occurences of no space before keyword
+* Number of occurences of no space before opening brace
+* Number of occurences of no space before struct operator
+* Number of occurences of space after opening square bracket
+* Number of occurences of space after unary operator
+* Number of occurences of space at end of line
+* Number of occurences of space before closing bracket
+* Number of occurences of space before closing square bracket
+* Number of occurences of space before comma
+* Number of occurences of space before opening square bracket
+* Number of occurences of space before semicolon
 
-The numbers are separated by a single tab.
 
 ## Building
 ### Prerequisites
@@ -50,4 +49,16 @@ The numbers are separated by a single tab.
 * GNU make
 * [CppUnit](http://sourceforge.net/projects/cppunit/)
 
-* To build type `make`
+* To build type make[1]: Entering directory '/cygdrive/c/dds/src/research/qmetrics'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/cygdrive/c/dds/src/research/qmetrics'
+
+## Further reading
+The style checks performed are based on the following guidelines.
+* [Google](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml)
+* [FreeBSD](http://www.freebsd.org/cgi/man.cgi?query=style&sektion=9)
+* [GNU](https://www.gnu.org/prep/standards/html_node/Formatting.html)
+* [Recommended C Style and Coding Standards - updated version of the Indian Hill C Style and Coding Standards paper](http://www.cs.arizona.edu/~mccann/cstyle.html
+* [Wikipedia summary](http://en.wikipedia.org/wiki/Indent_style)
+
+Some other metrics are based on the paper [A Tale of Four Kernels](http://www.dmst.aueb.gr/dds/pubs/conf/2008-ICSE-4kernel/html/Spi08b.html)

@@ -5,7 +5,7 @@ else
 CXXFLAGS+=-O2
 endif
 
-all: qmcalc
+all: qmcalc README.md
 
 HFILES=$(wildcard *.h)
 OFILES=CMetricsCalculator.o QualityMetrics.o
@@ -18,3 +18,6 @@ test: UnitTests
 
 qmcalc: $(HFILES) $(OFILES) qmcalc.cpp
 	$(CXX) $(LDFLAGS) qmcalc.cpp $(OFILES) -o $@
+
+README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
+	./make-readme.sh >$@

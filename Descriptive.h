@@ -69,8 +69,11 @@ public:
 template <typename T>
 std::ostream&
 operator <<(std::ostream& o, const Descriptive<T> &d) {
-	o << d.get_count() << '\t' << d.get_min() << '\t' << d.get_mean() <<
-		'\t' << d.get_max();
+	if (d.get_count() != 0)
+		o << d.get_count() << '\t' << d.get_min() << '\t' <<
+			d.get_mean() << '\t' << d.get_max();
+	else
+		o << "0\t\t\t";
 	return o;
 }
 #endif /* DESCRIPTIVE_H */

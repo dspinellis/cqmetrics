@@ -20,7 +20,7 @@ qmcalc: $(HFILES) $(OFILES) qmcalc.cpp
 	$(CXX) $(LDFLAGS) qmcalc.cpp $(OFILES) -o $@
 
 README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
-	./make-readme.sh >$@
+	sh make-readme.sh >$@
 
 header.tab: make-header.sh
-	./make-header.sh >$@
+	sh make-header.sh >$@

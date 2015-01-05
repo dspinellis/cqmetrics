@@ -44,9 +44,13 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" nest: " <<)
 		q.get_statement_nesting() << '\t' <<
 
-		// VAL: Number of `goto` statements declarations
+		// VAL: Number of `goto` statements
 		ANNOTATE(" ngoto: " <<)
 		q.get_ngoto() << '\t' <<
+
+		// VAL: Number of `register` keywords
+		ANNOTATE(" nregister: " <<)
+		q.get_nregister() << '\t' <<
 
 		// VAL: Number of `typedef`
 		ANNOTATE(" ntypedef: " <<)

@@ -25,6 +25,7 @@ class CKeywordTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(CKeywordTest);
 	CPPUNIT_TEST(testBranch);
 	CPPUNIT_TEST(testGoto);
+	CPPUNIT_TEST(testRegister);
 	CPPUNIT_TEST(testTypedef);
 	CPPUNIT_TEST(testOther);
 	CPPUNIT_TEST(testId);
@@ -44,6 +45,10 @@ public:
 
 	void testGoto() {
 		CPPUNIT_ASSERT(ck.identifier_type("goto") == CKeyword::GOTO);
+	}
+
+	void testRegister() {
+		CPPUNIT_ASSERT(ck.identifier_type("register") == CKeyword::REGISTER);
 	}
 
 	void testInclude() {

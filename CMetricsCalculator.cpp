@@ -549,6 +549,10 @@ CMetricsCalculator::calculate_metrics_switch()
 			keyword_style(before);
 			qm.add_goto();
 			break;
+		case CKeyword::REGISTER:
+			keyword_style(before);
+			qm.add_register();
+			break;
 		case CKeyword::TYPEDEF:
 			qm.add_typedef();
 			break;

@@ -7,7 +7,8 @@ numbers separated by a single tab.
 * Number of lines, minimum, mean, maximum line length
 * Number of functions (A function is considered to start with `{` at column 1)
 * Number of statements, minimum, mean, maximum statement nesting
-* Number of `goto` statements declarations
+* Number of `goto` statements
+* Number of `register` keywords
 * Number of `typedef`
 * Number of comments
 * Number of comment characters

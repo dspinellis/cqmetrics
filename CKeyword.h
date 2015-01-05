@@ -37,6 +37,7 @@ public:
 		IF,
 		IFDEF,
 		INCLUDE,
+		REGISTER,
 		RETURN,
 		STRUCT,
 		SWITCH,
@@ -73,7 +74,7 @@ public:
 		km["include"] = INCLUDE;	// Preprocessor only
 		km["int"] = OTHER;
 		km["long"] = OTHER;
-		km["register"] = OTHER;
+		km["register"] = REGISTER;
 		km["return"] = RETURN;
 		km["short"] = OTHER;
 		km["signed"] = OTHER;

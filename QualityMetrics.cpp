@@ -99,10 +99,10 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		q.get_unique_identifier_length();
 
 	ANNOTATE(o << " style: ";)
-	// One day: for (auto& e : get_style_error())
-	for (QualityMetrics::StyleErrorContainer::const_iterator e =
-			q.get_style_error().begin();
-			e != q.get_style_error().end(); e++)
+	// One day: for (auto& e : get_style_hint())
+	for (QualityMetrics::StyleHintContainer::const_iterator e =
+			q.get_style_hint().begin();
+			e != q.get_style_hint().end(); e++)
 		o << '\t' << *e;
 	return o;
 }

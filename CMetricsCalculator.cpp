@@ -22,10 +22,10 @@
 #include "QualityMetrics.h"
 #include "CMetricsCalculator.h"
 
-#if defined(SHOW_STYLE_ERRORS)
-#define STYLE_ERROR(x) qm.add_style_error(#x, QualityMetrics::x)
+#if defined(SHOW_STYLE_HINTS)
+#define STYLE_HINT(x) qm.add_style_hint(#x, QualityMetrics::x)
 #else
-#define STYLE_ERROR(x) qm.add_style_error(QualityMetrics::x)
+#define STYLE_HINT(x) qm.add_style_hint(QualityMetrics::x)
 #endif
 
 void
@@ -35,9 +35,9 @@ CMetricsCalculator::binary_style(char before)
 	if (scan_cpp_line)
 		return;
 	if (!isspace(before))
-		STYLE_ERROR(NO_SPACE_BEFORE_BINARY_OP);
+		STYLE_HINT(NO_SPACE_BEFORE_BINARY_OP);
 	if (!isspace(src.char_after()))
-		STYLE_ERROR(NO_SPACE_AFTER_BINARY_OP);
+		STYLE_HINT(NO_SPACE_AFTER_BINARY_OP);
 }
 
 void
@@ -46,9 +46,9 @@ CMetricsCalculator::keyword_style(char before, char allowed)
 	if (scan_cpp_line)
 		return;
 	if (!isspace(before) && before != allowed)
-		STYLE_ERROR(NO_SPACE_BEFORE_KEYWORD);
+		STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
 	if (!isspace(src.char_after()))
-		STYLE_ERROR(NO_SPACE_AFTER_KEYWORD);
+		STYLE_HINT(NO_SPACE_AFTER_KEYWORD);
 }
 
 void
@@ -57,7 +57,7 @@ CMetricsCalculator::keyword_style_left_space(char before)
 	if (scan_cpp_line)
 		return;
 	if (!isspace(before))
-		STYLE_ERROR(NO_SPACE_BEFORE_KEYWORD);
+		STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
 }
 
 void
@@ -69,7 +69,7 @@ CMetricsCalculator::newline()
 		c = src.char_before(2);
 	// Allow empty lines
 	if (c != '\n' && isspace(c))
-		STYLE_ERROR(SPACE_AT_END_OF_LINE);
+		STYLE_HINT(SPACE_AT_END_OF_LINE);
 
 	bol.saw_newline();
 	// Line length minus the newline
@@ -110,9 +110,9 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case '[':
 		if (isspace(src.char_before()))
-			STYLE_ERROR(SPACE_BEFORE_OPENING_SQUARE_BRACKET);
+			STYLE_HINT(SPACE_BEFORE_OPENING_SQUARE_BRACKET);
 		if (isspace(src.char_after()))
-			STYLE_ERROR(SPACE_AFTER_OPENING_SQUARE_BRACKET);
+			STYLE_HINT(SPACE_AFTER_OPENING_SQUARE_BRACKET);
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
@@ -126,33 +126,33 @@ CMetricsCalculator::calculate_metrics_switch()
 		 * as in "a | ~b", or not, as in "foo(~b)".
 		 */
 		if (isspace(src.char_after()))
-			STYLE_ERROR(SPACE_AFTER_UNARY_OP);
+			STYLE_HINT(SPACE_AFTER_UNARY_OP);
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
 	case ',':
 		if (isspace(src.char_before()))
-			STYLE_ERROR(SPACE_BEFORE_COMMA);
+			STYLE_HINT(SPACE_BEFORE_COMMA);
 		if (!isspace(src.char_after()))
-			STYLE_ERROR(NO_SPACE_AFTER_COMMA);
+			STYLE_HINT(NO_SPACE_AFTER_COMMA);
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
 	case ']':
 		if (isspace(src.char_before()))
-			STYLE_ERROR(SPACE_BEFORE_CLOSING_SQUARE_BRACKET);
+			STYLE_HINT(SPACE_BEFORE_CLOSING_SQUARE_BRACKET);
 		bol.saw_non_space();
 		break;
 	case ')':
 		if (isspace(src.char_before()))
-			STYLE_ERROR(SPACE_BEFORE_CLOSING_BRACKET);
+			STYLE_HINT(SPACE_BEFORE_CLOSING_BRACKET);
 		bol.saw_non_space();
 		break;
 	case '{':
 		if (in_function && !isspace(src.char_before()))
-			STYLE_ERROR(NO_SPACE_BEFORE_OPENING_BRACE);
+			STYLE_HINT(NO_SPACE_BEFORE_OPENING_BRACE);
 		if (in_function && !isspace(src.char_after()))
-			STYLE_ERROR(NO_SPACE_AFTER_OPENING_BRACE);
+			STYLE_HINT(NO_SPACE_AFTER_OPENING_BRACE);
 		// Heuristic: functions begin with { at first column
 		if (bol.at_bol() && current_depth == top_level_depth) {
 			qm.begin_function();
@@ -163,9 +163,9 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case '}':
 		if (in_function && !isspace(src.char_before()))
-			STYLE_ERROR(NO_SPACE_BEFORE_CLOSING_BRACE);
+			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACE);
 		if (in_function && !isspace(src.char_after()))
-			STYLE_ERROR(NO_SPACE_AFTER_CLOSING_BRACE);
+			STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
 		bol.saw_non_space();
 		current_depth--;
 		if (in_function && current_depth == top_level_depth) {
@@ -176,11 +176,11 @@ CMetricsCalculator::calculate_metrics_switch()
 	case ';':
 		// Allow a single ; on a line
 		if (isspace(src.char_before()) && !bol.at_bol_space())
-			STYLE_ERROR(SPACE_BEFORE_SEMICOLON);
+			STYLE_HINT(SPACE_BEFORE_SEMICOLON);
 		if (!isspace(src.char_after()) &&
 		    src.char_after() != ';' &&		// Handle "for (;;)"
 		    src.char_after() != ')')
-			STYLE_ERROR(NO_SPACE_AFTER_SEMICOLON);
+			STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
 		bol.saw_non_space();
 		if (in_function)
 			qm.add_statement(current_depth);
@@ -224,9 +224,9 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case '>':
 			if (isspace(before))
-				STYLE_ERROR(NO_SPACE_BEFORE_STRUCT_OP);
+				STYLE_HINT(NO_SPACE_BEFORE_STRUCT_OP);
 			if (isspace(src.char_after()))
-				STYLE_ERROR(NO_SPACE_AFTER_STRUCT_OP);
+				STYLE_HINT(NO_SPACE_AFTER_STRUCT_OP);
 			if (in_function) qm.add_operator("->");
 			break;
 		default:
@@ -286,7 +286,7 @@ CMetricsCalculator::calculate_metrics_switch()
 			src.push(c0);
 			// Can be "a ? b : c" or "case 42:"
 			if (!isspace(src.char_after()))
-				STYLE_ERROR(NO_SPACE_AFTER_BINARY_OP);
+				STYLE_HINT(NO_SPACE_AFTER_BINARY_OP);
 			break;
 		}
 		break;
@@ -301,7 +301,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		} else {
 			src.push(c0);
 			if (isspace(src.char_after()))
-				STYLE_ERROR(SPACE_AFTER_UNARY_OP);
+				STYLE_HINT(SPACE_AFTER_UNARY_OP);
 			if (in_function) qm.add_operator('!');
 		}
 		break;
@@ -487,9 +487,9 @@ CMetricsCalculator::calculate_metrics_switch()
 		if (c0 != '.') {
 			src.push(c0);
 			if (isspace(src.char_before()))
-				STYLE_ERROR(NO_SPACE_BEFORE_STRUCT_OP);
+				STYLE_HINT(NO_SPACE_BEFORE_STRUCT_OP);
 			if (isspace(src.char_after()))
-				STYLE_ERROR(NO_SPACE_AFTER_STRUCT_OP);
+				STYLE_HINT(NO_SPACE_AFTER_STRUCT_OP);
 			if (in_function) qm.add_operator('.');
 			break;
 		}

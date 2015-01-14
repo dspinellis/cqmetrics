@@ -278,7 +278,7 @@ public:
 	struct PSTest {
 		const char *prefix;
 		const char *suffix;
-		enum QualityMetrics::StyleError e;
+		enum QualityMetrics::StyleHint e;
 		int result;
 	};
 
@@ -292,7 +292,7 @@ public:
 				CMetricsCalculator calc(str);
 				calc.calculate_metrics();
 				const QualityMetrics& qm(calc.get_metrics());
-				CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+				CPPUNIT_ASSERT(qm.get_style_hint(t->e) == t->result);
 			}
 	}
 
@@ -383,7 +383,7 @@ public:
 	void testStyle() {
 		struct Test {
 			const char *code;
-			enum QualityMetrics::StyleError e;
+			enum QualityMetrics::StyleHint e;
 			int result;
 		} test[] = {
 { "a[4]", QualityMetrics::SPACE_BEFORE_OPENING_SQUARE_BRACKET, 0 },
@@ -433,7 +433,7 @@ public:
 			CMetricsCalculator calc(str);
 			calc.calculate_metrics();
 			const QualityMetrics& qm(calc.get_metrics());
-			CPPUNIT_ASSERT(qm.get_style_error(t->e) == t->result);
+			CPPUNIT_ASSERT(qm.get_style_hint(t->e) == t->result);
 		}
 	}
 };

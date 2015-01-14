@@ -9,7 +9,7 @@
 	# Generate list of primary metrics
 	sed -n '
 	# Skip formatting style metrics
-	/q\.get_style_error/d
+	/q\.get_style_hint/d
 	# Print metrics variable
 	s/.*q\.get_\([^(]*\)().*/\1/p' QualityMetrics.cpp |
 	# Add further elements for descriptive metrics
@@ -33,8 +33,8 @@
 	'
 
 	# Generate list of style metrics
-	sed -n '/^\tenum StyleError {/,/Add more elements here/{
-		/enum StyleError/d
+	sed -n '/^\tenum StyleHint {/,/Add more elements here/{
+		/enum StyleHint/d
 		/Add more elements here/d
 		s/,$//
 		s/\t\t/N/

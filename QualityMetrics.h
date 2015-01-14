@@ -30,7 +30,7 @@
 /** Keep taly of quality metrics */
 class QualityMetrics {
 public:
-	typedef std::vector <int> StyleErrorContainer;
+	typedef std::vector <int> StyleHintContainer;
 private:
 	Descriptive<int> line_length;	// Line lengths
 	int ncomment;			// Number of comments
@@ -58,9 +58,9 @@ private:
 	Halstead halstead_tracker;
 	Descriptive<double> cyclomatic;		// Cyclomatic complexity
 	Cyclomatic cyclomatic_tracker;
-	StyleErrorContainer nstyle_error;
+	StyleHintContainer nstyle_hint;
 public:
-	enum StyleError {
+	enum StyleHint {
 		NO_SPACE_AFTER_BINARY_OP,
 		NO_SPACE_AFTER_CLOSING_BRACE,
 		NO_SPACE_AFTER_COMMA,
@@ -82,7 +82,7 @@ public:
 		SPACE_BEFORE_OPENING_SQUARE_BRACKET,
 		SPACE_BEFORE_SEMICOLON,
 		// Add more elements here
-		STYLE_ERROR_SIZE
+		STYLE_HINT_SIZE
 	};
 
 	QualityMetrics() :
@@ -90,7 +90,7 @@ public:
 		ncpp_directive(0), ncpp_include(0), ngoto(0), nregister(0),
 		ntypedef(0), nfun_comment(0), nfun_cpp_directive(0),
 		ncpp_conditional(0), nfun_cpp_conditional(0),
-		nstyle_error(STYLE_ERROR_SIZE, 0) {}
+		nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
@@ -105,14 +105,14 @@ public:
 	void add_cpp_include() { ncpp_include++; }
 	void add_fun_cpp_directive() { nfun_cpp_directive++; }
 	void add_fun_cpp_conditional() { nfun_cpp_conditional++; }
-#if defined(SHOW_STYLE_ERRORS)
-	void add_style_error(const std::string& name, enum StyleError num) {
+#if defined(SHOW_STYLE_HINTS)
+	void add_style_hint(const std::string& name, enum StyleHint num) {
 		std::cerr << line_length.get_count() + 1 <<
 			": " << name << std::endl;
-		nstyle_error[num]++;
+		nstyle_hint[num]++;
 	}
 #else
-	void add_style_error(enum StyleError num) { nstyle_error[num]++; }
+	void add_style_hint(enum StyleHint num) { nstyle_hint[num]++; }
 #endif
 	void begin_function() {
 		halstead_tracker.reset();
@@ -184,8 +184,8 @@ public:
 	const Descriptive<int>& get_unique_identifier_length() const {
 		return unique_identifier_length;
 	}
-	int get_style_error(enum StyleError e) const { return nstyle_error[e]; }
-	const StyleErrorContainer& get_style_error() const { return nstyle_error; }
+	int get_style_hint(enum StyleHint e) const { return nstyle_hint[e]; }
+	const StyleHintContainer& get_style_hint() const { return nstyle_hint; }
 };
 
 std::ostream& operator <<(std::ostream& o, const QualityMetrics &q);

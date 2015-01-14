@@ -16,8 +16,8 @@ EOF
 # Generate list of primary metrics
 sed -n 's/^\t\t\/\/ VAL: /* /p' QualityMetrics.cpp
 # Generate list of style metrics
-sed -n '/^\tenum StyleError {/,/Add more elements here/{
-	/enum StyleError/d
+sed -n '/^\tenum StyleHint {/,/Add more elements here/{
+	/enum StyleHint/d
 	/Add more elements here/d
 	s/./\l&/g
 	s/\t\t//

@@ -28,6 +28,11 @@
 #define STYLE_HINT(x) qm.add_style_hint(QualityMetrics::x)
 #endif
 
+static inline bool
+is_eol_char(char c) {
+	return (c == '\r' || c == '\n');
+}
+
 void
 CMetricsCalculator::binary_style(char before)
 {
@@ -194,14 +199,16 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case '}':
 		if (in_function)
-			if (isspace(src.char_before()))
-				STYLE_HINT(SPACE_BEFORE_CLOSING_BRACE);
-			else
+			if (isspace(src.char_before())) {
+				if (!is_eol_char(src.char_before()))
+					STYLE_HINT(SPACE_BEFORE_CLOSING_BRACE);
+			} else
 				STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACE);
 		if (in_function)
-			if (isspace(src.char_after()))
-				STYLE_HINT(SPACE_AFTER_CLOSING_BRACE);
-			else
+			if (isspace(src.char_after())) {
+				if (!is_eol_char(src.char_after()))
+					STYLE_HINT(SPACE_AFTER_CLOSING_BRACE);
+			} else
 				STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
 		bol.saw_non_space();
 		current_depth--;
@@ -220,8 +227,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		if (src.char_after() != ';' &&		// Handle "for (;;)"
 		    src.char_after() != ')')
 			if (isspace(src.char_after())) {
-				if (src.char_after() != '\n' &&
-				    src.char_after() != '\r')
+				if (!is_eol_char(src.char_after()))
 					STYLE_HINT(SPACE_AFTER_SEMICOLON);
 			} else
 				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);

@@ -24,6 +24,10 @@
 #define ANNOTATE(x)
 #endif
 
+const char *QualityMetrics::metric_name[] = {
+#include "QualityMetricNames.h"
+};
+
 std::ostream&
 operator <<(std::ostream& o, const QualityMetrics &q) {
 	// Use the VAL prefix in order to have README.md correctly

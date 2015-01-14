@@ -18,6 +18,7 @@ sed -n 's/^\t\t\/\/ VAL: /* /p' QualityMetrics.cpp
 # Generate list of style metrics
 sed -n '/^\tenum StyleHint {/,/Add more elements here/{
 	/enum StyleHint/d
+	/^[ \t]*\/\//d
 	/Add more elements here/d
 	s/./\l&/g
 	s/\t\t//

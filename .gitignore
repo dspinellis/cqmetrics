@@ -1,8 +1,9 @@
 *.o
 *.stackdump
 *.swp
-UnitTests
-UnitTests.exe
 header.tab
 qmcalc
 qmcalc.exe
+QualityMetricNames.h
+UnitTests
+UnitTests.exe

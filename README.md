@@ -28,13 +28,12 @@ numbers separated by a single tab.
 * Number of occurences of no space after keyword
 * Number of occurences of no space after opening brace
 * Number of occurences of no space after semicolon
-* Number of occurences of no space after struct operator
 * Number of occurences of no space before binary operator
 * Number of occurences of no space before closing brace
 * Number of occurences of no space before keyword
 * Number of occurences of no space before opening brace
-* Number of occurences of no space before struct operator
 * Number of occurences of space after opening square bracket
+* Number of occurences of space after struct operator
 * Number of occurences of space after unary operator
 * Number of occurences of space at end of line
 * Number of occurences of space before closing bracket
@@ -42,6 +41,26 @@ numbers separated by a single tab.
 * Number of occurences of space before comma
 * Number of occurences of space before opening square bracket
 * Number of occurences of space before semicolon
+* Number of occurences of space before struct operator
+* Number of occurences of space after binary operator
+* Number of occurences of space after closing brace
+* Number of occurences of space after comma
+* Number of occurences of space after keyword
+* Number of occurences of space after opening brace
+* Number of occurences of space after semicolon
+* Number of occurences of no space after struct operator
+* Number of occurences of space before binary operator
+* Number of occurences of space before closing brace
+* Number of occurences of space before keyword
+* Number of occurences of space before opening brace
+* Number of occurences of no space before struct operator
+* Number of occurences of no space after opening square bracket
+* Number of occurences of no space after unary operator
+* Number of occurences of no space before closing bracket
+* Number of occurences of no space before closing square bracket
+* Number of occurences of no space before comma
+* Number of occurences of no space before opening square bracket
+* Number of occurences of no space before semicolon
 
 
 ## Building

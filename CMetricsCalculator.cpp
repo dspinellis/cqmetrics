@@ -34,9 +34,13 @@ CMetricsCalculator::binary_style(char before)
 	// Avoid complaining about missing space after <stdio.h>
 	if (scan_cpp_line)
 		return;
-	if (!isspace(before))
+	if (isspace(before))
+		STYLE_HINT(SPACE_BEFORE_BINARY_OP);
+	else
 		STYLE_HINT(NO_SPACE_BEFORE_BINARY_OP);
-	if (!isspace(src.char_after()))
+	if (isspace(src.char_after()))
+		STYLE_HINT(SPACE_AFTER_BINARY_OP);
+	else
 		STYLE_HINT(NO_SPACE_AFTER_BINARY_OP);
 }
 
@@ -45,9 +49,14 @@ CMetricsCalculator::keyword_style(char before, char allowed)
 {
 	if (scan_cpp_line)
 		return;
-	if (!isspace(before) && before != allowed)
-		STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
-	if (!isspace(src.char_after()))
+	if (before != allowed)
+		if (isspace(before))
+			STYLE_HINT(SPACE_BEFORE_KEYWORD);
+		else
+			STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
+	if (isspace(src.char_after()))
+		STYLE_HINT(SPACE_AFTER_KEYWORD);
+	else
 		STYLE_HINT(NO_SPACE_AFTER_KEYWORD);
 }
 
@@ -56,7 +65,9 @@ CMetricsCalculator::keyword_style_left_space(char before)
 {
 	if (scan_cpp_line)
 		return;
-	if (!isspace(before))
+	if (isspace(before))
+		STYLE_HINT(SPACE_BEFORE_KEYWORD);
+	else
 		STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
 }
 
@@ -111,8 +122,12 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '[':
 		if (isspace(src.char_before()))
 			STYLE_HINT(SPACE_BEFORE_OPENING_SQUARE_BRACKET);
+		else
+			STYLE_HINT(NO_SPACE_BEFORE_OPENING_SQUARE_BRACKET);
 		if (isspace(src.char_after()))
 			STYLE_HINT(SPACE_AFTER_OPENING_SQUARE_BRACKET);
+		else
+			STYLE_HINT(NO_SPACE_AFTER_OPENING_SQUARE_BRACKET);
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
@@ -127,13 +142,19 @@ CMetricsCalculator::calculate_metrics_switch()
 		 */
 		if (isspace(src.char_after()))
 			STYLE_HINT(SPACE_AFTER_UNARY_OP);
+		else
+			STYLE_HINT(NO_SPACE_AFTER_UNARY_OP);
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
 	case ',':
 		if (isspace(src.char_before()))
 			STYLE_HINT(SPACE_BEFORE_COMMA);
-		if (!isspace(src.char_after()))
+		else
+			STYLE_HINT(NO_SPACE_BEFORE_COMMA);
+		if (isspace(src.char_after()))
+			STYLE_HINT(SPACE_AFTER_COMMA);
+		else
 			STYLE_HINT(NO_SPACE_AFTER_COMMA);
 		bol.saw_non_space();
 		qm.add_operator(c0);
@@ -141,18 +162,28 @@ CMetricsCalculator::calculate_metrics_switch()
 	case ']':
 		if (isspace(src.char_before()))
 			STYLE_HINT(SPACE_BEFORE_CLOSING_SQUARE_BRACKET);
+		else
+			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_SQUARE_BRACKET);
 		bol.saw_non_space();
 		break;
 	case ')':
 		if (isspace(src.char_before()))
 			STYLE_HINT(SPACE_BEFORE_CLOSING_BRACKET);
+		else
+			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACKET);
 		bol.saw_non_space();
 		break;
 	case '{':
-		if (in_function && !isspace(src.char_before()))
-			STYLE_HINT(NO_SPACE_BEFORE_OPENING_BRACE);
-		if (in_function && !isspace(src.char_after()))
-			STYLE_HINT(NO_SPACE_AFTER_OPENING_BRACE);
+		if (in_function)
+			if (isspace(src.char_before()))
+				STYLE_HINT(SPACE_BEFORE_OPENING_BRACE);
+			else
+				STYLE_HINT(NO_SPACE_BEFORE_OPENING_BRACE);
+		if (in_function)
+			if (isspace(src.char_after()))
+				STYLE_HINT(SPACE_AFTER_OPENING_BRACE);
+			else
+				STYLE_HINT(NO_SPACE_AFTER_OPENING_BRACE);
 		// Heuristic: functions begin with { at first column
 		if (bol.at_bol() && current_depth == top_level_depth) {
 			qm.begin_function();
@@ -162,10 +193,16 @@ CMetricsCalculator::calculate_metrics_switch()
 		current_depth++;
 		break;
 	case '}':
-		if (in_function && !isspace(src.char_before()))
-			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACE);
-		if (in_function && !isspace(src.char_after()))
-			STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
+		if (in_function)
+			if (isspace(src.char_before()))
+				STYLE_HINT(SPACE_BEFORE_CLOSING_BRACE);
+			else
+				STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACE);
+		if (in_function)
+			if (isspace(src.char_after()))
+				STYLE_HINT(SPACE_AFTER_CLOSING_BRACE);
+			else
+				STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
 		bol.saw_non_space();
 		current_depth--;
 		if (in_function && current_depth == top_level_depth) {
@@ -175,12 +212,19 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case ';':
 		// Allow a single ; on a line
-		if (isspace(src.char_before()) && !bol.at_bol_space())
-			STYLE_HINT(SPACE_BEFORE_SEMICOLON);
-		if (!isspace(src.char_after()) &&
-		    src.char_after() != ';' &&		// Handle "for (;;)"
+		if (!bol.at_bol_space())
+			if (isspace(src.char_before()))
+				STYLE_HINT(SPACE_BEFORE_SEMICOLON);
+			else
+				STYLE_HINT(NO_SPACE_BEFORE_SEMICOLON);
+		if (src.char_after() != ';' &&		// Handle "for (;;)"
 		    src.char_after() != ')')
-			STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
+			if (isspace(src.char_after())) {
+				if (src.char_after() != '\n' &&
+				    src.char_after() != '\r')
+					STYLE_HINT(SPACE_AFTER_SEMICOLON);
+			} else
+				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
 		bol.saw_non_space();
 		if (in_function)
 			qm.add_statement(current_depth);
@@ -224,8 +268,12 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case '>':
 			if (isspace(before))
+				STYLE_HINT(SPACE_BEFORE_STRUCT_OP);
+			else
 				STYLE_HINT(NO_SPACE_BEFORE_STRUCT_OP);
 			if (isspace(src.char_after()))
+				STYLE_HINT(SPACE_AFTER_STRUCT_OP);
+			else
 				STYLE_HINT(NO_SPACE_AFTER_STRUCT_OP);
 			if (in_function) qm.add_operator("->");
 			break;
@@ -285,7 +333,9 @@ CMetricsCalculator::calculate_metrics_switch()
 		default:
 			src.push(c0);
 			// Can be "a ? b : c" or "case 42:"
-			if (!isspace(src.char_after()))
+			if (isspace(src.char_after()))
+				STYLE_HINT(SPACE_AFTER_BINARY_OP);
+			else
 				STYLE_HINT(NO_SPACE_AFTER_BINARY_OP);
 			break;
 		}
@@ -302,6 +352,8 @@ CMetricsCalculator::calculate_metrics_switch()
 			src.push(c0);
 			if (isspace(src.char_after()))
 				STYLE_HINT(SPACE_AFTER_UNARY_OP);
+			else
+				STYLE_HINT(NO_SPACE_AFTER_UNARY_OP);
 			if (in_function) qm.add_operator('!');
 		}
 		break;
@@ -487,8 +539,12 @@ CMetricsCalculator::calculate_metrics_switch()
 		if (c0 != '.') {
 			src.push(c0);
 			if (isspace(src.char_before()))
+				STYLE_HINT(SPACE_BEFORE_STRUCT_OP);
+			else
 				STYLE_HINT(NO_SPACE_BEFORE_STRUCT_OP);
 			if (isspace(src.char_after()))
+				STYLE_HINT(SPACE_AFTER_STRUCT_OP);
+			else
 				STYLE_HINT(NO_SPACE_AFTER_STRUCT_OP);
 			if (in_function) qm.add_operator('.');
 			break;

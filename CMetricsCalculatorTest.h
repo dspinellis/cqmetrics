@@ -282,6 +282,15 @@ public:
 		int result;
 	};
 
+	const std::string message(struct PSTest *t) {
+		std::stringstream m;
+		m << "Prefix \"" << t->prefix <<
+			"\" Suffix: \"" << t->suffix <<
+			"\" Hint: " << QualityMetrics::metric_name[t->e] <<
+			" Expected: " << t->result << ' ';
+		return m.str();
+	}
+
 	void testPrefixSuffix(const char *strings[], struct PSTest test[]) {
 		for (const char **o = strings; *o; o++)
 			for (struct PSTest *t = test; t->prefix; t++) {
@@ -292,7 +301,8 @@ public:
 				CMetricsCalculator calc(str);
 				calc.calculate_metrics();
 				const QualityMetrics& qm(calc.get_metrics());
-				CPPUNIT_ASSERT(qm.get_style_hint(t->e) == t->result);
+				CPPUNIT_ASSERT_MESSAGE(message(t),
+						qm.get_style_hint(t->e) == t->result);
 			}
 	}
 
@@ -309,8 +319,14 @@ public:
 		struct PSTest test[] = {
 		  { "a ", " b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
 		  { "a ", "b", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
+		  { "a ", " b", QualityMetrics::SPACE_AFTER_BINARY_OP, 1 },
+		  { "a ", "b", QualityMetrics::SPACE_AFTER_BINARY_OP, 0 },
 		  { "a ", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
 		  { "a", " b", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 1 },
+		  { "a ", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 1 },
+		  { "a", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 0 },
+		  { "a ", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 1 },
+		  { "a", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 0 },
 		  NULL
 		};
 
@@ -333,6 +349,12 @@ public:
 		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 1 },
 		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 1 },
+		  { ";",  " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_AFTER_KEYWORD, 1 },
+		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
+		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  NULL
 		};
 
@@ -353,6 +375,13 @@ public:
 		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 1 },
 		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 1 },
+		  { "foo(", " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { ";",  " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_AFTER_KEYWORD, 1 },
+		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
+		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  NULL
 		};
 
@@ -374,57 +403,122 @@ public:
 		  { "; ", "(1)", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
 		  { " #include <", ">", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::NO_SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 1 },
+		  { ";",  " (1)", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { "; ", " (1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
+		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
+		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
+		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  NULL
 		};
 
 		testPrefixSuffix(keyword, test);
 	}
 
+	struct Test {
+		const char *code;
+		enum QualityMetrics::StyleHint e;
+		int result;
+	};
+
+	const std::string message(struct Test *t) {
+		std::stringstream m;
+		m << "Code \"" << t->code << "\" Hint: " <<
+			QualityMetrics::metric_name[t->e] <<
+			" Expected: " << t->result << ' ';
+		return m.str();
+	}
+
 	void testStyle() {
-		struct Test {
-			const char *code;
-			enum QualityMetrics::StyleHint e;
-			int result;
-		} test[] = {
+		struct Test test[] = {
 { "a[4]", QualityMetrics::SPACE_BEFORE_OPENING_SQUARE_BRACKET, 0 },
 { "a [4]", QualityMetrics::SPACE_BEFORE_OPENING_SQUARE_BRACKET, 1 },
+{ "a[4]", QualityMetrics::NO_SPACE_BEFORE_OPENING_SQUARE_BRACKET, 1 },
+{ "a [4]", QualityMetrics::NO_SPACE_BEFORE_OPENING_SQUARE_BRACKET, 0 },
 { "a[4]", QualityMetrics::SPACE_AFTER_OPENING_SQUARE_BRACKET, 0 },
 { "a[ 4]", QualityMetrics::SPACE_AFTER_OPENING_SQUARE_BRACKET, 1 },
+{ "a[4]", QualityMetrics::NO_SPACE_AFTER_OPENING_SQUARE_BRACKET, 1 },
+{ "a[ 4]", QualityMetrics::NO_SPACE_AFTER_OPENING_SQUARE_BRACKET, 0 },
 { "~0xff", QualityMetrics::SPACE_AFTER_UNARY_OP, 0 },
 { "~ 0xff", QualityMetrics::SPACE_AFTER_UNARY_OP, 1 },
+{ "~0xff", QualityMetrics::NO_SPACE_AFTER_UNARY_OP, 1 },
+{ "~ 0xff", QualityMetrics::NO_SPACE_AFTER_UNARY_OP, 0 },
 { "a, b", QualityMetrics::SPACE_BEFORE_COMMA, 0 },
 { "a , b", QualityMetrics::SPACE_BEFORE_COMMA, 1 },
+{ "a, b", QualityMetrics::NO_SPACE_BEFORE_COMMA, 1 },
+{ "a , b", QualityMetrics::NO_SPACE_BEFORE_COMMA, 0 },
 { "a, b", QualityMetrics::NO_SPACE_AFTER_COMMA, 0 },
 { "a,b", QualityMetrics::NO_SPACE_AFTER_COMMA, 1 },
+{ "a, b", QualityMetrics::SPACE_AFTER_COMMA, 1 },
+{ "a,b", QualityMetrics::SPACE_AFTER_COMMA, 0 },
 { "foo(int a)", QualityMetrics::SPACE_BEFORE_CLOSING_BRACKET, 0 },
 { "foo(int a )", QualityMetrics::SPACE_BEFORE_CLOSING_BRACKET, 1 },
+{ "foo(int a)", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACKET, 1 },
+{ "foo(int a )", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACKET, 0 },
 { "foo()\n{x;\n}", QualityMetrics::NO_SPACE_BEFORE_OPENING_BRACE, 0 },
-{ "foo()\n{\nif (1){x;}}\n", QualityMetrics::NO_SPACE_BEFORE_OPENING_BRACE, 1 },
+{ "foo[a]", QualityMetrics::SPACE_BEFORE_CLOSING_SQUARE_BRACKET, 0 },
+{ "foo[a ]", QualityMetrics::SPACE_BEFORE_CLOSING_SQUARE_BRACKET, 1 },
+{ "foo[a]", QualityMetrics::NO_SPACE_BEFORE_CLOSING_SQUARE_BRACKET, 1 },
+{ "foo[a ]", QualityMetrics::NO_SPACE_BEFORE_CLOSING_SQUARE_BRACKET, 0 },
+{ "foo()\n{x;\n}", QualityMetrics::NO_SPACE_BEFORE_OPENING_BRACE, 0 },
+{ "foo()\n{x;\n}", QualityMetrics::SPACE_BEFORE_OPENING_BRACE, 0 },
+{ "foo()\n{\nif (1){x;}}\n", QualityMetrics::SPACE_BEFORE_OPENING_BRACE, 0 },
+{ "foo()\n{\nif (1) {x;}}\n", QualityMetrics::SPACE_BEFORE_OPENING_BRACE, 1 },
 { "foo()\n{\nx;\n}", QualityMetrics::NO_SPACE_AFTER_OPENING_BRACE, 0 },
 { "foo()\n{\nif (1){x;}}\n", QualityMetrics::NO_SPACE_AFTER_OPENING_BRACE, 1 },
+{ "foo()\n{\nx;\n}", QualityMetrics::SPACE_AFTER_OPENING_BRACE, 0 },
+{ "foo()\n{\nif (1){ x;}}\n", QualityMetrics::SPACE_AFTER_OPENING_BRACE, 1 },
 { "foo()\n{x;\n}", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACE, 0 },
+{ "foo()\n{x;\n}", QualityMetrics::SPACE_BEFORE_CLOSING_BRACE, 0 },
 { "foo()\n{\nx;}\n", QualityMetrics::NO_SPACE_BEFORE_CLOSING_BRACE, 1 },
+{ "foo()\n{\nx;}\n", QualityMetrics::SPACE_BEFORE_CLOSING_BRACE, 0 },
+{ "foo()\n{\nx; }\n", QualityMetrics::SPACE_BEFORE_CLOSING_BRACE, 1 },
 { "foo()\n{x;\n}\n", QualityMetrics::NO_SPACE_AFTER_CLOSING_BRACE, 0 },
+{ "foo()\n{x;\n}\n", QualityMetrics::SPACE_AFTER_CLOSING_BRACE, 0 },
+{ "foo()\n{x;\n}\n", QualityMetrics::SPACE_AFTER_CLOSING_BRACE, 0 },
 { "foo()\n{\nif(1){foo;}}\n", QualityMetrics::NO_SPACE_AFTER_CLOSING_BRACE, 1 },
+{ "foo()\n{\nif(1){foo;}}\n", QualityMetrics::SPACE_AFTER_CLOSING_BRACE, 0 },
+{ "foo()\n{\nif(1){foo;} }\n", QualityMetrics::SPACE_AFTER_CLOSING_BRACE, 1 },
 { "int a;", QualityMetrics::SPACE_BEFORE_SEMICOLON, 0 },
+{ "int a ;", QualityMetrics::SPACE_BEFORE_SEMICOLON, 1 },
 { " \t;", QualityMetrics::SPACE_BEFORE_SEMICOLON, 0 },
+{ "int a;", QualityMetrics::NO_SPACE_BEFORE_SEMICOLON, 1 },
+{ "int a ;", QualityMetrics::NO_SPACE_BEFORE_SEMICOLON, 0 },
+{ " \t;", QualityMetrics::NO_SPACE_BEFORE_SEMICOLON, 0 },
 { "int a; int b;\n", QualityMetrics::NO_SPACE_AFTER_SEMICOLON, 0 },
 { "int a;int b;\n", QualityMetrics::NO_SPACE_AFTER_SEMICOLON, 1 },
-{ "a->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
-{ "a ->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
-{ "a->b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
-{ "a-> b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
-{ "a.b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
-{ "a .b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
-{ "a.b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
-{ "a. b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
+{ "int a; int b;\n", QualityMetrics::SPACE_AFTER_SEMICOLON, 1 },
+{ "int a;int b;\n", QualityMetrics::SPACE_AFTER_SEMICOLON, 0 },
+{ "a->b", QualityMetrics::SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a ->b", QualityMetrics::SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a ->b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a->b", QualityMetrics::SPACE_AFTER_STRUCT_OP, 0 },
+{ "a->b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
+{ "a-> b", QualityMetrics::SPACE_AFTER_STRUCT_OP, 1 },
+{ "a-> b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
+{ "a.b", QualityMetrics::SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a .b", QualityMetrics::SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a.b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 1 },
+{ "a .b", QualityMetrics::NO_SPACE_BEFORE_STRUCT_OP, 0 },
+{ "a.b", QualityMetrics::SPACE_AFTER_STRUCT_OP, 0 },
+{ "a.b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 1 },
+{ "a. b", QualityMetrics::SPACE_AFTER_STRUCT_OP, 1 },
+{ "a. b", QualityMetrics::NO_SPACE_AFTER_STRUCT_OP, 0 },
 { "a ? b : c", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 0 },
 { "a ? b :c", QualityMetrics::NO_SPACE_AFTER_BINARY_OP, 1 },
+{ "a ? b : c", QualityMetrics::SPACE_AFTER_BINARY_OP, 2 },
+{ "a ?b :c", QualityMetrics::SPACE_AFTER_BINARY_OP, 0 },
 { "case 42:\n", QualityMetrics::NO_SPACE_BEFORE_BINARY_OP, 0 },
+{ "case 42 :\n", QualityMetrics::SPACE_BEFORE_BINARY_OP, 0 },
 { "!a", QualityMetrics::SPACE_AFTER_UNARY_OP, 0 },
 { "! a", QualityMetrics::SPACE_AFTER_UNARY_OP, 1 },
+{ "!a", QualityMetrics::NO_SPACE_AFTER_UNARY_OP, 1 },
+{ "! a", QualityMetrics::NO_SPACE_AFTER_UNARY_OP, 0 },
 { "\nreturn;", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 0 },
 { ";return;", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
+{ ";return;", QualityMetrics::SPACE_AT_END_OF_LINE, 0 },
+{ ";return; \n", QualityMetrics::SPACE_AT_END_OF_LINE, 1 },
 		  NULL
 		};
 
@@ -433,7 +527,8 @@ public:
 			CMetricsCalculator calc(str);
 			calc.calculate_metrics();
 			const QualityMetrics& qm(calc.get_metrics());
-			CPPUNIT_ASSERT(qm.get_style_hint(t->e) == t->result);
+			CPPUNIT_ASSERT_MESSAGE(message(t),
+					qm.get_style_hint(t->e) == t->result);
 		}
 	}
 };

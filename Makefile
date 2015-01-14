@@ -24,3 +24,6 @@ README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
 
 header.tab: make-header.sh
 	sh make-header.sh >$@
+
+clean:
+	rm -f *.o *.exe qmcalc UnitTests

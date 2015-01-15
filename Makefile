@@ -22,7 +22,7 @@ qmcalc: $(HFILES) $(OFILES) qmcalc.cpp
 QualityMetrics.o: QualityMetrics.h QualityMetrics.cpp QualityMetricNames.h
 
 QualityMetricNames.h: QualityMetrics.h metric-names.sed
-	./metric-names.sed QualityMetrics.h >$@
+	sed -f metric-names.sed QualityMetrics.h >$@
 
 README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-readme.sh >$@

@@ -14,6 +14,7 @@
  *   limitations under the License.
  */
 
+#include <cstring>
 #include <ostream>
 
 #include "CMetricsCalculator.h"
@@ -25,6 +26,8 @@ main(int argc, char *argv[])
 	CMetricsCalculator cm;
 
 	cm.calculate_metrics();
-	std::cout << cm.get_metrics() << std::endl;
+	std::cout << cm.get_metrics();
+	if (argc != 2 || strcmp(argv[1], "-n"))
+		std::cout << std::endl;
 	return 0;
 }

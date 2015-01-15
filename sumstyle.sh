@@ -8,7 +8,6 @@ do
 	echo -n "$f "
 	qmcalc <$f
 done |
-tee freebsd.out |
 awk '
 {
 	count++;

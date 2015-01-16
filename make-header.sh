@@ -36,6 +36,7 @@
 	sed -n '/^\tenum StyleHint {/,/Add more elements here/{
 		/enum StyleHint/d
 		/Add more elements here/d
+		/^[ \t]*\/\//d
 		s/,$//
 		s/\t\t/N/
 		s/./\l&/g

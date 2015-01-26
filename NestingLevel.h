@@ -26,8 +26,12 @@ class NestingDetails {
 public:
 	int brace_balance;		// Matching {} pairs
 	CKeyword::IdentifierType key;	// Keyword that introduced the nesting
-	NestingDetails() : brace_balance(0), key(CKeyword::OTHER) {}
-	NestingDetails(CKeyword::IdentifierType k) : brace_balance(0), key(k) {}
+	bool saw_statement;		// True after seeing a statement
+
+	NestingDetails() : brace_balance(0), key(CKeyword::OTHER),
+			saw_statement(false) {}
+	NestingDetails(CKeyword::IdentifierType k) : brace_balance(0), key(k),
+			saw_statement(false) {}
 };
 
 /** Track nesting level */
@@ -41,11 +45,24 @@ private:
 	 * gets thrown off by the use of macros.
 	 */
 	void pop() {
-		while (!nd.empty() && nd.top().brace_balance == 0)
+		while (!nd.empty() && nd.top().brace_balance == 0 &&
+				nd.top().key != CKeyword::DO)
 			nd.pop();
 		if (nd.empty())
 			reset();	// We lost track of the state
 	}
+
+	/**
+	 * To be called after encountering a statement's semicolon
+	 * or a closing brace.
+	 */
+	void saw_statement() {
+		if (nd.top().brace_balance == 0) {
+			pop();
+			nd.top().saw_statement = true;
+		}
+	}
+
 public:
 	NestingLevel() {
 		reset();
@@ -65,21 +82,19 @@ public:
 	/** To be called after encountering a closing brace */
 	void saw_close_brace() {
 		nd.top().brace_balance--;
-		if (nd.top().key != CKeyword::DO)
-			pop();
+		saw_statement();
 	}
 
 	/** To be called after encountering a statement's semicolon */
 	void saw_statement_semicolon() {
-		if (nd.top().key != CKeyword::DO)
-			pop();
+		saw_statement();
 	}
 
 	/** To be called after encountering a keyword associated with nesting */
 	void saw_nesting_keyword(CKeyword::IdentifierType t) {
 		if (nd.top().key == CKeyword::DO && t == CKeyword::WHILE &&
-				nd.top().brace_balance == 0)
-			pop();
+				nd.top().saw_statement)
+			nd.pop();
 		else if (nd.top().key == CKeyword::ELSE && t == CKeyword::IF &&
 				nd.top().brace_balance == 0)
 			// else if -> elif

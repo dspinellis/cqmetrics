@@ -203,6 +203,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		current_depth++;
 		break;
 	case '}':
+		current_depth--;
 		if (in_function) {
 			if (isspace(src.char_before())) {
 				if (!is_eol_char(src.char_before()))
@@ -221,7 +222,6 @@ CMetricsCalculator::calculate_metrics_switch()
 			}
 		}
 		bol.saw_non_space();
-		current_depth--;
 		break;
 	case ';':
 		// Allow a single ; on a line

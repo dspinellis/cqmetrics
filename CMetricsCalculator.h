@@ -22,6 +22,7 @@
 #include "CharSource.h"
 #include "BolState.h"
 #include "QualityMetrics.h"
+#include "NestingLevel.h"
 
 /** Collect quality metrics from C-like source code */
 class CMetricsCalculator {
@@ -38,6 +39,8 @@ private:
 	bool in_function;		// True when scanning functions
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
+	int bracket_balance;		// Bracket balance
+	NestingLevel nesting;		// Track nesting level
 	CKeyword ckeyword;
 	/** Verify the coding style of binary operators */
 	void binary_style(char before);

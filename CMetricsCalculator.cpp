@@ -100,6 +100,7 @@ CMetricsCalculator::calculate_metrics_switch()
 	char c0, c1;
 	char before;	// The character before the current token
 	std::string val;
+	CKeyword::IdentifierType key;
 
 #define GET(x) do { \
 	if (!src.get(x)) \
@@ -139,6 +140,7 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '(':
 		bol.saw_non_space();
 		qm.add_operator(c0);
+		bracket_balance++;
 		break;
 	case '~':
 		/*
@@ -177,45 +179,49 @@ CMetricsCalculator::calculate_metrics_switch()
 		else
 			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACKET);
 		bol.saw_non_space();
+		bracket_balance--;
 		break;
 	case '{':
-		if (in_function)
+		if (in_function) {
 			if (isspace(src.char_before()))
 				STYLE_HINT(SPACE_BEFORE_OPENING_BRACE);
 			else
 				STYLE_HINT(NO_SPACE_BEFORE_OPENING_BRACE);
-		if (in_function)
 			if (isspace(src.char_after()))
 				STYLE_HINT(SPACE_AFTER_OPENING_BRACE);
 			else
 				STYLE_HINT(NO_SPACE_AFTER_OPENING_BRACE);
+			nesting.saw_open_brace();
+		}
 		// Heuristic: functions begin with { at first column
 		if (bol.at_bol() && current_depth == top_level_depth) {
 			qm.begin_function();
 			in_function = true;
+			nesting.reset();
 		}
 		bol.saw_non_space();
 		current_depth++;
 		break;
 	case '}':
-		if (in_function)
+		if (in_function) {
 			if (isspace(src.char_before())) {
 				if (!is_eol_char(src.char_before()))
 					STYLE_HINT(SPACE_BEFORE_CLOSING_BRACE);
 			} else
 				STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACE);
-		if (in_function)
 			if (isspace(src.char_after())) {
 				if (!is_eol_char(src.char_after()))
 					STYLE_HINT(SPACE_AFTER_CLOSING_BRACE);
 			} else
 				STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
+			nesting.saw_close_brace();
+			if (current_depth == top_level_depth) {
+				qm.end_function();
+				in_function = false;
+			}
+		}
 		bol.saw_non_space();
 		current_depth--;
-		if (in_function && current_depth == top_level_depth) {
-			qm.end_function();
-			in_function = false;
-		}
 		break;
 	case ';':
 		// Allow a single ; on a line
@@ -232,8 +238,11 @@ CMetricsCalculator::calculate_metrics_switch()
 			} else
 				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
 		bol.saw_non_space();
-		if (in_function)
-			qm.add_statement(current_depth);
+		// Do not add statements in for (x;y;z)
+		if (in_function && bracket_balance == 0) {
+			qm.add_statement(nesting.get_nesting_level());
+			nesting.saw_statement_semicolon();
+		}
 		break;
 	/*
 	 * Double character C tokens with more than 2 different outcomes
@@ -596,20 +605,26 @@ CMetricsCalculator::calculate_metrics_switch()
 			val += c0;
 		}
 		src.push(c0);
-		switch (ckeyword.identifier_type(val)) {
-		case CKeyword::WHILE:
+		key = ckeyword.identifier_type(val);
+		switch (key) {
 		case CKeyword::FOR:
+		case CKeyword::WHILE:
+			nesting.saw_nesting_keyword(key);
+			/* FALLTHROUGH */
 		case CKeyword::CASE:
 			keyword_style(before);
 			qm.add_path();
+			bracket_balance = 0;
 			break;
 		case CKeyword::DEFAULT:
 			keyword_style_left_space(before);
 			qm.add_path();
+			bracket_balance = 0;
 			break;
 		case CKeyword::GOTO:
 			keyword_style(before);
 			qm.add_goto();
+			bracket_balance = 0;
 			break;
 		case CKeyword::REGISTER:
 			keyword_style(before);
@@ -625,12 +640,15 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case CKeyword::DO:
 		case CKeyword::SWITCH:
+			nesting.saw_nesting_keyword(key);
 			keyword_style(before);
+			bracket_balance = 0;
 			break;
 		case CKeyword::BREAK:
 		case CKeyword::CONTINUE:
 		case CKeyword::RETURN:
 			keyword_style_left_space(before);
+			bracket_balance = 0;
 			break;
 		case CKeyword::OTHER:
 			break;
@@ -641,8 +659,10 @@ CMetricsCalculator::calculate_metrics_switch()
 			}
 			goto identifier;
 		case CKeyword::ELSE:
+			nesting.saw_nesting_keyword(key);
 			if (!scan_cpp_directive)
 				keyword_style(before);
+			bracket_balance = 0;
 			break;
 		case CKeyword::IF:
 			if (scan_cpp_directive) {
@@ -650,9 +670,11 @@ CMetricsCalculator::calculate_metrics_switch()
 				if (in_function)
 					qm.add_fun_cpp_conditional();
 			} else {
+				nesting.saw_nesting_keyword(key);
 				keyword_style(before);
 				qm.add_path();
 			}
+			bracket_balance = 0;
 			break;
 		case CKeyword::IFDEF:
 		case CKeyword::ELIF:

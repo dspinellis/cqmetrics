@@ -53,7 +53,7 @@ public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
 	scan_cpp_directive(false), scan_cpp_line(false),
-	chars_read_at_bol(0) {}
+	chars_read_at_bol(0), bracket_balance(0) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF

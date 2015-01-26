@@ -24,9 +24,9 @@
 /** Track the details of a single nesting */
 class NestingDetails {
 public:
-	int brace_balance;	// Matching {} pairs
-	bool is_do;		// True if nesting of do while statement
-	NestingDetails(bool id) : brace_balance(0), is_do(id) {}
+	int brace_balance;		// Matching {} pairs
+	CKeyword::IdentifierType key;	// Keyword that introduced the nesting
+	NestingDetails(bool id) : brace_balance(0), key(CKeyword::OTHER) {}
 };
 
 /** Track nesting level */
@@ -64,20 +64,24 @@ public:
 	/** To be called after encountering a closing brace */
 	void saw_close_brace() {
 		nd.top().brace_balance--;
-		if (!nd.top().is_do)
+		if (!nd.top().key != CKeyword::DO)
 			pop();
 	}
 
 	/** To be called after encountering a statement's semicolon */
 	void saw_statement_semicolon() {
-		if (!nd.top().is_do)
+		if (!nd.top().key != CKeyword::DO)
 			pop();
 	}
 
 	/** To be called after encountering a keyword associated with nesting */
 	void saw_nesting_keyword(CKeyword::IdentifierType t) {
-		if (nd.top().is_do && t == CKeyword::WHILE)
+		if (nd.top().key != CKeyword::DO && t == CKeyword::WHILE)
 			pop();
+		else if (nd.top().key == CKeyword::ELSE && t == CKeyword::IF &&
+				nd.top().brace_balance == 0)
+			// else if -> elif
+			nd.top().key = CKeyword::ELIF;
 		else
 			nd.push(NestingDetails(t == CKeyword::DO));
 	}

@@ -40,7 +40,7 @@ private:
 	 * gets thrown off by the use of macros.
 	 */
 	void pop() {
-		while (nd.top().brace_balance == 0 && !nd.empty())
+		while (!nd.empty() && nd.top().brace_balance == 0)
 			nd.pop();
 		if (nd.empty())
 			reset();	// We lost track of the state

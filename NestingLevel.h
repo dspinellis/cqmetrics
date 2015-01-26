@@ -45,6 +45,9 @@ private:
 			reset();	// We lost track of the state
 	}
 public:
+	NestingLevel() {
+		reset();
+	}
 	/** Reset state after a function's opening brace. */
 	void reset() {
 		nd = NDStack();

@@ -24,6 +24,7 @@
 #include "DescriptiveTest.h"
 #include "HalsteadTest.h"
 #include "QualityMetricsTest.h"
+#include "NestingLevelTest.h"
 
 int
 main(int argc, char *argv[])
@@ -38,6 +39,7 @@ main(int argc, char *argv[])
 	runner.addTest(DescriptiveTest::suite());
 	runner.addTest(HalsteadTest::suite());
 	runner.addTest(QualityMetricsTest::suite());
+	runner.addTest(NestingLevelTest::suite());
 
 	runner.run();
 	return 0;

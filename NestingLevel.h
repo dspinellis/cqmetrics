@@ -35,12 +35,13 @@ private:
 	typedef std::stack<NestingDetails> NDStack;	// Details for each nesting level
 	NDStack nd;	// Details for each nesting level
 	/**
-	 * Pop one level of nesting within a function.
+	 * Pop nesting within a function that is not protected by braces.
 	 * Ensure that at least one level remains, in case the parsing algorithm
 	 * gets thrown off by the use of macros.
 	 */
 	void pop() {
-		nd.pop();
+		while (nd.top().brace_balance == 0 && !nd.empty())
+			nd.pop();
 		if (nd.empty())
 			reset();	// We lost track of the state
 	}
@@ -63,20 +64,19 @@ public:
 	/** To be called after encountering a closing brace */
 	void saw_close_brace() {
 		nd.top().brace_balance--;
-		if (nd.top().brace_balance == 0 && !nd.top().is_do)
+		if (!nd.top().is_do)
 			pop();
 	}
 
 	/** To be called after encountering a statement's semicolon */
 	void saw_statement_semicolon() {
-		if (nd.top().brace_balance == 0 && !nd.top().is_do)
+		if (!nd.top().is_do)
 			pop();
 	}
 
 	/** To be called after encountering a keyword associated with nesting */
 	void saw_nesting_keyword(CKeyword::IdentifierType t) {
-		if (nd.top().brace_balance == 0 && nd.top().is_do &&
-				t == CKeyword::WHILE)
+		if (nd.top().is_do && t == CKeyword::WHILE)
 			pop();
 		else
 			nd.push(NestingDetails(t == CKeyword::DO));

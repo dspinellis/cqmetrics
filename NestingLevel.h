@@ -26,7 +26,8 @@ class NestingDetails {
 public:
 	int brace_balance;		// Matching {} pairs
 	CKeyword::IdentifierType key;	// Keyword that introduced the nesting
-	NestingDetails(bool id) : brace_balance(0), key(CKeyword::OTHER) {}
+	NestingDetails() : brace_balance(0), key(CKeyword::OTHER) {}
+	NestingDetails(CKeyword::IdentifierType k) : brace_balance(0), key(k) {}
 };
 
 /** Track nesting level */
@@ -52,7 +53,7 @@ public:
 	/** Reset state after a function's opening brace. */
 	void reset() {
 		nd = NDStack();
-		nd.push(NestingDetails(false));
+		nd.push(NestingDetails());
 		nd.top().brace_balance++;
 	}
 
@@ -83,7 +84,7 @@ public:
 			// else if -> elif
 			nd.top().key = CKeyword::ELIF;
 		else
-			nd.push(NestingDetails(t == CKeyword::DO));
+			nd.push(NestingDetails(t));
 	}
 
 	/** Return the current level of nesting. */

@@ -77,7 +77,8 @@ public:
 
 	/** To be called after encountering a keyword associated with nesting */
 	void saw_nesting_keyword(CKeyword::IdentifierType t) {
-		if (nd.top().key == CKeyword::DO && t == CKeyword::WHILE)
+		if (nd.top().key == CKeyword::DO && t == CKeyword::WHILE &&
+				nd.top().brace_balance == 0)
 			pop();
 		else if (nd.top().key == CKeyword::ELSE && t == CKeyword::IF &&
 				nd.top().brace_balance == 0)

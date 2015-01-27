@@ -89,10 +89,10 @@ public:
 	void testOutput() {
 		std::stringstream str;
 		Descriptive<int> a;
-		a.add(3);
-		a.add(12);
+		a.add(2);
+		a.add(4);
 		str << a;
-		CPPUNIT_ASSERT(str.str() == "2\t3\t7.5\t12");
+		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t4\t1");
 	}
 	void testSDZero() {
 		Descriptive<int> a;

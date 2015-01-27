@@ -115,24 +115,26 @@ public:
 	}
 
 	void testStatementNesting() {
-		std::stringstream str("foo()\n{a;{b;{c;}}}");
+		std::stringstream str("foo()\n{a;if (1) {b; if (2) c;}}");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 3);
-		// (1 + 2 + 3) / 3 == 2
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 2);
+		// (0 + 1 + 2) / 3 == 1
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 1);
 	}
 
 	void testStatementNestingTwoFunction() {
-		std::stringstream str("foo()\n{a;{{c;}}}"
-			"bar()\n{{a;{b;{{{c;}}} d; }}}");
+		std::stringstream str("foo()\n{a;if(1) if(2) c;\n}\n"
+				       //      0             3
+			"bar()\n{if(1){a;if(1){b;if(1){if(1){if(1){c;}}} d; }}}");
+			//             1       2                   6     2
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 6);
-		// (1 + 3 + 2 + 3 + 6 + 3)  == 18; 18 / 6 == 3
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 3);
+		// (0 + 3 + 1 + 2 + 6 + 2)  == 12; 12 / 6 == 2
+		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 2);
 	}
 
 	void testNBlockComment() {

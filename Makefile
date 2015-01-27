@@ -29,7 +29,7 @@ QualityMetricNames.h: QualityMetrics.h metric-names.sed
 README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-readme.sh >$@
 
-header.tab: make-header.sh
+header.tab: make-header.sh QualityMetrics.cpp
 	sh make-header.sh >$@
 
 clean:

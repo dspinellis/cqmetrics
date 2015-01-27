@@ -20,6 +20,8 @@
 #include <limits>
 #include <ostream>
 
+#include "math.h"
+
 /** Maintain simple descriptive statistics values */
 template <typename T>
 class Descriptive {
@@ -27,11 +29,18 @@ private:
 	T sum;
 	int count;
 	T min, max;
+	/*
+	 * These are used for calculating the standard deviation from the
+	 * running values; see:
+	 * https://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
+	 */
+	double a, q;
 public:
 	Descriptive() :
 		sum(0), count(0),
 		min(std::numeric_limits<T>::max()),
-		max(std::numeric_limits<T>::min())
+		max(std::numeric_limits<T>::min()),
+		a(0), q(0)
 	{}
 
 	T get_sum() const {
@@ -62,8 +71,21 @@ public:
 			max = v;
 		if (v < min)
 			min = v;
+
+		// Running variance
+		double a_prev = a;
+		a = a + (v - a) / (double)count;
+		q = q + (v - a_prev) * (v - a);
 	}
 
+	/** Return the population's standard deviation. */
+	double get_standard_deviation(void) const {
+		/*
+		 * The standard deviation of an empty population is not defined,
+		 * but for measuring quality, 0, is a reasonable value.
+		 */
+		return count ? sqrt(q / count) : 0;
+	}
 };
 
 template <typename T>

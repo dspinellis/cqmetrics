@@ -32,12 +32,16 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testMinMax);
 	CPPUNIT_TEST(testMinMaxDouble);
 	CPPUNIT_TEST(testOutput);
+	CPPUNIT_TEST(testSDZero);
+	CPPUNIT_TEST(testSDTwo);
+	CPPUNIT_TEST(testSDHalf);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
 		Descriptive<int> a;
 		CPPUNIT_ASSERT(a.get_count() == 0);
 		CPPUNIT_ASSERT(a.get_sum() == 0);
+		CPPUNIT_ASSERT(a.get_standard_deviation() == 0);
 	}
 
 	void testAdd() {
@@ -89,6 +93,38 @@ public:
 		a.add(12);
 		str << a;
 		CPPUNIT_ASSERT(str.str() == "2\t3\t7.5\t12");
+	}
+	void testSDZero() {
+		Descriptive<int> a;
+		a.add(1);
+		a.add(1);
+		a.add(1);
+		CPPUNIT_ASSERT(a.get_standard_deviation() == 0);
+	}
+
+	// From https://en.wikipedia.org/wiki/Standard_deviation#Basic_examples
+	void testSDTwo() {
+		Descriptive<int> a;
+		a.add(2);
+		a.add(4);
+		a.add(4);
+		a.add(4);
+		a.add(5);
+		a.add(5);
+		a.add(7);
+		a.add(9);
+		CPPUNIT_ASSERT(a.get_standard_deviation() == 2);
+	}
+
+	// Verified in R with:
+	// x <- c(1,2,rep(3,16)); sqrt(sum((x-mean(x))^2)/(length(x))
+	void testSDHalf() {
+		Descriptive<double> a;
+		a.add(1);
+		a.add(2);
+		for (int i = 0; i < 16; i++)
+			a.add(3);
+		CPPUNIT_ASSERT(a.get_standard_deviation() == 0.5);
 	}
 };
 #endif /*  DESCRIPTIVETEST_H */

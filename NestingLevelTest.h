@@ -22,6 +22,7 @@ class NestingLevelTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testDoubleBraceProtection);
 	CPPUNIT_TEST(testIfElseBrace);
 	CPPUNIT_TEST(testIfElse);
+	CPPUNIT_TEST(testBracedIfElse);
 	CPPUNIT_TEST(testIfIfElse);
 	CPPUNIT_TEST(testElseIf);
 	CPPUNIT_TEST(testBracedElseIf);
@@ -209,6 +210,22 @@ public:
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
 		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
+	// if (x) 1; else 1; 0;
+	void testBracedIfElse() {
+		NestingLevel n;
+		n.saw_nesting_keyword(CKeyword::IF);
+		n.saw_open_brace();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		n.saw_close_brace();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		n.saw_open_brace();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		n.saw_close_brace();
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
 

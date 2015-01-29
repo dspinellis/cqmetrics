@@ -51,6 +51,10 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testKeywordStyle);
 	CPPUNIT_TEST(testDeclKeywordStyle);
 	CPPUNIT_TEST(testKeywordStyleLeft);
+	CPPUNIT_TEST(testIndentationSimple);
+	CPPUNIT_TEST(testIndentationIf);
+	CPPUNIT_TEST(testIndentationBrace);
+	CPPUNIT_TEST(testIfFor);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -533,5 +537,46 @@ public:
 					qm.get_style_hint(t->e) == t->result);
 		}
 	}
+
+	void testIndentationSimple() {
+		std::stringstream str("foo()\n{\n\treturn;\n}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 1);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testIndentationIf() {
+		std::stringstream str("foo()\n{\n\tif (a)\n\t\treturn;\n}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testIndentationBrace() {
+		std::stringstream str("foo()\n{\n\tif (a) { \n\t\treturn;\n\t}\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testIfFor() {
+		std::stringstream str("foo()\n{\n\tif (a)\n\t\tfor (;;)\n\t\t\tbar();\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

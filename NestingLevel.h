@@ -38,13 +38,18 @@ public:
 class NestingLevel {
 private:
 	typedef std::stack<NestingDetails> NDStack;	// Details for each nesting level
-	NDStack nd;	// Details for each nesting level
+	NDStack nd;		// Details for each nesting level
+	NDStack backtrack;	// Details for each nesting level
 	/**
 	 * Pop nesting within a function that is not protected by braces.
 	 * Ensure that at least one level remains, in case the parsing algorithm
 	 * gets thrown off by the use of macros.
 	 */
 	void pop() {
+		// Save if stack for possible else
+		if (nd.top().key == CKeyword::IF ||
+				nd.top().key == CKeyword::ELIF)
+			backtrack = nd;
 		while (!nd.empty() && nd.top().brace_balance == 0 &&
 				nd.top().key != CKeyword::DO)
 			nd.pop();
@@ -92,15 +97,27 @@ public:
 
 	/** To be called after encountering a keyword associated with nesting */
 	void saw_nesting_keyword(CKeyword::IdentifierType t) {
-		if (nd.top().key == CKeyword::DO && t == CKeyword::WHILE &&
+		if (t == CKeyword::WHILE && nd.top().key == CKeyword::DO &&
 				nd.top().saw_statement)
+			// Handle while of do while
 			nd.pop();
-		else if (nd.top().key == CKeyword::ELSE && t == CKeyword::IF &&
+		else if (t == CKeyword::IF && nd.top().key == CKeyword::ELSE &&
 				nd.top().brace_balance == 0)
 			// else if -> elif
 			nd.top().key = CKeyword::ELIF;
-		else
+		else {
+			/*
+			 * On an "else" keyword backtrack: undo preceding
+			 * full pop and add a single level one.
+			 */
+			if (t == CKeyword::ELSE) {
+				nd = backtrack;
+				if (!nd.empty())
+					nd.pop();
+				backtrack = nd;
+			}
 			nd.push(NestingDetails(t));
+		}
 	}
 
 	/** Return the current level of nesting. */

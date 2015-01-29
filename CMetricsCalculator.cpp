@@ -79,18 +79,44 @@ CMetricsCalculator::keyword_style_left_space(char before)
 void
 CMetricsCalculator::newline()
 {
-	char c = src.char_before();
+	if (in_function && check_indentation) {
+		int expected = line_nesting;
+		if (saw_unindent)
+			expected--;
+		// Actual indentation spacing in units of spaces (e.g. 8 or 4)
+		double spacing = bol.get_indentation() / (double)(expected + 1);
+		if (bol.get_indentation()) {
+#ifdef LOGGING
+			std::cerr << qm.get_line_length().get_count() + 1 << " e: " << expected << " i: " << bol.get_indentation() << " s: " << spacing << std::endl;
+#endif
+			qm.add_indentation_spacing(spacing);
+		}
+	}
+
+	int eol_ptr;
+	char c = src.char_before(eol_ptr = 1);
 	// Skip over \r in \r\n
 	if (c == '\r')
-		c = src.char_before(2);
+		c = src.char_before(eol_ptr = 2);
 	// Allow empty lines
 	if (c != '\n' && isspace(c))
 		STYLE_HINT(SPACE_AT_END_OF_LINE);
+
+	// Find first non-blank character
+	while (c && c != '\n' && isspace(c))
+		c = src.char_before(++eol_ptr);
+	// Heuristic: determine continuation lines and disable indentation
+	check_indentation = (c == ';' || c == '{' || c == '}' || c == '\n' ||
+			(saw_non_semicolon_keyword && line_bracket_balance == 0));
 
 	bol.saw_newline();
 	// Line length minus the newline
 	qm.add_line(src.get_nchar() - chars_read_at_bol - 1);
 	chars_read_at_bol = src.get_nchar();
+	line_bracket_balance = 0;
+	saw_non_semicolon_keyword = false;
+	saw_unindent = false;
+	line_nesting = nesting.get_nesting_level();
 }
 
 inline bool
@@ -118,7 +144,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		scan_cpp_line = false;
 		break;
 	case ' ': case '\t': case '\v': case '\f': case '\r':
-		bol.saw_space();
+		bol.saw_space(c0);
 		break;
 	case '?':
 		bol.saw_non_space();
@@ -140,7 +166,8 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '(':
 		bol.saw_non_space();
 		qm.add_operator(c0);
-		bracket_balance++;
+		stmt_bracket_balance++;
+		line_bracket_balance++;
 		break;
 	case '~':
 		/*
@@ -179,7 +206,8 @@ CMetricsCalculator::calculate_metrics_switch()
 		else
 			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACKET);
 		bol.saw_non_space();
-		bracket_balance--;
+		stmt_bracket_balance--;
+		line_bracket_balance--;
 		break;
 	case '{':
 		if (in_function) {
@@ -204,6 +232,7 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case '}':
 		current_depth--;
+		saw_unindent = true;
 		if (in_function) {
 			if (isspace(src.char_before())) {
 				if (!is_eol_char(src.char_before()))
@@ -239,7 +268,7 @@ CMetricsCalculator::calculate_metrics_switch()
 				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
 		bol.saw_non_space();
 		// Do not add statements in for (x;y;z)
-		if (in_function && bracket_balance == 0) {
+		if (in_function && stmt_bracket_balance == 0) {
 			qm.add_statement(nesting.get_nesting_level());
 			nesting.saw_statement_semicolon();
 		}
@@ -610,21 +639,29 @@ CMetricsCalculator::calculate_metrics_switch()
 		case CKeyword::FOR:
 		case CKeyword::WHILE:
 			nesting.saw_nesting_keyword(key);
-			/* FALLTHROUGH */
+			keyword_style(before);
+			qm.add_path();
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
+			break;
 		case CKeyword::CASE:
 			keyword_style(before);
 			qm.add_path();
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
+			saw_unindent = true;
 			break;
 		case CKeyword::DEFAULT:
 			keyword_style_left_space(before);
 			qm.add_path();
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
+			saw_unindent = true;
 			break;
 		case CKeyword::GOTO:
 			keyword_style(before);
 			qm.add_goto();
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
 			break;
 		case CKeyword::REGISTER:
 			keyword_style(before);
@@ -642,13 +679,14 @@ CMetricsCalculator::calculate_metrics_switch()
 		case CKeyword::SWITCH:
 			nesting.saw_nesting_keyword(key);
 			keyword_style(before);
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
 			break;
 		case CKeyword::BREAK:
 		case CKeyword::CONTINUE:
 		case CKeyword::RETURN:
 			keyword_style_left_space(before);
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
 			break;
 		case CKeyword::OTHER:
 			break;
@@ -660,9 +698,12 @@ CMetricsCalculator::calculate_metrics_switch()
 			goto identifier;
 		case CKeyword::ELSE:
 			nesting.saw_nesting_keyword(key);
+			line_nesting = nesting.get_nesting_level() - 1;
+			saw_unindent = false;	// } else
 			if (!scan_cpp_directive)
 				keyword_style(before);
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
 			break;
 		case CKeyword::IF:
 			if (scan_cpp_directive) {
@@ -674,7 +715,8 @@ CMetricsCalculator::calculate_metrics_switch()
 				keyword_style(before);
 				qm.add_path();
 			}
-			bracket_balance = 0;
+			stmt_bracket_balance = 0;
+			saw_non_semicolon_keyword = true;
 			break;
 		case CKeyword::IFDEF:
 		case CKeyword::ELIF:

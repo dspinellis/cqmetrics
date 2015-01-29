@@ -36,7 +36,7 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		// VAL: Number of characters
 		q.get_nchar() << '\t' <<
 
-		// VAL: Number of lines, minimum, mean, maximum line length
+		// VAL: Number of lines, minimum, mean, maximum, standard deviation of line length
 		ANNOTATE(" line len: " <<)
 		q.get_line_length() << '\t' <<
 
@@ -44,7 +44,7 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" fun: " <<)
 		q.get_nfunction() << '\t' <<
 
-		// VAL: Number of statements, minimum, mean, maximum statement nesting
+		// VAL: Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 		ANNOTATE(" nest: " <<)
 		q.get_statement_nesting() << '\t' <<
 
@@ -86,21 +86,25 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		// VAL: Number of C preprocessor conditional directives in function bodies
 		q.get_nfun_cpp_conditional() << '\t' <<
 
-		// VAL: Number of functions, minimum, mean, maximum Halstead complexity per function
+		// VAL: Number of functions, minimum, mean, maximum, standard deviation of Halstead complexity per function
 		ANNOTATE(" halstead: " <<)
 		q.get_halstead() << '\t' <<
 
-		// VAL: Number of functions, minimum, mean, maximum cyclomatic complexity per function
+		// VAL: Number of functions, minimum, mean, maximum, standard deviation of cyclomatic complexity per function
 		ANNOTATE(" cyclomatic: " <<)
 		q.get_cyclomatic() << '\t' <<
 
-		// VAL: Number of identifiers, minimum, mean, maximum identifier length
+		// VAL: Number of identifiers, minimum, mean, maximum, standard deviation of identifier length
 		ANNOTATE(" id len: " <<)
 		q.get_identifier_length() << '\t' <<
 
-		// VAL: Number of unique identifiers, minimum, mean, maximum unique identifier length
+		// VAL: Number of unique identifiers, minimum, mean, maximum, standard deviation of unique identifier length
 		ANNOTATE(" unique id len: " <<)
-		q.get_unique_identifier_length();
+		q.get_unique_identifier_length() << '\t' <<
+
+		// VAL: Number spaces used for one level indentation, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
+		ANNOTATE(" identation spacing: " <<)
+		q.get_indentation_spacing();
 
 	ANNOTATE(o << " style: ";)
 	// One day: for (auto& e : get_style_hint())

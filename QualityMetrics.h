@@ -57,6 +57,7 @@ private:
 	Descriptive<double> halstead;		// Halstead complexity
 	Halstead halstead_tracker;
 	Descriptive<double> cyclomatic;		// Cyclomatic complexity
+	Descriptive<double> indentation_spacing;// Spacing used for indentation
 	Cyclomatic cyclomatic_tracker;
 	StyleHintContainer nstyle_hint;
 public:
@@ -166,6 +167,9 @@ public:
 	void add_operand(char c) {
 		add_operand(std::string(1, c));
 	}
+	void add_indentation_spacing(double s) {
+		indentation_spacing.add(s);
+	}
 	void add_identifier(const std::string s) {
 		if (identifier.find(s) == identifier.end()) {
 			unique_identifier_length.add(s.length());
@@ -202,6 +206,9 @@ public:
 
 	const Descriptive<double>& get_halstead() const { return halstead; }
 	const Descriptive<double>& get_cyclomatic() const { return cyclomatic; }
+	const Descriptive<double>& get_indentation_spacing() const {
+		return indentation_spacing;
+	}
 	const Descriptive<int>& get_identifier_length() const {
 		return identifier_length;
 	}

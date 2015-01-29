@@ -20,9 +20,12 @@ class NestingLevelTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testDoubleNestingBrace);
 	CPPUNIT_TEST(testBraceProtection);
 	CPPUNIT_TEST(testDoubleBraceProtection);
+	CPPUNIT_TEST(testIfElseBrace);
 	CPPUNIT_TEST(testIfElse);
+	CPPUNIT_TEST(testIfIfElse);
 	CPPUNIT_TEST(testElseIf);
 	CPPUNIT_TEST(testBracedElseIf);
+	CPPUNIT_TEST(testBracedElseIfElse);
 	CPPUNIT_TEST(testComplexBracedElseIf);
 	CPPUNIT_TEST(testSimpleDo);
 	CPPUNIT_TEST(testBracedDo);
@@ -181,13 +184,14 @@ public:
 	}
 
 	// if (x) { if (y) 2; else 2; 1; } 0;
-	void testIfElse() {
+	void testIfElseBrace() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
 		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
 		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
 		n.saw_statement_semicolon();
@@ -196,10 +200,39 @@ public:
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
 
+	// if (x) 1; else 1; 0;
+	void testIfElse() {
+		NestingLevel n;
+		n.saw_nesting_keyword(CKeyword::IF);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
+	// if (x) if (y) 2; else 2; 1; 0;
+	// Modeled implementation error
+	void testIfIfElse() {
+		NestingLevel n;
+		n.saw_nesting_keyword(CKeyword::IF);
+		n.saw_nesting_keyword(CKeyword::IF);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
 	// if (x) 1; else if (y) 1; else 1; 0;
 	// Uncovered specification error: strictly it is
 	// if (x) 1; else if (y) 2; else 1; 0;
-	// Uncovered implementation error
+	// Uncovered two implementation errors
 	void testElseIf() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
@@ -232,6 +265,29 @@ public:
 		n.saw_close_brace();
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
+
+	// if (x) 1; else { if (y) 2; else if (z) 2; else 2; } 0;
+	void testBracedElseIfElse() {
+		NestingLevel n;
+		n.saw_nesting_keyword(CKeyword::IF);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		n.saw_open_brace();
+		n.saw_nesting_keyword(CKeyword::IF);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		n.saw_nesting_keyword(CKeyword::IF);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		n.saw_close_brace();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
 
 	// if (x) 1; else { 1; if (y) 2; else 2; 1; } 0;
 	void testComplexBracedElseIf() {
@@ -363,7 +419,6 @@ public:
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
 
-
 	// if (x) for (;;) switch while (y) do 5; while(z); 0;
 	void testAllStatements() {
 		NestingLevel n;
@@ -383,7 +438,6 @@ public:
 		n.saw_statement_semicolon();
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
-
 
 };
 #endif /*  NESTINGLEVELTEST_H */

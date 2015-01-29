@@ -4,9 +4,9 @@ input and print on its standard output a single line with the following
 numbers separated by a single tab.
 
 * Number of characters
-* Number of lines, minimum, mean, maximum line length
+* Number of lines, minimum, mean, maximum, standard deviation of line length
 * Number of functions (A function is considered to start with `{` at column 1)
-* Number of statements, minimum, mean, maximum statement nesting
+* Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 * Number of `goto` statements
 * Number of `register` keywords
 * Number of `typedef`
@@ -18,10 +18,11 @@ numbers separated by a single tab.
 * Number of C preprocessor conditional directives (`#if`, `#ifdef`, `#elif`)
 * Number of C preprocessor directives in function bodies
 * Number of C preprocessor conditional directives in function bodies
-* Number of functions, minimum, mean, maximum Halstead complexity per function
-* Number of functions, minimum, mean, maximum cyclomatic complexity per function
-* Number of identifiers, minimum, mean, maximum identifier length
-* Number of unique identifiers, minimum, mean, maximum unique identifier length
+* Number of functions, minimum, mean, maximum, standard deviation of Halstead complexity per function
+* Number of functions, minimum, mean, maximum, standard deviation of cyclomatic complexity per function
+* Number of identifiers, minimum, mean, maximum, standard deviation of identifier length
+* Number of unique identifiers, minimum, mean, maximum, standard deviation of unique identifier length
+* Number spaces used for one level indentation, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
 * Number of occurences of no space after binary operator
 * Number of occurences of no space after closing brace
 * Number of occurences of no space after comma

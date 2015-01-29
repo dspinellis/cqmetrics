@@ -39,7 +39,14 @@ private:
 	bool in_function;		// True when scanning functions
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
-	int bracket_balance;		// Bracket balance
+	/** Bracket balance for control statememts. */
+	int stmt_bracket_balance;
+	int line_bracket_balance;	// Bracket balance for each line
+	int line_nesting;		// Nesting of current line
+	bool check_indentation;		// Check indentation of current line
+	/** True for keywords that don't end with semicolon */
+	bool saw_non_semicolon_keyword;
+	bool saw_unindent;		// True if line is unindented
 	NestingLevel nesting;		// Track nesting level
 	CKeyword ckeyword;
 	/** Verify the coding style of binary operators */
@@ -53,7 +60,8 @@ public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
 	scan_cpp_directive(false), scan_cpp_line(false),
-	chars_read_at_bol(0), bracket_balance(0) {}
+	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
+	saw_non_semicolon_keyword(false), saw_unindent(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF

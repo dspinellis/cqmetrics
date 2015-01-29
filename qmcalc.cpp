@@ -15,7 +15,11 @@
  */
 
 #include <cstring>
+#include <fstream>
+#include <iostream>
 #include <ostream>
+
+#include "unistd.h"
 
 #include "CMetricsCalculator.h"
 
@@ -24,10 +28,34 @@ int
 main(int argc, char *argv[])
 {
 	CMetricsCalculator cm;
+	std::ifstream in;
+	bool output_endl = true;
+	int opt;
+
+	while ((opt = getopt(argc, argv, "n")) != -1)
+		switch (opt) {
+		case 'n':
+			output_endl = false;
+			break;
+		default: /* ? */
+			std::cerr << "Usage: " << argv[0] <<
+				" [-n] [file]" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+
+	// Read from file, if specified
+	if (argv[optind]) {
+		in.open(argv[optind], std::ifstream::in);
+		if (!in.good()) {
+			std::cerr << "Unable to open " << argv[1] << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		std::cin.rdbuf(in.rdbuf());
+	}
 
 	cm.calculate_metrics();
 	std::cout << cm.get_metrics();
-	if (argc != 2 || strcmp(argv[1], "-n"))
+	if (output_endl)
 		std::cout << std::endl;
 	return 0;
 }

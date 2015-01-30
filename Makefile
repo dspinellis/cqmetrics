@@ -1,6 +1,6 @@
 ifdef DEBUG
 LDFLAGS=-g
-CXXFLAGS+=-g
+CXXFLAGS+=-g -O0
 else
 CXXFLAGS+=-O2
 endif

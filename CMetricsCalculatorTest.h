@@ -55,6 +55,11 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testIndentationIf);
 	CPPUNIT_TEST(testIndentationBrace);
 	CPPUNIT_TEST(testIfFor);
+	CPPUNIT_TEST(testLineComment);
+	CPPUNIT_TEST(testCppLine);
+	CPPUNIT_TEST(testCppCommentLine);
+	CPPUNIT_TEST(testElseCppCommentLine);
+	CPPUNIT_TEST(testBlockCommentIndent);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -568,6 +573,7 @@ public:
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
 	}
 
+	// Written to find implementation error
 	void testIfFor() {
 		std::stringstream str("foo()\n{\n\tif (a)\n\t\tfor (;;)\n\t\t\tbar();\n}\n");
 		CMetricsCalculator calc(str);
@@ -578,5 +584,58 @@ public:
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
 	}
 
+	// Written to investigate implementation error
+	void testLineComment() {
+		std::stringstream str("foo()\n{\n\tif (x) {\n\t\t// foo\n\t\tbar();\n\t}\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	// Written to investigate implementation error
+	void testCppLine() {
+		std::stringstream str("foo()\n{\n\tif (x) {\n\t\t#define x 1\n\t\tbar();\n\t}\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	// Written to investigate implementation error
+	void testCppCommentLine() {
+		std::stringstream str("foo()\n{\n\tif (x) {\n\t\t#define x 1\n\t\t// Comment\n\t\tbar();\n\t}\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	// Written to investigate implementation error
+	void testElseCppCommentLine() {
+		std::stringstream str("foo()\n{\n\tif (x) {\n\t\tfoo();\n\t} else {\n#define x 1\n\t\t// Comment\n\t\tbar();\n\t}\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 6);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testBlockCommentIndent() {
+		std::stringstream str("foo()\n{\n\tif (x)\n\t\t/*\n\t\t * comment\n\t\t */\n\t\tfoo();\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

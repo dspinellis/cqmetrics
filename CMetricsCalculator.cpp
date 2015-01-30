@@ -77,9 +77,12 @@ CMetricsCalculator::keyword_style_left_space(char before)
 }
 
 void
-CMetricsCalculator::newline()
+CMetricsCalculator::newline(bool in_block_comment)
 {
-	if (in_function && check_indentation) {
+	if (in_function &&
+			!continuation &&
+			!saw_cpp_directive &&
+			!in_block_comment) {
 		int expected = line_nesting;
 		if (saw_unindent)
 			expected--;
@@ -105,9 +108,21 @@ CMetricsCalculator::newline()
 	// Find first non-blank character
 	while (c && c != '\n' && isspace(c))
 		c = src.char_before(++eol_ptr);
-	// Heuristic: determine continuation lines and disable indentation
-	check_indentation = (c == ';' || c == '{' || c == '}' || c == '\n' ||
-			(saw_non_semicolon_keyword && line_bracket_balance == 0));
+	/*
+	 * Heuristic: determine whether the next line could be a continuation
+	 * line (where indentation practices vary widely).
+	 * The following cases:
+	 * Lines ending in ;{}
+	 * Empty lines
+	 * Comments (although they could be commenting long statement)
+	 * C preprocessor directives
+	 * A complete for(), while(), if(), ... statement
+	 */
+	bool not_continuation =
+		(c == ';' || c == '{' || c == '}' || c == '\n' ||
+		saw_comment || saw_cpp_directive ||
+		(saw_non_semicolon_keyword && line_bracket_balance == 0));
+	continuation = !not_continuation;
 
 	bol.saw_newline();
 	// Line length minus the newline
@@ -116,6 +131,8 @@ CMetricsCalculator::newline()
 	line_bracket_balance = 0;
 	saw_non_semicolon_keyword = false;
 	saw_unindent = false;
+	saw_comment = false;
+	saw_cpp_directive = false;
 	line_nesting = nesting.get_nesting_level();
 }
 
@@ -461,6 +478,7 @@ CMetricsCalculator::calculate_metrics_switch()
 				qm.add_fun_cpp_directive();
 			scan_cpp_directive = true;
 			scan_cpp_line = true;
+			saw_cpp_directive = true;
 		}
 		bol.saw_non_space();
 		break;
@@ -541,12 +559,13 @@ CMetricsCalculator::calculate_metrics_switch()
 					qm.add_comment_char();
 					GET(c0);
 					if (c0 == '\n')
-						newline();
+						newline(true);
 				}
 				GET(c0);
-				if (c0 == '/')
+				if (c0 == '/') {
+					saw_comment = true;
 					break;
-				else {
+				} else {
 					if (c0 == '\n')
 						newline();
 					qm.add_comment_char();
@@ -565,6 +584,7 @@ CMetricsCalculator::calculate_metrics_switch()
 					qm.add_comment_char();
 			}
 			src.push(c0);
+			saw_comment = true;
 			break;
 		default:				/* / */
 			src.push(c0);

@@ -43,10 +43,12 @@ private:
 	int stmt_bracket_balance;
 	int line_bracket_balance;	// Bracket balance for each line
 	int line_nesting;		// Nesting of current line
-	bool check_indentation;		// Check indentation of current line
+	bool continuation;		// True if a statement continuation line
 	/** True for keywords that don't end with semicolon */
 	bool saw_non_semicolon_keyword;
 	bool saw_unindent;		// True if line is unindented
+	bool saw_comment;		// True after a comment
+	bool saw_cpp_directive;		// True after c preprocessor directive
 	NestingLevel nesting;		// Track nesting level
 	CKeyword ckeyword;
 	/** Verify the coding style of binary operators */
@@ -55,13 +57,14 @@ private:
 	void keyword_style(char before, char allowed = 0);
 	void keyword_style_left_space(char before);
 	/** Called at every encountered newline */
-	void newline();
+	void newline(bool block_comment = false);
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
 	scan_cpp_directive(false), scan_cpp_line(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
-	saw_non_semicolon_keyword(false), saw_unindent(false) {}
+	saw_non_semicolon_keyword(false), saw_unindent(false),
+	saw_comment(false), saw_cpp_directive(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF

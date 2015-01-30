@@ -717,13 +717,14 @@ CMetricsCalculator::calculate_metrics_switch()
 			}
 			goto identifier;
 		case CKeyword::ELSE:
-			nesting.saw_nesting_keyword(key);
-			line_nesting = nesting.get_nesting_level() - 1;
-			saw_unindent = false;	// } else
-			if (!scan_cpp_directive)
+			if (!scan_cpp_directive) {
+				nesting.saw_nesting_keyword(key);
+				line_nesting = nesting.get_nesting_level() - 1;
+				saw_unindent = false;	// } else
 				keyword_style(before);
-			stmt_bracket_balance = 0;
-			saw_non_semicolon_keyword = true;
+				saw_non_semicolon_keyword = true;
+				stmt_bracket_balance = 0;
+			}
 			break;
 		case CKeyword::IF:
 			if (scan_cpp_directive) {
@@ -734,9 +735,9 @@ CMetricsCalculator::calculate_metrics_switch()
 				nesting.saw_nesting_keyword(key);
 				keyword_style(before);
 				qm.add_path();
+				stmt_bracket_balance = 0;
+				saw_non_semicolon_keyword = true;
 			}
-			stmt_bracket_balance = 0;
-			saw_non_semicolon_keyword = true;
 			break;
 		case CKeyword::IFDEF:
 		case CKeyword::ELIF:

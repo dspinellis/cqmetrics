@@ -213,7 +213,7 @@ public:
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
 
-	// if (x) 1; else 1; 0;
+	// if (x) { 1; } else { 1; } 0;
 	void testBracedIfElse() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);

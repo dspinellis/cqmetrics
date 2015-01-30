@@ -36,6 +36,7 @@ class NestingLevelTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testUnbracedNestedDoNestedWhile);
 	CPPUNIT_TEST(testSingleWhile);
 	CPPUNIT_TEST(testAllStatements);
+	CPPUNIT_TEST(testBracedAssignment);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -455,6 +456,19 @@ public:
 		n.saw_statement_semicolon();
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 	}
+
+	// a = { 0 }; 0;
+	void testBracedAssignment() {
+		NestingLevel n;
+		n.saw_open_brace();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		n.saw_close_brace();
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
 
 };
 #endif /*  NESTINGLEVELTEST_H */

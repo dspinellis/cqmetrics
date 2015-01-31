@@ -19,6 +19,7 @@
 #include <iostream>
 #include <ostream>
 
+#include "errno.h"
 #include "unistd.h"
 
 #include "CMetricsCalculator.h"
@@ -47,7 +48,8 @@ main(int argc, char *argv[])
 	if (argv[optind]) {
 		in.open(argv[optind], std::ifstream::in);
 		if (!in.good()) {
-			std::cerr << "Unable to open " << argv[1] << std::endl;
+			std::cerr << "Unable to open " << argv[1] <<
+				": " << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);
 		}
 		std::cin.rdbuf(in.rdbuf());

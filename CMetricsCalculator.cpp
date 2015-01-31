@@ -786,7 +786,6 @@ CMetricsCalculator::calculate_metrics_switch()
 		val = "";
 		for (;;) {
 			GET(c0);
-			std::cerr << "S:" << c0 << std::endl;
 			if (c0 == '\\') {
 				val += '\\';
 				// Consume one character after the backslash

@@ -62,6 +62,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testBlockCommentIndent);
 	CPPUNIT_TEST(testIfElseCppComment);
 	CPPUNIT_TEST(testBracedAssignment);
+	CPPUNIT_TEST(testElseComment);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -658,6 +659,17 @@ public:
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	// Added after problem that set indentation level to -1
+	void testElseComment() {
+		std::stringstream str("foo()\n{\n\tif(x)\n\t\tfor (;;) foo();\n\telse\n\t\tbar();\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
 	}

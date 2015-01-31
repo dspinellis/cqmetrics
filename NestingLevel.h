@@ -46,13 +46,19 @@ private:
 	 * gets thrown off by the use of macros.
 	 */
 	void pop() {
-		// Save if stack for possible else
-		if (nd.top().key == CKeyword::IF ||
-				nd.top().key == CKeyword::ELIF)
-			backtrack = nd;
+		bool saved_backtrack = false;
+
 		while (!nd.empty() && nd.top().brace_balance == 0 &&
-				nd.top().key != CKeyword::DO)
+				nd.top().key != CKeyword::DO) {
+			// Save if stack for possible else
+			if ((nd.top().key == CKeyword::IF ||
+					nd.top().key == CKeyword::ELIF) &&
+					!saved_backtrack) {
+				backtrack = nd;
+				saved_backtrack = true;
+			}
 			nd.pop();
+		}
 		if (nd.empty())
 			reset();	// We lost track of the state
 	}

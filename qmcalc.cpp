@@ -24,40 +24,62 @@
 
 #include "CMetricsCalculator.h"
 
-/* Calculate and print C metrics for the standard input */
-int
-main(int argc, char *argv[])
+static bool output_endl = true;
+static bool output_filename = false;
+
+// Process and print the metrics of stdin
+static void
+process_metrics(const char *filename)
 {
 	CMetricsCalculator cm;
+
+	cm.calculate_metrics();
+	std::cout << cm.get_metrics();
+	if (output_filename)
+		std::cout << '\t' << filename;
+	if (output_endl)
+		std::cout << std::endl;
+}
+
+/* Calculate and print C metrics for the standard input */
+int
+main(int argc, char * const argv[])
+{
 	std::ifstream in;
-	bool output_endl = true;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "n")) != -1)
+	while ((opt = getopt(argc, argv, "an")) != -1)
 		switch (opt) {
+		case 'a':
+			output_filename = true;
+			break;
 		case 'n':
 			output_endl = false;
 			break;
 		default: /* ? */
 			std::cerr << "Usage: " << argv[0] <<
-				" [-n] [file]" << std::endl;
+				" [-n] [-a] [file]" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
+	if (!argv[optind]) {
+		process_metrics("-");
+		exit(EXIT_SUCCESS);
+	}
+
 	// Read from file, if specified
-	if (argv[optind]) {
+	while (argv[optind]) {
 		in.open(argv[optind], std::ifstream::in);
 		if (!in.good()) {
-			std::cerr << "Unable to open " << argv[1] <<
+			std::cerr << "Unable to open " << argv[optind] <<
 				": " << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);
 		}
 		std::cin.rdbuf(in.rdbuf());
+		process_metrics(argv[optind]);
+		in.close();
+		optind++;
 	}
 
-	cm.calculate_metrics();
-	std::cout << cm.get_metrics();
-	if (output_endl)
-		std::cout << std::endl;
-	return 0;
+	exit(EXIT_SUCCESS);
 }

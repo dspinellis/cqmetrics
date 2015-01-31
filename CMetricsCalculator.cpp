@@ -86,6 +86,9 @@ CMetricsCalculator::newline(bool in_non_code_block)
 		int expected = line_nesting;
 		if (saw_unindent && expected > 0)
 			expected--;
+		// Calculation seems to be off: prevent division by zero
+		if (expected < 0)
+			expected = 0;
 		// Actual indentation spacing in units of spaces (e.g. 8 or 4)
 		double spacing = bol.get_indentation() / (double)(expected + 1);
 		if (bol.get_indentation()) {

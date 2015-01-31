@@ -57,7 +57,7 @@ private:
 	void keyword_style(char before, char allowed = 0);
 	void keyword_style_left_space(char before);
 	/** Called at every encountered newline */
-	void newline(bool block_comment = false);
+	void newline(bool in_non_code_block = false);
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),

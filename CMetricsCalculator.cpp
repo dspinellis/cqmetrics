@@ -77,12 +77,12 @@ CMetricsCalculator::keyword_style_left_space(char before)
 }
 
 void
-CMetricsCalculator::newline(bool in_block_comment)
+CMetricsCalculator::newline(bool in_non_code_block)
 {
 	if (in_function &&
 			!continuation &&
 			!saw_cpp_directive &&
-			!in_block_comment) {
+			!in_non_code_block) {
 		int expected = line_nesting;
 		if (saw_unindent && expected > 0)
 			expected--;
@@ -786,15 +786,19 @@ CMetricsCalculator::calculate_metrics_switch()
 		val = "";
 		for (;;) {
 			GET(c0);
+			std::cerr << "S:" << c0 << std::endl;
 			if (c0 == '\\') {
 				val += '\\';
 				// Consume one character after the backslash
 				GET(c0);
+				if (c0 == '\n')
+					newline(true);
 				val += c0;
 				continue;
-			}
-			if (c0 == '"')
+			} else if (c0 == '"')
 				break;
+			else if (c0 == '\n')
+				newline(true);
 			val += c0;
 		}
 		qm.add_operand(val);

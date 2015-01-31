@@ -116,7 +116,7 @@ public:
 			 * On an "else" keyword backtrack: undo preceding
 			 * full pop and add a single level one.
 			 */
-			if (t == CKeyword::ELSE) {
+			if (t == CKeyword::ELSE && !backtrack.empty()) {
 				nd = backtrack;
 				if (!nd.empty())
 					nd.pop();

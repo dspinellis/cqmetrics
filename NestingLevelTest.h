@@ -38,6 +38,7 @@ class NestingLevelTest : public CppUnit::TestFixture  {
 	CPPUNIT_TEST(testAllStatements);
 	CPPUNIT_TEST(testBracedAssignment);
 	CPPUNIT_TEST(testIfForElse);
+	CPPUNIT_TEST(testElse);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -479,6 +480,19 @@ public:
 		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
 		n.saw_nesting_keyword(CKeyword::FOR);
 		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		n.saw_nesting_keyword(CKeyword::ELSE);
+		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		n.saw_statement_semicolon();
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+	}
+
+	// 0; else 1;
+	// Added to investigate and verify fixing testNoIf
+	void testElse() {
+		NestingLevel n;
+		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 		n.saw_statement_semicolon();
 		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
 		n.saw_nesting_keyword(CKeyword::ELSE);

@@ -1,9 +1,12 @@
 *.o
 *.stackdump
 *.swp
+.gdb_history
 header.tab
+header.txt
 qmcalc
 qmcalc.exe
 QualityMetricNames.h
+tags
 UnitTests
 UnitTests.exe

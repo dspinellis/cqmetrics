@@ -26,6 +26,7 @@
 
 static bool output_endl = true;
 static bool output_filename = false;
+static bool indentation_list = false;
 
 // Process and print the metrics of stdin
 static void
@@ -33,6 +34,8 @@ process_metrics(const char *filename)
 {
 	CMetricsCalculator cm;
 
+	if (indentation_list)
+		cm.enable_indentation_list();
 	cm.calculate_metrics();
 	std::cout << cm.get_metrics();
 	if (output_filename)
@@ -48,17 +51,20 @@ main(int argc, char * const argv[])
 	std::ifstream in;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "an")) != -1)
+	while ((opt = getopt(argc, argv, "ain")) != -1)
 		switch (opt) {
 		case 'a':
 			output_filename = true;
+			break;
+		case 'i':
+			indentation_list = true;
 			break;
 		case 'n':
 			output_endl = false;
 			break;
 		default: /* ? */
 			std::cerr << "Usage: " << argv[0] <<
-				" [-n] [-a] [file]" << std::endl;
+				" [-ain] [file ...]" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 

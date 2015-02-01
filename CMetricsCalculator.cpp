@@ -92,9 +92,12 @@ CMetricsCalculator::newline(bool in_non_code_block)
 		// Actual indentation spacing in units of spaces (e.g. 8 or 4)
 		double spacing = bol.get_indentation() / (double)(expected + 1);
 		if (bol.get_indentation()) {
-#ifdef LOGGING
-			std::cerr << qm.get_line_length().get_count() + 1 << " e: " << expected << " i: " << bol.get_indentation() << " s: " << spacing << std::endl;
-#endif
+			if (indentation_list)
+				std::cout <<
+					qm.get_line_length().get_count() + 1 <<
+					": e: " << expected <<
+					" i: " << bol.get_indentation() <<
+					" s: " << spacing << std::endl;
 			qm.add_indentation_spacing(spacing);
 		}
 	}

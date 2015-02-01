@@ -50,6 +50,7 @@ private:
 	bool saw_unindent;		// True if line is unindented
 	bool saw_comment;		// True after a comment
 	bool saw_cpp_directive;		// True after c preprocessor directive
+	bool indentation_list;		// List indentation for each line
 	NestingLevel nesting;		// Track nesting level
 	CKeyword ckeyword;
 	/** Verify the coding style of binary operators */
@@ -66,7 +67,7 @@ public:
 	scan_cpp_directive(false), scan_cpp_line(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
 	saw_non_semicolon_keyword(false), saw_unindent(false),
-	saw_comment(false), saw_cpp_directive(false) {}
+	saw_comment(false), saw_cpp_directive(false), indentation_list(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF
@@ -74,5 +75,6 @@ public:
 			qm.add_line(src.get_nchar() - chars_read_at_bol);
 	}
 	const QualityMetrics& get_metrics() const { return qm; }
+	void enable_indentation_list() { indentation_list = true; }
 };
 #endif /* CMETRICSCALCULATOR_H */

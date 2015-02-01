@@ -54,6 +54,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testIndentationSimple);
 	CPPUNIT_TEST(testIndentationIf);
 	CPPUNIT_TEST(testIndentationBrace);
+	CPPUNIT_TEST(testIndentationGnuBrace);
 	CPPUNIT_TEST(testIfFor);
 	CPPUNIT_TEST(testLineComment);
 	CPPUNIT_TEST(testDoxComment);
@@ -596,6 +597,16 @@ public:
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testIndentationGnuBrace() {
+		std::stringstream str("foo()\n{\n  if (a)\n    {\n      return;\n    }\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 2);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
 	}
 

@@ -44,6 +44,8 @@ private:
 	int stmt_bracket_balance;
 	int line_bracket_balance;	// Bracket balance for each line
 	int line_nesting;		// Nesting of current line
+	/** Indentation of preceding indented line. */
+	int previous_indentation;
 	bool continuation;		// True if a statement continuation line
 	/** True for keywords that don't end with semicolon */
 	bool saw_non_semicolon_keyword;

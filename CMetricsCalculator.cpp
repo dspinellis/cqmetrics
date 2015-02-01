@@ -100,6 +100,7 @@ CMetricsCalculator::newline(bool in_non_code_block)
 					" s: " << spacing << std::endl;
 			qm.add_indentation_spacing(spacing);
 		}
+		previous_indentation = bol.get_indentation();
 	}
 
 	int eol_ptr;
@@ -242,7 +243,9 @@ CMetricsCalculator::calculate_metrics_switch()
 				STYLE_HINT(SPACE_AFTER_OPENING_BRACE);
 			else
 				STYLE_HINT(NO_SPACE_AFTER_OPENING_BRACE);
-			nesting.saw_open_brace();
+			nesting.saw_open_brace(bol.at_bol_space() &&
+					bol.get_indentation() >
+					previous_indentation);
 		}
 		// Heuristic: functions begin with { at first column
 		if (bol.at_bol() && current_depth == top_level_depth) {

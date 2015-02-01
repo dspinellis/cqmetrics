@@ -24,7 +24,7 @@ CMetricsCalculator.o: CMetricsCalculator.h CMetricsCalculator.cpp BolState.h \
 	CharSource.h QualityMetrics.h NestingLevel.h
 
 QualityMetricNames.h: QualityMetrics.h metric-names.sed
-	sed -f metric-names.sed QualityMetrics.h >$@
+	sed -n -f metric-names.sed QualityMetrics.h >$@
 
 README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-readme.sh >$@

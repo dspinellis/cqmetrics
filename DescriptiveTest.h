@@ -32,6 +32,7 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testMinMax);
 	CPPUNIT_TEST(testMinMaxDouble);
 	CPPUNIT_TEST(testOutput);
+	CPPUNIT_TEST(testOutputEmpty);
 	CPPUNIT_TEST(testSDZero);
 	CPPUNIT_TEST(testSDTwo);
 	CPPUNIT_TEST(testSDHalf);
@@ -94,6 +95,14 @@ public:
 		str << a;
 		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t4\t1");
 	}
+
+	void testOutputEmpty() {
+		std::stringstream str;
+		Descriptive<int> a;
+		str << a;
+		CPPUNIT_ASSERT(str.str() == "0\t\t\t\t");
+	}
+
 	void testSDZero() {
 		Descriptive<int> a;
 		a.add(1);

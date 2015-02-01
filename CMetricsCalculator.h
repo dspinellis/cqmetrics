@@ -37,6 +37,7 @@ private:
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
 	bool in_function;		// True when scanning functions
+	bool in_dox_comment;		// True if processing a DOxygen comment
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
 	/** Bracket balance for control statememts. */
@@ -61,6 +62,7 @@ private:
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0), in_function(false),
+	in_dox_comment(false),
 	scan_cpp_directive(false), scan_cpp_line(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
 	saw_non_semicolon_keyword(false), saw_unindent(false),

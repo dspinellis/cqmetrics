@@ -12,6 +12,8 @@ numbers separated by a single tab.
 * Number of `typedef`
 * Number of comments
 * Number of comment characters
+* Number of DOxygen comments
+* Number of DOxygen comment characters
 * Number of comments inside function bodies
 * Number of C preprocessor directives
 * Number of C preprocessor include directives

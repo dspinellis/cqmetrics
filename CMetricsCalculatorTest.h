@@ -56,6 +56,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testIndentationBrace);
 	CPPUNIT_TEST(testIfFor);
 	CPPUNIT_TEST(testLineComment);
+	CPPUNIT_TEST(testDoxComment);
 	CPPUNIT_TEST(testCppLine);
 	CPPUNIT_TEST(testCppCommentLine);
 	CPPUNIT_TEST(testElseCppCommentLine);
@@ -164,6 +165,27 @@ public:
 		calc2.calculate_metrics();
 		const QualityMetrics& qm2(calc2.get_metrics());
 		CPPUNIT_ASSERT(qm2.get_ncomment() == 3);
+	}
+
+	void testDoxComment() {
+		std::stringstream str("/** hi\n */\n/* no dox */\n/// foo\n// No dox\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ndox_comment() == 2);
+		CPPUNIT_ASSERT(qm.get_ncomment() == 4);
+
+		std::stringstream str2("///Hi\n");
+		CMetricsCalculator calc2(str2);
+		calc2.calculate_metrics();
+		const QualityMetrics& qm2(calc2.get_metrics());
+		CPPUNIT_ASSERT(qm2.get_ndox_comment_char() == 3);
+
+		std::stringstream str3("/**hi*/\n");
+		CMetricsCalculator calc3(str3);
+		calc3.calculate_metrics();
+		const QualityMetrics& qm3(calc3.get_metrics());
+		CPPUNIT_ASSERT(qm3.get_ndox_comment_char() == 2);
 	}
 
 	void testNLineComment() {
@@ -637,7 +659,7 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
+		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
 	}

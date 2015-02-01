@@ -556,10 +556,18 @@ CMetricsCalculator::calculate_metrics_switch()
 				qm.add_fun_comment();
 			GET(c0);
 			if (c0 == '\n')
-				newline();
+				newline(true);
+			else if (c0 == '*') {
+				// DOxygen block comment
+				in_dox_comment = true;
+				qm.add_dox_comment();
+				qm.remove_dox_comment_char();
+			}
 			for (;;) {
 				while (c0 != '*') {
 					qm.add_comment_char();
+					if (in_dox_comment)
+						qm.add_dox_comment_char();
 					GET(c0);
 					if (c0 == '\n')
 						newline(true);
@@ -567,11 +575,14 @@ CMetricsCalculator::calculate_metrics_switch()
 				GET(c0);
 				if (c0 == '/') {
 					saw_comment = true;
+					in_dox_comment = false;
 					break;
 				} else {
 					if (c0 == '\n')
 						newline();
 					qm.add_comment_char();
+					if (in_dox_comment)
+						qm.add_dox_comment_char();
 				}
 			}
 			break;
@@ -579,15 +590,24 @@ CMetricsCalculator::calculate_metrics_switch()
 			qm.add_comment();
 			if (in_function)
 				qm.add_fun_comment();
+			GET(c0);
+			if (c0 == '/') {
+				// DOxygen line comment
+				in_dox_comment = true;
+				qm.add_dox_comment();
+			}
 			for (;;) {
-				GET(c0);
 				if (c0 == '\n')
 					break;
 				else
 					qm.add_comment_char();
+					if (in_dox_comment)
+						qm.add_dox_comment_char();
+				GET(c0);
 			}
 			src.push(c0);
 			saw_comment = true;
+			in_dox_comment = false;
 			break;
 		default:				/* / */
 			src.push(c0);

@@ -54,11 +54,12 @@ CMetricsCalculator::keyword_style(char before, char allowed)
 {
 	if (scan_cpp_line)
 		return;
-	if (before != allowed)
+	if (before != allowed) {
 		if (isspace(before))
 			STYLE_HINT(SPACE_BEFORE_KEYWORD);
 		else
 			STYLE_HINT(NO_SPACE_BEFORE_KEYWORD);
+	}
 	if (isspace(src.char_after()))
 		STYLE_HINT(SPACE_AFTER_KEYWORD);
 	else
@@ -146,7 +147,6 @@ CMetricsCalculator::newline(bool in_non_code_block)
 inline bool
 CMetricsCalculator::calculate_metrics_switch()
 {
-	int n;
 	char c0, c1;
 	char before;	// The character before the current token
 	std::string val;
@@ -280,18 +280,20 @@ CMetricsCalculator::calculate_metrics_switch()
 		break;
 	case ';':
 		// Allow a single ; on a line
-		if (!bol.at_bol_space())
+		if (!bol.at_bol_space()) {
 			if (isspace(src.char_before()))
 				STYLE_HINT(SPACE_BEFORE_SEMICOLON);
 			else
 				STYLE_HINT(NO_SPACE_BEFORE_SEMICOLON);
+		}
 		if (src.char_after() != ';' &&		// Handle "for (;;)"
-		    src.char_after() != ')')
+		    src.char_after() != ')') {
 			if (isspace(src.char_after())) {
 				if (!is_eol_char(src.char_after()))
 					STYLE_HINT(SPACE_AFTER_SEMICOLON);
 			} else
 				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
+		}
 		bol.saw_non_space();
 		// Do not add statements in for (x;y;z)
 		if (in_function && stmt_bracket_balance == 0) {

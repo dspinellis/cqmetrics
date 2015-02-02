@@ -1,3 +1,4 @@
+CXXFLAGS=-Wall -Werror
 ifdef DEBUG
 LDFLAGS=-g
 CXXFLAGS+=-g -O0

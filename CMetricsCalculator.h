@@ -64,9 +64,9 @@ private:
 	void newline(bool in_non_code_block = false);
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
-	top_level_depth(0), current_depth(0), in_function(false),
-	in_dox_comment(false),
+	top_level_depth(0), current_depth(0),
 	scan_cpp_directive(false), scan_cpp_line(false),
+	in_function(false), in_dox_comment(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
 	saw_non_semicolon_keyword(false), saw_unindent(false),
 	saw_comment(false), saw_cpp_directive(false), indentation_list(false) {}

@@ -30,7 +30,7 @@ public:
 	/** Called when processing a space character c0 */
 	void saw_space(int c) {
 		bol_state = false;
-		if (bol_space_state)
+		if (bol_space_state) {
 			if (c == ' ')
 				indentation++;
 			/*
@@ -43,6 +43,7 @@ public:
 			 */
 			else if (c == '\t')
 				indentation = (indentation / 8 + 1) * 8;
+		}
 	}
 
 	/** Called when processing a non-space character */

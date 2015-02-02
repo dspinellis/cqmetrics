@@ -66,6 +66,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testBracedAssignment);
 	CPPUNIT_TEST(testElseComment);
 	CPPUNIT_TEST(testElseNoIf);
+	CPPUNIT_TEST(testInconsistency);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -717,6 +718,25 @@ public:
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
 		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+	}
+
+	void testInconsistency() {
+		std::stringstream str("foo()\n{\n"
+				"foo(a,b);\n"
+				"foo(a,b) ;\n"
+				"foo(a, b);;;;\n"
+			"}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		/*
+		 * (NO)SPACE_AFTER_COMMA 3 (1 inconistent)
+		 * (NO)SPACE_BEFORE_CLOSING_BRACKET 4
+		 * (NO)SPACE_BEFORE_COMMA 3
+		 * (NO)SPACE_BEFORE_SEMICOLON 6 (1 inconsistent)
+		 * Total=16
+		 */
+		CPPUNIT_ASSERT(qm.get_style_inconsistency() == 2 / 16.);
 	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

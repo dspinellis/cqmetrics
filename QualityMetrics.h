@@ -200,6 +200,8 @@ public:
 	int get_ndox_comment() const { return ndox_comment; }
 	int get_ndox_comment_char() const { return ndox_comment_char; }
 	int get_nfun_comment() const { return nfun_comment; }
+	/// Return the code's weighted style inconsistency.
+	double get_style_inconsistency() const;
 
 	/*
 	 * The global preprocessor directive functions include in their
@@ -224,6 +226,16 @@ public:
 	}
 	int get_style_hint(enum StyleHint e) const { return nstyle_hint[e]; }
 	const StyleHintContainer& get_style_hint() const { return nstyle_hint; }
+
+	// Actually private, but exposed for unit testing
+
+	friend class QualityMetricsTest;
+private:
+	/// Accumulate # cases and sum of two inconsistency measures.
+	double inconsistency_accumulate(enum StyleHint a, enum StyleHint b,
+		int& ncases, double& inc_sum) const;
+	 /// Unweighted inconsistency of two complimentary choices a and b.
+	static double inconsistency(double a, double b);
 };
 
 std::ostream& operator <<(std::ostream& o, const QualityMetrics &q);

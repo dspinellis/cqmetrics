@@ -25,6 +25,7 @@ class QualityMetricsTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(QualityMetricsTest);
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testNline);
+	CPPUNIT_TEST(testInconsistency);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -39,6 +40,15 @@ public:
 		q.add_line(10);
 		q.add_line(12);
 		CPPUNIT_ASSERT(q.get_line_length().get_count() == 2);
+	}
+
+	void testInconsistency() {
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 0) == 0);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(0, 5) == 0);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 5) == 5);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(2, 4) == 2);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(6, 6) == 2);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(1, 100) == 1);
 	}
 };
 #endif /*  QUALITYMETRICSTEST_H */

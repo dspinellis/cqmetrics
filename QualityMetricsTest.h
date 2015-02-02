@@ -26,6 +26,8 @@ class QualityMetricsTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testNline);
 	CPPUNIT_TEST(testInconsistency);
+	CPPUNIT_TEST(testInconsistencyAccumulate);
+	CPPUNIT_TEST(testStyleInconsistency);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
@@ -51,5 +53,48 @@ public:
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(6, 2) == 2);
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(1, 100) == 1);
 	}
+
+	void testInconsistencyAccumulate() {
+		int ncases = 0;
+		int inc_sum = 0;
+		QualityMetrics q;
+
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_BINARY_OP);
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_BINARY_OP);
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_BINARY_OP);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_BINARY_OP);
+		q.inconsistency_accumulate(
+				QualityMetrics::NO_SPACE_AFTER_BINARY_OP,
+				QualityMetrics::SPACE_AFTER_BINARY_OP, ncases,
+				inc_sum);
+		CPPUNIT_ASSERT(ncases == 4);
+		CPPUNIT_ASSERT(inc_sum == 1);
+	}
+
+	void testStyleInconsistency() {
+		QualityMetrics q;
+
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_BINARY_OP);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_BINARY_OP);
+
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_COMMA);
+		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_COMMA);
+
+		// (1 + 3) inconsistent cases / out of 16 total
+		CPPUNIT_ASSERT(q.get_style_inconsistency() == 0.25);
+	}
+
 };
 #endif /*  QUALITYMETRICSTEST_H */

@@ -44,9 +44,9 @@ QualityMetrics::inconsistency(int a, int b)
 }
 
 /// Accumulate the number of cases and sum of two inconsistency measures.
-double
+void
 QualityMetrics::inconsistency_accumulate(enum StyleHint a, enum StyleHint b,
-		int& ncases, double& inc_sum) const
+		int& ncases, int& inc_sum) const
 {
 	int ca = nstyle_hint[a];
 	int cb = nstyle_hint[b];
@@ -60,7 +60,7 @@ double
 QualityMetrics::get_style_inconsistency() const
 {
 	int ncases = 0;
-	double inc_sum = 0;
+	int inc_sum = 0;
 
 #define IA(a, b) inconsistency_accumulate(a, b, ncases, inc_sum)
 
@@ -84,7 +84,7 @@ QualityMetrics::get_style_inconsistency() const
 	IA(SPACE_BEFORE_OPENING_SQUARE_BRACKET, NO_SPACE_BEFORE_OPENING_SQUARE_BRACKET);
 	IA(SPACE_BEFORE_SEMICOLON, NO_SPACE_BEFORE_SEMICOLON);
 
-	return inc_sum / ncases;
+	return (double)inc_sum / (double)ncases;
 }
 
 std::ostream&

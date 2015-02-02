@@ -227,13 +227,11 @@ public:
 	int get_style_hint(enum StyleHint e) const { return nstyle_hint[e]; }
 	const StyleHintContainer& get_style_hint() const { return nstyle_hint; }
 
-	// Actually private, but exposed for unit testing
-
 	friend class QualityMetricsTest;
 private:
 	/// Accumulate # cases and sum of two inconsistency measures.
-	double inconsistency_accumulate(enum StyleHint a, enum StyleHint b,
-		int& ncases, double& inc_sum) const;
+	void inconsistency_accumulate(enum StyleHint a, enum StyleHint b,
+		int& ncases, int& inc_sum) const;
 	 /// Unweighted inconsistency of two complimentary choices a and b.
 	static int inconsistency(int a, int b);
 };

@@ -30,17 +30,17 @@ const char *QualityMetrics::metric_name[] = {
 
 /**
  * Unweighted inconsistency of two complimentary choices a and b.
- * 0: none, N: N cases, split exactly in half (perfect inconsistency).
+ * 0: none, N: N cases at odds with the rest, e.g. 2N cases, split
+ * exactly in half (perfect inconsistency), or N < A.
+ * This function is also known as min. :-)
  */
-double
-QualityMetrics::inconsistency(double a, double b)
+int
+QualityMetrics::inconsistency(int a, int b)
 {
-	if (a == 0 && b == 0)
-		return 0;
-	if (a > b)
-		return (b / a) * (a + b);
+	if (a < b)
+		return a;
 	else
-		return (a / b) * (a + b);
+		return b;
 }
 
 /// Accumulate the number of cases and sum of two inconsistency measures.

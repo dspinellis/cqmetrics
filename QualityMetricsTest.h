@@ -42,12 +42,13 @@ public:
 		CPPUNIT_ASSERT(q.get_line_length().get_count() == 2);
 	}
 
+	// Uncovered specification error
 	void testInconsistency() {
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 0) == 0);
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(0, 5) == 0);
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 5) == 5);
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(2, 4) == 2);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(6, 6) == 2);
+		CPPUNIT_ASSERT(QualityMetrics::inconsistency(6, 2) == 2);
 		CPPUNIT_ASSERT(QualityMetrics::inconsistency(1, 100) == 1);
 	}
 };

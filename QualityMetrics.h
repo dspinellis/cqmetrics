@@ -235,7 +235,7 @@ private:
 	double inconsistency_accumulate(enum StyleHint a, enum StyleHint b,
 		int& ncases, double& inc_sum) const;
 	 /// Unweighted inconsistency of two complimentary choices a and b.
-	static double inconsistency(double a, double b);
+	static int inconsistency(int a, int b);
 };
 
 std::ostream& operator <<(std::ostream& o, const QualityMetrics &q);

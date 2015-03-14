@@ -25,7 +25,7 @@ numbers separated by a single tab.
 * Number of functions, minimum, mean, maximum, standard deviation of cyclomatic complexity per function
 * Number of identifiers, minimum, mean, maximum, standard deviation of identifier length
 * Number of unique identifiers, minimum, mean, maximum, standard deviation of unique identifier length
-* Number spaces used for one level of indentation, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
+* Number of one level indentations, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
 * Number of occurences of no space after binary operator
 * Number of occurences of no space after closing brace
 * Number of occurences of no space after comma

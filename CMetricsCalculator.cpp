@@ -702,6 +702,10 @@ CMetricsCalculator::calculate_metrics_switch()
 			saw_non_semicolon_keyword = true;
 			saw_unindent = true;
 			break;
+		case CKeyword::CONST:
+			keyword_style(before, '(');
+			qm.add_const();
+			break;
 		case CKeyword::DEFAULT:
 			keyword_style_left_space(before);
 			qm.add_path();
@@ -718,13 +722,44 @@ CMetricsCalculator::calculate_metrics_switch()
 			keyword_style(before);
 			qm.add_register();
 			break;
+		case CKeyword::SIGNED:
+			keyword_style(before, '(');
+			qm.add_signed();
+			break;
+		case CKeyword::STATIC:
+			if (!in_function)
+				qm.add_internal();
+			break;
 		case CKeyword::TYPEDEF:
 			qm.add_typedef();
 			break;
 		case CKeyword::ENUM:
-		case CKeyword::STRUCT:
-		case CKeyword::UNION:
+			qm.add_enum();
 			keyword_style(before, '(');
+			break;
+		case CKeyword::NOALIAS:
+			keyword_style(before, '(');
+			qm.add_noalias();
+			break;
+		case CKeyword::STRUCT:
+			qm.add_struct();
+			keyword_style(before, '(');
+			break;
+		case CKeyword::UNION:
+			qm.add_union();
+			keyword_style(before, '(');
+			break;
+		case CKeyword::UNSIGNED:
+			keyword_style(before, '(');
+			qm.add_unsigned();
+			break;
+		case CKeyword::VOID:
+			keyword_style(before, '(');
+			qm.add_void();
+			break;
+		case CKeyword::VOLATILE:
+			keyword_style(before, '(');
+			qm.add_volatile();
 			break;
 		case CKeyword::DO:
 		case CKeyword::SWITCH:

@@ -108,17 +108,53 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" nest: " <<)
 		q.get_statement_nesting() << '\t' <<
 
+		// VAL: Number of declarations with internal linkage (`static`) visibility
+		ANNOTATE(" ninternal: " <<)
+		q.get_ninternal() << '\t' <<
+
+		// VAL: Number of `const` keywords
+		ANNOTATE(" nconst: " <<)
+		q.get_nconst() << '\t' <<
+
+		// VAL: Number of `enum` keywords
+		ANNOTATE(" nenum: " <<)
+		q.get_nenum() << '\t' <<
+
 		// VAL: Number of `goto` statements
 		ANNOTATE(" ngoto: " <<)
 		q.get_ngoto() << '\t' <<
+
+		// VAL: Number of `noalias` keywords
+		ANNOTATE(" nnoalias: " <<)
+		q.get_nnoalias() << '\t' <<
 
 		// VAL: Number of `register` keywords
 		ANNOTATE(" nregister: " <<)
 		q.get_nregister() << '\t' <<
 
+		// VAL: Number of `signed` keywords
+		ANNOTATE(" signed: " <<)
+		q.get_nsigned() << '\t' <<
+
+		// VAL: Number of `struct` keywords
+		ANNOTATE(" struct: " <<)
+		q.get_nstruct() << '\t' <<
+
+		// VAL: Number of `union` keywords
+		ANNOTATE(" union: " <<)
+		q.get_nunion() << '\t' <<
+
+		// VAL: Number of `unsigned` keywords
+		ANNOTATE(" nunsigned: " <<)
+		q.get_nunsigned() << '\t' <<
+
 		// VAL: Number of `void` keywords
 		ANNOTATE(" nvoid: " <<)
 		q.get_nvoid() << '\t' <<
+
+		// VAL: Number of `volatile` keywords
+		ANNOTATE(" nvolatile: " <<)
+		q.get_nvolatile() << '\t' <<
 
 		// VAL: Number of `typedef` keywords
 		ANNOTATE(" ntypedef: " <<)

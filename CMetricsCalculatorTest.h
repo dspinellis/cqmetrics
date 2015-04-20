@@ -44,7 +44,10 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCyclomaticLogicalTwoFunctions);
 	CPPUNIT_TEST(testCyclomaticCombined);
 	CPPUNIT_TEST(testCppDirective);
+	CPPUNIT_TEST(testInternal);
 	CPPUNIT_TEST(testCKeyword);
+	CPPUNIT_TEST(testCKeyword2);
+	CPPUNIT_TEST(testCKeyword3);
 	CPPUNIT_TEST(testIdentifierLength);
 	CPPUNIT_TEST(testStyle);
 	CPPUNIT_TEST(testBinaryOperatorStyle);
@@ -291,6 +294,14 @@ public:
 		CPPUNIT_ASSERT(qm.get_ncpp_include() == 1);
 	}
 
+	void testInternal() {
+		std::stringstream str("static a; static b;\nint\nfoo()\n{\n\tstatic d;\n}\n" );
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_ninternal() == 2);
+	}
+
 	void testCKeyword() {
 		std::stringstream str("register x; typedef int a; typedef double b; typedef short s;\ngoto c; goto d; void, void, void, void;" );
 		CMetricsCalculator calc(str);
@@ -300,6 +311,28 @@ public:
 		CPPUNIT_ASSERT(qm.get_ntypedef() == 3);
 		CPPUNIT_ASSERT(qm.get_nregister() == 1);
 		CPPUNIT_ASSERT(qm.get_nvoid() == 4);
+	}
+
+	void testCKeyword2() {
+		std::stringstream str("signed unsigned unsigned const const const volatile volatile volatile volatile noalias noalias noalias noalias noalias;" );
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_nsigned() == 1);
+		CPPUNIT_ASSERT(qm.get_nunsigned() == 2);
+		CPPUNIT_ASSERT(qm.get_nconst() == 3);
+		CPPUNIT_ASSERT(qm.get_nvolatile() == 4);
+		CPPUNIT_ASSERT(qm.get_nnoalias() == 5);
+	}
+
+	void testCKeyword3() {
+		std::stringstream str("struct union union enum enum enum;" );
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_nstruct() == 1);
+		CPPUNIT_ASSERT(qm.get_nunion() == 2);
+		CPPUNIT_ASSERT(qm.get_nenum() == 3);
 	}
 
 	void testIdentifierLength() {

@@ -62,7 +62,7 @@ public:
 	void testOther() {
 		CPPUNIT_ASSERT(ck.identifier_type("sizeof") == CKeyword::OTHER);
 		CPPUNIT_ASSERT(ck.identifier_type("int") == CKeyword::OTHER);
-		CPPUNIT_ASSERT(ck.identifier_type("static") == CKeyword::OTHER);
+		CPPUNIT_ASSERT(ck.identifier_type("static") == CKeyword::STATIC);
 	}
 
 	void testId() {

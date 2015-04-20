@@ -41,10 +41,20 @@ private:
 	int ncpp_directive;		// Number of C preprocessor directives
 
 	int ncpp_include;		// Number of include directives
+	int ninternal;			// Number of internal visibility
+					// declarations (static in file scope)
+	int nconst;			// Number of const keywords
+	int nenum;			// Number of enum keywords
 	int ngoto;			// Number of goto statements
+	int nnoalias;			// Number of noalias keywords
 	int nregister;			// Number of register keywords
-	int nvoid;			// Number of void keywords
+	int nsigned;			// Number of signed keywords
+	int nstruct;			// Number of struct keywords
 	int ntypedef;			// Number of type definitions
+	int nunion;			// Number of union keywords
+	int nunsigned;			// Number of unsigned keywords
+	int nvoid;			// Number of void keywords
+	int nvolatile;			// Number of volatile keywords
 	int nfun_comment;		// Number of comments in functions
 	int nfun_cpp_directive;		// Number of C preprocessor directives
 					// in functions
@@ -116,16 +126,27 @@ public:
 	QualityMetrics() :
 		ncomment(0), ncomment_char(0), ndox_comment(0),
 		ndox_comment_char(0), nfunction(0), ncpp_directive(0),
-		ncpp_include(0), ngoto(0), nregister(0), nvoid(0), ntypedef(0),
+		ncpp_include(0), ninternal(0), nconst(0), nenum(0), ngoto(0),
+		nnoalias(0), nregister(0), nsigned(0), nstruct(0), ntypedef(0),
+		nunion(0), nunsigned(0), nvoid(0), nvolatile(0),
 		nfun_comment(0), nfun_cpp_directive(0), ncpp_conditional(0),
 		nfun_cpp_conditional(0), nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
+	void add_internal() { ninternal++; }
+	void add_const() { nconst++; }
+	void add_enum() { nenum++; }
 	void add_goto() { ngoto++; }
+	void add_noalias() { nnoalias++; }
 	void add_register() { nregister++; }
-	void add_void() { nvoid++; }
+	void add_signed() { nsigned++; }
+	void add_struct() { nstruct++; }
 	void add_typedef() { ntypedef++; }
+	void add_union() { nunion++; }
+	void add_unsigned() { nunsigned++; }
+	void add_void() { nvoid++; }
+	void add_volatile() { nvolatile++; }
 	void add_comment() { ncomment++; }
 	void add_fun_comment() { nfun_comment++; }
 	void add_comment_char() { ncomment_char++; }
@@ -193,11 +214,19 @@ public:
 	const Descriptive<int> &get_statement_nesting() const {
 		return statement_nesting;
 	}
+	int get_ninternal() const { return ninternal; }
+	int get_nconst() const { return nconst; }
+	int get_nenum() const { return nenum; }
 	int get_ngoto() const { return ngoto; }
+	int get_nnoalias() const { return nnoalias; }
 	int get_nregister() const { return nregister; }
-	int get_nvoid() const { return nvoid; }
+	int get_nsigned() const { return nsigned; }
+	int get_nstruct() const { return nstruct; }
 	int get_ntypedef() const { return ntypedef; }
-
+	int get_nunion() const { return nunion; }
+	int get_nunsigned() const { return nunsigned; }
+	int get_nvoid() const { return nvoid; }
+	int get_nvolatile() const { return nvolatile; }
 	int get_ncomment() const { return ncomment; }
 	int get_ncomment_char() const { return ncomment_char; }
 	int get_ndox_comment() const { return ndox_comment; }

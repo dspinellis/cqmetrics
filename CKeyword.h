@@ -26,6 +26,7 @@ public:
 	enum IdentifierType {
 		BREAK,
 		CASE,
+		CONST,
 		CONTINUE,
 		DEFAULT,
 		DO,
@@ -37,12 +38,18 @@ public:
 		IF,
 		IFDEF,
 		INCLUDE,
+		NOALIAS,
 		REGISTER,
 		RETURN,
+		SIGNED,
+		STATIC,
 		STRUCT,
 		SWITCH,
 		TYPEDEF,
 		UNION,
+		UNSIGNED,
+		VOID,
+		VOLATILE,
 		WHILE,
 		OTHER,		// All other keywords
 		IDENTIFIER,	// Plain identifier (not a keyword)
@@ -57,7 +64,7 @@ public:
 		km["break"] = BREAK;
 		km["case"] = CASE;
 		km["char"] = OTHER;
-		km["const"] = OTHER;
+		km["const"] = CONST;
 		km["continue"] = CONTINUE;
 		km["default"] = DEFAULT;
 		km["do"] = DO;
@@ -74,19 +81,20 @@ public:
 		km["include"] = INCLUDE;	// Preprocessor only
 		km["int"] = OTHER;
 		km["long"] = OTHER;
+		km["noalias"] = NOALIAS;
 		km["register"] = REGISTER;
 		km["return"] = RETURN;
 		km["short"] = OTHER;
-		km["signed"] = OTHER;
+		km["signed"] = SIGNED;
 		km["sizeof"] = OTHER;
-		km["static"] = OTHER;
+		km["static"] = STATIC;
 		km["struct"] = STRUCT;
 		km["switch"] = SWITCH;
 		km["typedef"] = TYPEDEF;
 		km["union"] = UNION;
-		km["unsigned"] = OTHER;
-		km["void"] = OTHER;
-		km["volatile"] = OTHER;
+		km["unsigned"] = UNSIGNED;
+		km["void"] = VOID;
+		km["volatile"] = VOLATILE;
 		km["while"] = WHILE;
 	}
 

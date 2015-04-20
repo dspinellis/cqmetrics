@@ -7,9 +7,18 @@ numbers separated by a single tab.
 * Number of lines, minimum, mean, maximum, standard deviation of line length
 * Number of functions (A function is considered to start with `{` at column 1)
 * Number of statements, minimum, mean, maximum, standard deviation of statement nesting
+* Number of declarations with internal linkage (`static`) visibility
+* Number of `const` keywords
+* Number of `enum` keywords
 * Number of `goto` statements
+* Number of `noalias` keywords
 * Number of `register` keywords
+* Number of `signed` keywords
+* Number of `struct` keywords
+* Number of `union` keywords
+* Number of `unsigned` keywords
 * Number of `void` keywords
+* Number of `volatile` keywords
 * Number of `typedef` keywords
 * Number of comments
 * Number of comment characters

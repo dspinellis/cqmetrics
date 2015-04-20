@@ -116,7 +116,11 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" nregister: " <<)
 		q.get_nregister() << '\t' <<
 
-		// VAL: Number of `typedef`
+		// VAL: Number of `void` keywords
+		ANNOTATE(" nvoid: " <<)
+		q.get_nvoid() << '\t' <<
+
+		// VAL: Number of `typedef` keywords
 		ANNOTATE(" ntypedef: " <<)
 		q.get_ntypedef() << '\t' <<
 

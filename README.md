@@ -9,7 +9,8 @@ numbers separated by a single tab.
 * Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 * Number of `goto` statements
 * Number of `register` keywords
-* Number of `typedef`
+* Number of `void` keywords
+* Number of `typedef` keywords
 * Number of comments
 * Number of comment characters
 * Number of DOxygen comments
@@ -25,7 +26,7 @@ numbers separated by a single tab.
 * Number of functions, minimum, mean, maximum, standard deviation of cyclomatic complexity per function
 * Number of identifiers, minimum, mean, maximum, standard deviation of identifier length
 * Number of unique identifiers, minimum, mean, maximum, standard deviation of unique identifier length
-* Number of one level indentations, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
+* Number spaces used for one level of indentation, minimum, mean, maximum, standard deviation of spaces used for one level of indentation
 * Number of occurences of no space after binary operator
 * Number of occurences of no space after closing brace
 * Number of occurences of no space after comma

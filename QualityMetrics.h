@@ -43,6 +43,7 @@ private:
 	int ncpp_include;		// Number of include directives
 	int ngoto;			// Number of goto statements
 	int nregister;			// Number of register keywords
+	int nvoid;			// Number of void keywords
 	int ntypedef;			// Number of type definitions
 	int nfun_comment;		// Number of comments in functions
 	int nfun_cpp_directive;		// Number of C preprocessor directives
@@ -115,7 +116,7 @@ public:
 	QualityMetrics() :
 		ncomment(0), ncomment_char(0), ndox_comment(0),
 		ndox_comment_char(0), nfunction(0), ncpp_directive(0),
-		ncpp_include(0), ngoto(0), nregister(0), ntypedef(0),
+		ncpp_include(0), ngoto(0), nregister(0), nvoid(0), ntypedef(0),
 		nfun_comment(0), nfun_cpp_directive(0), ncpp_conditional(0),
 		nfun_cpp_conditional(0), nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
@@ -123,6 +124,7 @@ public:
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
 	void add_goto() { ngoto++; }
 	void add_register() { nregister++; }
+	void add_void() { nvoid++; }
 	void add_typedef() { ntypedef++; }
 	void add_comment() { ncomment++; }
 	void add_fun_comment() { nfun_comment++; }
@@ -193,6 +195,7 @@ public:
 	}
 	int get_ngoto() const { return ngoto; }
 	int get_nregister() const { return nregister; }
+	int get_nvoid() const { return nvoid; }
 	int get_ntypedef() const { return ntypedef; }
 
 	int get_ncomment() const { return ncomment; }

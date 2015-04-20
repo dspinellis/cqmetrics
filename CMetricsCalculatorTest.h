@@ -292,13 +292,14 @@ public:
 	}
 
 	void testCKeyword() {
-		std::stringstream str("register x; typedef int a; typedef double b; typedef short s;\ngoto c; goto d;");
+		std::stringstream str("register x; typedef int a; typedef double b; typedef short s;\ngoto c; goto d; void, void, void, void;" );
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT(qm.get_ngoto() == 2);
 		CPPUNIT_ASSERT(qm.get_ntypedef() == 3);
 		CPPUNIT_ASSERT(qm.get_nregister() == 1);
+		CPPUNIT_ASSERT(qm.get_nvoid() == 4);
 	}
 
 	void testIdentifierLength() {

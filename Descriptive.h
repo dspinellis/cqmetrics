@@ -17,8 +17,11 @@
 #ifndef DESCRIPTIVE_H
 #define DESCRIPTIVE_H
 
+#include <algorithm>
+#include <cmath>
 #include <limits>
 #include <ostream>
+#include <vector>
 
 #include "math.h"
 
@@ -27,20 +30,29 @@ template <typename T>
 class Descriptive {
 private:
 	T sum;
-	int count;
-	T min, max;
+	T max;			// Required; we get min by partial_sort
+	mutable std::vector <T> values;	// Required for median
 	/*
 	 * These are used for calculating the standard deviation from the
 	 * running values; see:
 	 * https://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
 	 */
 	double a, q;
+	mutable bool is_sorted;
+
+	/** Sort the first half of the values to obtain median and min */
+	void sort() const {
+		if (is_sorted)
+			return;
+		partial_sort(values.begin(), values.begin() +
+				values.size() / 2 + 1, values.end());
+		is_sorted = true;
+	}
 public:
 	Descriptive() :
-		sum(0), count(0),
-		min(std::numeric_limits<T>::max()),
+		sum(0),
 		max(std::numeric_limits<T>::min()),
-		a(0), q(0)
+		a(0), q(0), is_sorted(true)
 	{}
 
 	T get_sum() const {
@@ -48,11 +60,12 @@ public:
 	}
 
 	int get_count() const {
-		return (count);
+		return (values.size());
 	}
 
 	T get_min() const {
-		return (min);
+		sort();
+		return (values.front());
 	}
 
 	T get_max() const {
@@ -61,20 +74,30 @@ public:
 
 	/** Return the artihmetic mean of the measured value */
 	double get_mean() const {
-		return ((double)sum / count);
+		return ((double)sum / values.size());
+	}
+
+	/** Return the median of the measured value */
+	double get_median() const {
+		if (values.size() == 0)
+			return nan("");
+		sort();
+		if (values.size() % 2 == 0)
+			return (values[values.size() / 2] + values[values.size() / 2 + 1]) / 2.0;
+		else
+			return values[values.size() / 2];
 	}
 
 	void add(T v) {
+		values.push_back(v);
+		is_sorted = false;
 		sum += v;
-		count++;
 		if (v > max)
 			max = v;
-		if (v < min)
-			min = v;
 
 		// Running variance
 		double a_prev = a;
-		a = a + (v - a) / (double)count;
+		a = a + (v - a) / (double)values.size();
 		q = q + (v - a_prev) * (v - a);
 	}
 
@@ -84,7 +107,7 @@ public:
 		 * The standard deviation of an empty population is not defined,
 		 * but for measuring quality, 0, is a reasonable value.
 		 */
-		return count ? sqrt(q / count) : 0;
+		return values.size() ? sqrt(q / values.size()) : nan("");
 	}
 };
 

@@ -36,13 +36,18 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testSDZero);
 	CPPUNIT_TEST(testSDTwo);
 	CPPUNIT_TEST(testSDHalf);
+	CPPUNIT_TEST(testMedianEven);
+	CPPUNIT_TEST(testMedianOdd);
+	CPPUNIT_TEST(testMedianPartial);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void testCtor() {
 		Descriptive<int> a;
 		CPPUNIT_ASSERT(a.get_count() == 0);
 		CPPUNIT_ASSERT(a.get_sum() == 0);
-		CPPUNIT_ASSERT(a.get_standard_deviation() == 0);
+		CPPUNIT_ASSERT(std::isnan(a.get_standard_deviation()));
+		CPPUNIT_ASSERT(std::isnan(a.get_mean()));
+		CPPUNIT_ASSERT(std::isnan(a.get_median()));
 	}
 
 	void testAdd() {
@@ -135,5 +140,34 @@ public:
 			a.add(3);
 		CPPUNIT_ASSERT(a.get_standard_deviation() == 0.5);
 	}
+
+	void testMedianOdd() {
+		Descriptive<int> a;
+		a.add(2);
+		a.add(0);
+		a.add(1);
+		CPPUNIT_ASSERT(a.get_median() == 1);
+	}
+
+	void testMedianEven() {
+		Descriptive<int> a;
+		a.add(2);
+		a.add(0);
+		a.add(1);
+		a.add(5);
+		CPPUNIT_ASSERT(a.get_median() == 1.5);
+	}
+
+	void testMedianPartial() {
+		Descriptive<int> a;
+		a.add(100);
+		a.add(3);
+		a.add(0);
+		a.add(5);
+		a.add(7);
+		a.add(9);
+		CPPUNIT_ASSERT(a.get_median() == 6);
+	}
+
 };
 #endif /*  DESCRIPTIVETEST_H */

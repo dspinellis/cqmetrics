@@ -83,7 +83,7 @@ public:
 			return nan("");
 		sort();
 		if (values.size() % 2 == 0)
-			return (values[values.size() / 2] + values[values.size() / 2 + 1]) / 2.0;
+			return (values[values.size() / 2 - 1] + values[values.size() / 2]) / 2.0;
 		else
 			return values[values.size() / 2];
 	}

@@ -14,8 +14,8 @@
  *   limitations under the License.
  */
 
-#ifndef CH
-#define CH
+#ifndef CKEYWORD_H
+#define CKEYWORD_H
 
 #include <map>
 #include <string>
@@ -106,4 +106,4 @@ public:
 			return f->second;
 	}
 };
-#endif /* CH */
+#endif /* CKEYWORD_H */

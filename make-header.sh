@@ -16,7 +16,7 @@ while read metric
 do
   if grep -q "> $metric;" QualityMetrics.h
   then
-    echo "${metric}_count ${metric}_min ${metric}_mean ${metric}_max ${metric}_sd"
+    echo "${metric}_count ${metric}_min ${metric}_mean ${metric}_median ${metric}_max ${metric}_sd"
   else
     echo $metric
   fi

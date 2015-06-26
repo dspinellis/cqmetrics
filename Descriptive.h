@@ -116,7 +116,9 @@ std::ostream&
 operator <<(std::ostream& o, const Descriptive<T> &d) {
 	if (d.get_count() != 0)
 		o << d.get_count() << '\t' << d.get_min() << '\t' <<
-			d.get_mean() << '\t' << d.get_max() << '\t' <<
+			d.get_mean() << '\t' <<
+			d.get_median() << '\t' <<
+			d.get_max() << '\t' <<
 			d.get_standard_deviation();
 	else
 		o << "0\t\t\t\t";

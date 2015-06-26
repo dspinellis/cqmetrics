@@ -167,6 +167,9 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		// VAL: Number of comment characters
 		q.get_ncomment_char() << '\t' <<
 
+		// VAL: Number of boilerplate (license) comment characters
+		q.get_nboilerplate_comment_char() << '\t' <<
+
 		// VAL: Number of DOxygen comments
 		ANNOTATE(" comment: " <<)
 		q.get_ndox_comment() << '\t' <<

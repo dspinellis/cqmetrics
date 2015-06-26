@@ -1,5 +1,5 @@
 /*-
- * Copyright 2014 Diomidis Spinellis
+ * Copyright 2015 Diomidis Spinellis
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,30 +16,32 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+#include "BoilerplateTest.h"
 #include "BolStateTest.h"
+#include "CharSourceTest.h"
 #include "CKeywordTest.h"
 #include "CMetricsCalculatorTest.h"
-#include "CharSourceTest.h"
 #include "CyclomaticTest.h"
 #include "DescriptiveTest.h"
 #include "HalsteadTest.h"
-#include "QualityMetricsTest.h"
 #include "NestingLevelTest.h"
+#include "QualityMetricsTest.h"
 
 int
 main(int argc, char *argv[])
 {
 	CppUnit::TextUi::TestRunner runner;
 
+	runner.addTest(BoilerplateTest::suite());
 	runner.addTest(BolStateTest::suite());
+	runner.addTest(CharSourceTest::suite());
 	runner.addTest(CKeywordTest::suite());
 	runner.addTest(CMetricsCalculatorTest::suite());
-	runner.addTest(CharSourceTest::suite());
 	runner.addTest(CyclomaticTest::suite());
 	runner.addTest(DescriptiveTest::suite());
 	runner.addTest(HalsteadTest::suite());
-	runner.addTest(QualityMetricsTest::suite());
 	runner.addTest(NestingLevelTest::suite());
+	runner.addTest(QualityMetricsTest::suite());
 
 	runner.run();
 	return 0;

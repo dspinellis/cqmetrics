@@ -22,6 +22,7 @@ numbers separated by a single tab.
 * Number of `typedef` keywords
 * Number of comments
 * Number of comment characters
+* Number of boilerplate (license) comment characters
 * Number of DOxygen comments
 * Number of DOxygen comment characters
 * Number of comments inside function bodies

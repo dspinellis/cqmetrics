@@ -35,6 +35,7 @@ private:
 	Descriptive<int> line_length;	// Line lengths
 	int ncomment;			// Number of comments
 	int ncomment_char;		// Number of comment characters
+	int nboilerplate_comment_char;	// Number of boilerplate (license) comment characters
 	int ndox_comment;		// Number of DOxygen comments
 	int ndox_comment_char;		// Number of DOxygen comment characters
 	int nfunction;			// Number of functions
@@ -124,13 +125,14 @@ public:
 	static const char *metric_name[];
 
 	QualityMetrics() :
-		ncomment(0), ncomment_char(0), ndox_comment(0),
-		ndox_comment_char(0), nfunction(0), ncpp_directive(0),
-		ncpp_include(0), ninternal(0), nconst(0), nenum(0), ngoto(0),
-		nnoalias(0), nregister(0), nsigned(0), nstruct(0), ntypedef(0),
-		nunion(0), nunsigned(0), nvoid(0), nvolatile(0),
-		nfun_comment(0), nfun_cpp_directive(0), ncpp_conditional(0),
-		nfun_cpp_conditional(0), nstyle_hint(STYLE_HINT_SIZE, 0) {}
+		ncomment(0), ncomment_char(0), nboilerplate_comment_char(0),
+		ndox_comment(0), ndox_comment_char(0), nfunction(0),
+		ncpp_directive(0), ncpp_include(0), ninternal(0), nconst(0),
+		nenum(0), ngoto(0), nnoalias(0), nregister(0), nsigned(0),
+		nstruct(0), ntypedef(0), nunion(0), nunsigned(0), nvoid(0),
+		nvolatile(0), nfun_comment(0), nfun_cpp_directive(0),
+		ncpp_conditional(0), nfun_cpp_conditional(0),
+		nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
@@ -150,6 +152,9 @@ public:
 	void add_comment() { ncomment++; }
 	void add_fun_comment() { nfun_comment++; }
 	void add_comment_char() { ncomment_char++; }
+	void add_boilerplate_comment_chars(int n) {
+		nboilerplate_comment_char += n;
+	}
 	void add_dox_comment() { ndox_comment++; }
 	void add_dox_comment_char() { ndox_comment_char++; }
 	void remove_dox_comment_char() { ndox_comment_char--; }
@@ -229,6 +234,7 @@ public:
 	int get_nvolatile() const { return nvolatile; }
 	int get_ncomment() const { return ncomment; }
 	int get_ncomment_char() const { return ncomment_char; }
+	int get_nboilerplate_comment_char() const { return nboilerplate_comment_char; }
 	int get_ndox_comment() const { return ndox_comment; }
 	int get_ndox_comment_char() const { return ndox_comment_char; }
 	int get_nfun_comment() const { return nfun_comment; }

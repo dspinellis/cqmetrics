@@ -17,6 +17,7 @@
 #include <cctype>
 #include <string>
 
+#include "Boilerplate.h"
 #include "BolState.h"
 #include "CharSource.h"
 #include "QualityMetrics.h"
@@ -151,6 +152,7 @@ CMetricsCalculator::calculate_metrics_switch()
 	char before;	// The character before the current token
 	std::string val;
 	CKeyword::IdentifierType key;
+	Boilerplate bp;
 
 #define GET(x) do { \
 	if (!src.get(x)) \
@@ -562,7 +564,9 @@ CMetricsCalculator::calculate_metrics_switch()
 			qm.add_comment();
 			if (in_function)
 				qm.add_fun_comment();
+			bp.begin_comment();
 			GET(c0);
+			bp.process_char(c0);
 			if (c0 == '\n')
 				newline(true);
 			else if (c0 == '*') {
@@ -577,10 +581,12 @@ CMetricsCalculator::calculate_metrics_switch()
 					if (in_dox_comment)
 						qm.add_dox_comment_char();
 					GET(c0);
+					bp.process_char(c0);
 					if (c0 == '\n')
 						newline(true);
 				}
 				GET(c0);
+				bp.process_char(c0);
 				if (c0 == '/') {
 					saw_comment = true;
 					in_dox_comment = false;
@@ -593,6 +599,8 @@ CMetricsCalculator::calculate_metrics_switch()
 						qm.add_dox_comment_char();
 				}
 			}
+			qm.add_boilerplate_comment_chars(
+					bp.get_boilerplate_chars());
 			break;
 		case '/':				/* Line comment */
 			qm.add_comment();

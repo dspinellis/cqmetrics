@@ -98,7 +98,7 @@ public:
 		a.add(2);
 		a.add(4);
 		str << a;
-		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t4\t1");
+		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t3\t4\t1");
 	}
 
 	void testOutputEmpty() {

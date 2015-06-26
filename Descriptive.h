@@ -30,7 +30,8 @@ template <typename T>
 class Descriptive {
 private:
 	T sum;
-	T max;			// Required; we get min by partial_sort
+	T min;
+	T max;
 	mutable std::vector <T> values;	// Required for median
 	/*
 	 * These are used for calculating the standard deviation from the
@@ -38,21 +39,12 @@ private:
 	 * https://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
 	 */
 	double a, q;
-	mutable bool is_sorted;
-
-	/** Sort the first half of the values to obtain median and min */
-	void sort() const {
-		if (is_sorted)
-			return;
-		partial_sort(values.begin(), values.begin() +
-				values.size() / 2 + 1, values.end());
-		is_sorted = true;
-	}
 public:
 	Descriptive() :
 		sum(0),
+		min(std::numeric_limits<T>::max()),
 		max(std::numeric_limits<T>::min()),
-		a(0), q(0), is_sorted(true)
+		a(0), q(0)
 	{}
 
 	T get_sum() const {
@@ -64,8 +56,7 @@ public:
 	}
 
 	T get_min() const {
-		sort();
-		return (values.front());
+		return (min);
 	}
 
 	T get_max() const {
@@ -81,17 +72,23 @@ public:
 	double get_median() const {
 		if (values.size() == 0)
 			return nan("");
-		sort();
-		if (values.size() % 2 == 0)
-			return (values[values.size() / 2 - 1] + values[values.size() / 2]) / 2.0;
-		else
-			return values[values.size() / 2];
+		int half = values.size() / 2;
+		std::nth_element(values.begin(), values.begin() + half,
+				values.end());
+		if (values.size() % 2 == 0) {
+			std::nth_element(values.begin(),
+					values.begin() + half - 1,
+					values.end());
+			return (values[half - 1] + values[half]) / 2.0;
+		} else
+			return values[half];
 	}
 
 	void add(T v) {
 		values.push_back(v);
-		is_sorted = false;
 		sum += v;
+		if (v < min)
+			min = v;
 		if (v > max)
 			max = v;
 
@@ -115,7 +112,8 @@ template <typename T>
 std::ostream&
 operator <<(std::ostream& o, const Descriptive<T> &d) {
 	if (d.get_count() != 0)
-		o << d.get_count() << '\t' << d.get_min() << '\t' <<
+		o << d.get_count() << '\t' <<
+			d.get_min() << '\t' <<
 			d.get_mean() << '\t' <<
 			d.get_median() << '\t' <<
 			d.get_max() << '\t' <<

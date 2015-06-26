@@ -36,6 +36,8 @@ class DescriptiveTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testSDZero);
 	CPPUNIT_TEST(testSDTwo);
 	CPPUNIT_TEST(testSDHalf);
+	CPPUNIT_TEST(testMedianOne);
+	CPPUNIT_TEST(testMedianTwo);
 	CPPUNIT_TEST(testMedianEven);
 	CPPUNIT_TEST(testMedianOdd);
 	CPPUNIT_TEST(testMedianPartial);
@@ -139,6 +141,19 @@ public:
 		for (int i = 0; i < 16; i++)
 			a.add(3);
 		CPPUNIT_ASSERT(a.get_standard_deviation() == 0.5);
+	}
+
+	void testMedianOne() {
+		Descriptive<int> a;
+		a.add(42);
+		CPPUNIT_ASSERT(a.get_median() == 42);
+	}
+
+	void testMedianTwo() {
+		Descriptive<int> a;
+		a.add(4);
+		a.add(2);
+		CPPUNIT_ASSERT(a.get_median() == 3);
 	}
 
 	void testMedianOdd() {

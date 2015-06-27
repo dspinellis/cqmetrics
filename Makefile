@@ -1,4 +1,6 @@
-CXXFLAGS=-Wall -Werror
+# All warnings, treat warnings as errors, generate dependencies in .d files
+CXXFLAGS=-Wall -Werror -MD
+
 ifdef DEBUG
 LDFLAGS=-g
 CXXFLAGS+=-g -O0
@@ -9,20 +11,16 @@ endif
 all: qmcalc README.md header.tab header.txt
 
 HFILES=$(wildcard *.h)
-OFILES=CMetricsCalculator.o QualityMetrics.o
+OBJS=CMetricsCalculator.o QualityMetrics.o
 
-UnitTests: UnitTests.cpp $(HFILES) $(OFILES)
-	$(CXX) $(LDFLAGS) UnitTests.cpp $(OFILES) -lcppunit -o $@
+UnitTests: UnitTests.o $(OBJS)
+	$(CXX) $(LDFLAGS) UnitTests.o $(OBJS) -lcppunit -o $@
 
 test: UnitTests
 	./UnitTests
 
-qmcalc: $(HFILES) $(OFILES) qmcalc.cpp
-	$(CXX) $(LDFLAGS) qmcalc.cpp $(OFILES) -o $@
-
-QualityMetrics.o: QualityMetrics.h QualityMetrics.cpp QualityMetricNames.h
-CMetricsCalculator.o: CMetricsCalculator.h CMetricsCalculator.cpp BolState.h \
-	CharSource.h QualityMetrics.h NestingLevel.h
+qmcalc: $(OBJS) qmcalc.o
+	$(CXX) $(LDFLAGS) qmcalc.o $(OBJS) -o $@
 
 QualityMetricNames.h: QualityMetrics.h metric-names.sed
 	sed -n -f metric-names.sed QualityMetrics.h >$@
@@ -39,4 +37,7 @@ header.txt: make-header.sh QualityMetrics.cpp
 	sh make-header.sh | tr ' \t' '\n\n' | cat -n >$@
 
 clean:
-	rm -f *.o *.exe qmcalc UnitTests
+	rm -f *.o *.d *.exe qmcalc UnitTests
+
+# Pull-in dependencies generated with -MD
+-include $(OBJS:.o=.d)

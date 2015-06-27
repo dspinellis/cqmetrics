@@ -100,6 +100,7 @@ public:
 		a.add(2);
 		a.add(4);
 		str << a;
+		// Don't forget to update testOutputEmpty
 		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t3\t4\t1");
 	}
 
@@ -107,7 +108,7 @@ public:
 		std::stringstream str;
 		Descriptive<int> a;
 		str << a;
-		CPPUNIT_ASSERT(str.str() == "0\t\t\t\t");
+		CPPUNIT_ASSERT(str.str() == "0\t\t\t\t\t");
 	}
 
 	void testSDZero() {

@@ -119,7 +119,7 @@ operator <<(std::ostream& o, const Descriptive<T> &d) {
 			d.get_max() << '\t' <<
 			d.get_standard_deviation();
 	else
-		o << "0\t\t\t\t";
+		o << "0\t\t\t\t\t";
 	return o;
 }
 #endif /* DESCRIPTIVE_H */

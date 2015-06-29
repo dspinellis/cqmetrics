@@ -22,6 +22,8 @@ test: UnitTests
 qmcalc: $(OBJS) qmcalc.o
 	$(CXX) $(LDFLAGS) qmcalc.o $(OBJS) -o $@
 
+QualityMetrics.o: QualityMetricNames.h
+
 QualityMetricNames.h: QualityMetrics.h metric-names.sed
 	sed -n -f metric-names.sed QualityMetrics.h >$@
 
@@ -37,7 +39,8 @@ header.txt: make-header.sh QualityMetrics.cpp
 	sh make-header.sh | tr ' \t' '\n\n' | cat -n >$@
 
 clean:
-	rm -f *.o *.d *.exe qmcalc UnitTests
+	rm -f *.o *.d *.exe qmcalc UnitTests QualityMetricNames.h \
+		header.tab header.txt
 
 # Pull-in dependencies generated with -MD
 -include $(OBJS:.o=.d)

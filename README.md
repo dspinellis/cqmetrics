@@ -11,8 +11,10 @@ numbers separated by a single tab.
 * Number of `const` keywords
 * Number of `enum` keywords
 * Number of `goto` statements
+* Number of `inline` keywords
 * Number of `noalias` keywords
 * Number of `register` keywords
+* Number of `restrict` keywords
 * Number of `signed` keywords
 * Number of `struct` keywords
 * Number of `union` keywords

@@ -745,9 +745,17 @@ CMetricsCalculator::calculate_metrics_switch()
 			qm.add_enum();
 			keyword_style(before, '(');
 			break;
+		case CKeyword::INLINE:
+			keyword_style(before, '(');
+			qm.add_inline();
+			break;
 		case CKeyword::NOALIAS:
 			keyword_style(before, '(');
 			qm.add_noalias();
+			break;
+		case CKeyword::RESTRICT:
+			keyword_style(before, '(');
+			qm.add_restrict();
 			break;
 		case CKeyword::STRUCT:
 			qm.add_struct();

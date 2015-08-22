@@ -124,6 +124,10 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" ngoto: " <<)
 		q.get_ngoto() << '\t' <<
 
+		// VAL: Number of `inline` keywords
+		ANNOTATE(" ninline: " <<)
+		q.get_ninline() << '\t' <<
+
 		// VAL: Number of `noalias` keywords
 		ANNOTATE(" nnoalias: " <<)
 		q.get_nnoalias() << '\t' <<
@@ -131,6 +135,11 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		// VAL: Number of `register` keywords
 		ANNOTATE(" nregister: " <<)
 		q.get_nregister() << '\t' <<
+
+		// VAL: Number of `restrict` keywords
+		ANNOTATE(" nrestrict: " <<)
+		q.get_nrestrict() << '\t' <<
+
 
 		// VAL: Number of `signed` keywords
 		ANNOTATE(" signed: " <<)

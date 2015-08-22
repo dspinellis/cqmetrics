@@ -47,8 +47,10 @@ private:
 	int nconst;			// Number of const keywords
 	int nenum;			// Number of enum keywords
 	int ngoto;			// Number of goto statements
+	int ninline;			// Number of inline keywords
 	int nnoalias;			// Number of noalias keywords
 	int nregister;			// Number of register keywords
+	int nrestrict;			// Number of restrict keywords
 	int nsigned;			// Number of signed keywords
 	int nstruct;			// Number of struct keywords
 	int ntypedef;			// Number of type definitions
@@ -128,11 +130,11 @@ public:
 		ncomment(0), ncomment_char(0), nboilerplate_comment_char(0),
 		ndox_comment(0), ndox_comment_char(0), nfunction(0),
 		ncpp_directive(0), ncpp_include(0), ninternal(0), nconst(0),
-		nenum(0), ngoto(0), nnoalias(0), nregister(0), nsigned(0),
-		nstruct(0), ntypedef(0), nunion(0), nunsigned(0), nvoid(0),
-		nvolatile(0), nfun_comment(0), nfun_cpp_directive(0),
-		ncpp_conditional(0), nfun_cpp_conditional(0),
-		nstyle_hint(STYLE_HINT_SIZE, 0) {}
+		nenum(0), ngoto(0), ninline(0), nnoalias(0), nregister(0),
+		nrestrict(0), nsigned(0), nstruct(0), ntypedef(0), nunion(0),
+		nunsigned(0), nvoid(0), nvolatile(0), nfun_comment(0),
+		nfun_cpp_directive(0), ncpp_conditional(0),
+		nfun_cpp_conditional(0), nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
@@ -140,8 +142,10 @@ public:
 	void add_const() { nconst++; }
 	void add_enum() { nenum++; }
 	void add_goto() { ngoto++; }
+	void add_inline() { ninline++; }
 	void add_noalias() { nnoalias++; }
 	void add_register() { nregister++; }
+	void add_restrict() { nrestrict++; }
 	void add_signed() { nsigned++; }
 	void add_struct() { nstruct++; }
 	void add_typedef() { ntypedef++; }
@@ -223,8 +227,10 @@ public:
 	int get_nconst() const { return nconst; }
 	int get_nenum() const { return nenum; }
 	int get_ngoto() const { return ngoto; }
+	int get_ninline() const { return ninline; }
 	int get_nnoalias() const { return nnoalias; }
 	int get_nregister() const { return nregister; }
+	int get_nrestrict() const { return nrestrict; }
 	int get_nsigned() const { return nsigned; }
 	int get_nstruct() const { return nstruct; }
 	int get_ntypedef() const { return ntypedef; }

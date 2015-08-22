@@ -48,6 +48,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testCKeyword);
 	CPPUNIT_TEST(testCKeyword2);
 	CPPUNIT_TEST(testCKeyword3);
+	CPPUNIT_TEST(testCKeyword4);
 	CPPUNIT_TEST(testIdentifierLength);
 	CPPUNIT_TEST(testStyle);
 	CPPUNIT_TEST(testBinaryOperatorStyle);
@@ -333,6 +334,15 @@ public:
 		CPPUNIT_ASSERT(qm.get_nstruct() == 1);
 		CPPUNIT_ASSERT(qm.get_nunion() == 2);
 		CPPUNIT_ASSERT(qm.get_nenum() == 3);
+	}
+
+	void testCKeyword4() {
+		std::stringstream str("restrict inline inline;" );
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT(qm.get_nrestrict() == 1);
+		CPPUNIT_ASSERT(qm.get_ninline() == 2);
 	}
 
 	void testIdentifierLength() {

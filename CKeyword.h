@@ -38,8 +38,10 @@ public:
 		IF,
 		IFDEF,
 		INCLUDE,
+		INLINE,
 		NOALIAS,
 		REGISTER,
+		RESTRICT,
 		RETURN,
 		SIGNED,
 		STATIC,
@@ -79,10 +81,12 @@ public:
 		km["if"] = IF;
 		km["ifdef"] = IFDEF;		// Preprocessor only
 		km["include"] = INCLUDE;	// Preprocessor only
+		km["inline"] = INLINE;
 		km["int"] = OTHER;
 		km["long"] = OTHER;
 		km["noalias"] = NOALIAS;
 		km["register"] = REGISTER;
+		km["restrict"] = RESTRICT;
 		km["return"] = RETURN;
 		km["short"] = OTHER;
 		km["signed"] = SIGNED;

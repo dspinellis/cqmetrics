@@ -1,0 +1,11 @@
+language: cpp
+
+script: make && make test
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang

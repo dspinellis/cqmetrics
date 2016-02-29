@@ -141,7 +141,7 @@ public:
 		a.add(2);
 		for (int i = 0; i < 16; i++)
 			a.add(3);
-		CPPUNIT_ASSERT(a.get_standard_deviation() == 0.5);
+		CPPUNIT_ASSERT(fabs(a.get_standard_deviation() - 0.5) < 1e-10);
 	}
 
 	void testMedianOne() {

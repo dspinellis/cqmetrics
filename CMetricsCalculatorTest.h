@@ -410,7 +410,7 @@ public:
 		  { "a", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 0 },
 		  { "a ", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 1 },
 		  { "a", " b", QualityMetrics::SPACE_BEFORE_BINARY_OP, 0 },
-		  NULL
+		  { NULL },
 		};
 
 		testPrefixSuffix(binary_operator, test);
@@ -438,7 +438,7 @@ public:
 		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
-		  NULL
+		  { NULL },
 		};
 
 		testPrefixSuffix(keyword, test);
@@ -465,7 +465,7 @@ public:
 		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
-		  NULL
+		  { NULL },
 		};
 
 		testPrefixSuffix(keyword, test);
@@ -492,7 +492,7 @@ public:
 		  { "; ", "(1)", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
 		  { " #include <", ">", QualityMetrics::SPACE_BEFORE_KEYWORD, 0 },
 		  { " #define <", ">", QualityMetrics::SPACE_AFTER_KEYWORD, 0 },
-		  NULL
+		  { NULL },
 		};
 
 		testPrefixSuffix(keyword, test);
@@ -602,7 +602,7 @@ public:
 { ";return;", QualityMetrics::NO_SPACE_BEFORE_KEYWORD, 1 },
 { ";return;", QualityMetrics::SPACE_AT_END_OF_LINE, 0 },
 { ";return; \n", QualityMetrics::SPACE_AT_END_OF_LINE, 1 },
-		  NULL
+{ NULL },
 		};
 
 		for (struct Test *t = test; t->code; t++) {

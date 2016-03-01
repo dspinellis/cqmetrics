@@ -2,9 +2,10 @@ sudo: required
 
 language: cpp
 
-before-install:
+install:
   - sudo apt-get update
-  - sudo apt-get install libcppunit-dev libcppunit-1.12-1
+  - sudo apt-get install libcppunit-dev
+  - ls -ld /usr/include/cppunit
 
 script: make && make test
 

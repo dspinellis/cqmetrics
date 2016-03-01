@@ -81,6 +81,8 @@ numbers separated by a single tab.
 
 
 ## Building
+[![Build Status](https://travis-ci.org/dspinellis/cqmetrics.svg?branch=master)](https://travis-ci.org/dspinellis/cqmetrics)
+
 ### Prerequisites
 * C++ compiler
 * GNU make

@@ -1,11 +1,12 @@
+sudo: required
+
 language: cpp
+
+before-install:
+  - sudo apt-get update
+  - sudo apt-get install libcppunit-dev libcppunit-1.12-1
 
 script: make && make test
 
-os:
-  - linux
-  - osx
-
-compiler:
-  - gcc
-  - clang
+cache:
+  - apt

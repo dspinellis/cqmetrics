@@ -1,4 +1,8 @@
 # C Code Quality Metrics
+
+[![Build Status](https://travis-ci.org/dspinellis/cqmetrics.svg?branch=master)](https://travis-ci.org/dspinellis/cqmetrics)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/8464/badge.svg)](https://scan.coverity.com/projects/dspinellis-cqmetrics)
+
 The program qmcalc will read a C source code file from its standard
 input and print on its standard output a single line with the following
 numbers separated by a single tab.
@@ -81,7 +85,6 @@ numbers separated by a single tab.
 
 
 ## Building
-[![Build Status](https://travis-ci.org/dspinellis/cqmetrics.svg?branch=master)](https://travis-ci.org/dspinellis/cqmetrics)
 
 ### Prerequisites
 * C++ compiler

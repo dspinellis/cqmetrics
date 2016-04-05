@@ -68,6 +68,7 @@ public:
 	scan_cpp_directive(false), scan_cpp_line(false),
 	in_function(false), in_dox_comment(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
+	line_nesting(0), previous_indentation(0), continuation(false),
 	saw_non_semicolon_keyword(false), saw_unindent(false),
 	saw_comment(false), saw_cpp_directive(false), indentation_list(false) {}
 	void calculate_metrics() {

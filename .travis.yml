@@ -7,7 +7,23 @@ install:
   - sudo apt-get install libcppunit-dev
   - ls -ld /usr/include/cppunit
 
-script: make && make test
+script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make && make test ; fi
 
 cache:
   - apt
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "NFB1s/gduCuOOS06u2VqwBQUd+jJrnLgb9WJOsnD8+SDSApICKuId8tmd1CsPs2mv0qVmDodZh/ECZXk59KKhGdjuYXaEBplwVjyQifF2vAeL+K5jcSFM3VNvgCUXefXHW/cwSS7XjC4TPjhqn3gznnDqGCVlKRfeeq3PuDsWik="
+
+addons:
+  coverity_scan:
+    project:
+      name: "dspinellis/cqmetrics"
+      description: "Build submitted via Travis CI"
+    notification_email: dds@aueb.gr
+    build_command_prepend: "./configure; make clean"
+    build_command:   "make -j 4"
+    branch_pattern: coverity_scan

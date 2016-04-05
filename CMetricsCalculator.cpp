@@ -615,10 +615,9 @@ CMetricsCalculator::calculate_metrics_switch()
 			for (;;) {
 				if (c0 == '\n')
 					break;
-				else
-					qm.add_comment_char();
-					if (in_dox_comment)
-						qm.add_dox_comment_char();
+				qm.add_comment_char();
+				if (in_dox_comment)
+					qm.add_dox_comment_char();
 				GET(c0);
 			}
 			src.push(c0);

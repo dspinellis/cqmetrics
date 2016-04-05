@@ -7,7 +7,7 @@ install:
   - sudo apt-get install libcppunit-dev
   - ls -ld /usr/include/cppunit
 
-script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make && make test ; fi
+script: make && make test
 
 cache:
   - apt
@@ -23,6 +23,6 @@ addons:
     project:
       name: "dspinellis/cqmetrics"
     notification_email: dds@aueb.gr
-    build_command_prepend: "./configure; make clean"
+    build_command_prepend: "make clean"
     build_command:   "make -j 4"
     branch_pattern: coverity_scan

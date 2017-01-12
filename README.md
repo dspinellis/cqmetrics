@@ -100,7 +100,7 @@ The style checks performed are based on the following guidelines.
 * [Google](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml)
 * [FreeBSD](http://www.freebsd.org/cgi/man.cgi?query=style&sektion=9)
 * [GNU](https://www.gnu.org/prep/standards/html_node/Formatting.html)
-* [Recommended C Style and Coding Standards - updated version of the Indian Hill C Style and Coding Standards paper](http://www.cs.arizona.edu/~mccann/cstyle.html
+* [Recommended C Style and Coding Standards - updated version of the Indian Hill C Style and Coding Standards paper](http://www.cs.arizona.edu/~mccann/cstyle.html)
 * [Wikipedia summary](http://en.wikipedia.org/wiki/Indent_style)
 
 ## Citation

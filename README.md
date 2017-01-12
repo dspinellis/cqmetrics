@@ -103,4 +103,7 @@ The style checks performed are based on the following guidelines.
 * [Recommended C Style and Coding Standards - updated version of the Indian Hill C Style and Coding Standards paper](http://www.cs.arizona.edu/~mccann/cstyle.html
 * [Wikipedia summary](http://en.wikipedia.org/wiki/Indent_style)
 
-Some other metrics are based on the paper [A Tale of Four Kernels](http://www.dmst.aueb.gr/dds/pubs/conf/2008-ICSE-4kernel/html/Spi08b.html)
+## Citation
+* The tools is described in detail in the following paper.
+Diomidis Spinellis, Panos Louridas, and Maria Kechagia. [The evolution of C programming practices: A study of the Unix operating system](http://www.dmst.aueb.gr/dds/pubs/conf/2016-ICSE-ProgEvol/html/SLK16.html) 1973–2015. In Willem Visser and Laurie Williams, editors, *ICSE '16: Proceedings of the 38th International Conference on Software Engineering*, pages 748–759, New York, May 2016. Association for Computing Machinery. ([doi:10.1145/2884781.2884799](http://dx.doi.org/10.1145/2884781.2884799))
+* Some other metrics are based on the paper [A Tale of Four Kernels](http://www.dmst.aueb.gr/dds/pubs/conf/2008-ICSE-4kernel/html/Spi08b.html).

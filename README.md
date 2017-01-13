@@ -11,6 +11,21 @@ and observed formatting style.
 The full set of the metrics is documented in the file
 [metrics.md](https://github.com/dspinellis/cqmetrics/blob/master/metrics.md).
 
+The code has been written to run efficiently and reliably.
+The program receives the code to analyze from its standard input,
+so that it can process data coming e.g. directly out of a `git show` command,
+without having intermediate data touch the disk.
+Also, the program can process code
+that may not be easy (or possible) to fully parse using a compiler front-end,
+due e.g. to missing header files or an unknown compiler configuration.
+
+Furthermore,
+the software is designed in a way that should allow its easy extension to
+other languages with C-like syntax, such as Java, C++, C#, and Go.
+The main thing you need to add is an *X*MetricsCalculator and an
+*X*Keyword class.
+Pull requests for such extensions are more than welcomed.
+
 ## Building
 
 ### Prerequisites
@@ -32,6 +47,6 @@ The style checks performed are based on the following guidelines.
 * [Wikipedia summary](http://en.wikipedia.org/wiki/Indent_style)
 
 ## Citation
-* The tools is described in detail in the following paper.
+* The tool is described in detail in the following paper.
 Diomidis Spinellis, Panos Louridas, and Maria Kechagia. [The evolution of C programming practices: A study of the Unix operating system](http://www.dmst.aueb.gr/dds/pubs/conf/2016-ICSE-ProgEvol/html/SLK16.html) 1973–2015. In Willem Visser and Laurie Williams, editors, *ICSE '16: Proceedings of the 38th International Conference on Software Engineering*, pages 748–759, New York, May 2016. Association for Computing Machinery. ([doi:10.1145/2884781.2884799](http://dx.doi.org/10.1145/2884781.2884799))
 * Some other metrics are based on the paper [A Tale of Four Kernels](http://www.dmst.aueb.gr/dds/pubs/conf/2008-ICSE-4kernel/html/Spi08b.html).

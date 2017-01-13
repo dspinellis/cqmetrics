@@ -23,6 +23,8 @@
 
 #include "Halstead.h"
 
+static const double EPSILON = 1e-10;
+
 class HalsteadTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(HalsteadTest);
 	CPPUNIT_TEST(testCtor);
@@ -54,11 +56,11 @@ public:
 
 		h.add("b");
 		/* 2 * log2(2) == 2 * 1 == 2 */
-		CPPUNIT_ASSERT(h.complexity() == 2);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(h.complexity(), 2, EPSILON);
 
 		h.add("b");
 		/* 3 * log2(2) == 3 * 1 == 3 */
-		CPPUNIT_ASSERT(h.complexity() == 3);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(h.complexity(), 3, EPSILON);
 	}
 
 	/* From Code Quality: The Open Source Perspective, p. 328 */

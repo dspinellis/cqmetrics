@@ -1,0 +1,11 @@
+component_depth: 1
+languages:
+- name: cpp
+  production:
+    exclude:
+      - .*Test.*
+      - src/UnitTests\.cpp
+  test:
+    include:
+      - .*Test.*
+      - src/UnitTests\.cpp

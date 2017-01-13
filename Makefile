@@ -8,7 +8,7 @@ else
 CXXFLAGS+=-O2
 endif
 
-all: qmcalc README.md header.tab header.txt
+all: qmcalc metrics.md header.tab header.txt
 
 HFILES=$(wildcard *.h)
 OBJS=CMetricsCalculator.o QualityMetrics.o
@@ -27,8 +27,8 @@ QualityMetrics.o: QualityMetricNames.h
 QualityMetricNames.h: QualityMetrics.h metric-names.sed
 	sed -n -f metric-names.sed QualityMetrics.h >$@
 
-README.md: make-readme.sh QualityMetrics.h QualityMetrics.cpp
-	sh make-readme.sh >$@
+metrics.md: make-metrics-list.sh QualityMetrics.h QualityMetrics.cpp
+	sh make-metrics-list.sh >$@
 
 # Tab-separated, ending with a newline
 header.tab: make-header.sh QualityMetrics.cpp

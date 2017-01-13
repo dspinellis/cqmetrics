@@ -18,7 +18,8 @@ The full set of the metrics is documented in the file
 * GNU make
 * [CppUnit](http://sourceforge.net/projects/cppunit/) for running `make test`
 
-To build type `make`. This will also generate the file `header.tab`,
+To build type change the directory to `src` (`cd src`) and run `make`.
+This will also generate the files `header.tab` and `header.txt`,
 which can be used for loading the output into other programs
 for further processing.
 

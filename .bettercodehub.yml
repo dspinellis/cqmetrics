@@ -9,3 +9,4 @@ languages:
     include:
       - .*Test.*
       - src/UnitTests\.cpp
+- script

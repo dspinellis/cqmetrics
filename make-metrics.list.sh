@@ -10,6 +10,17 @@ cat <<\EOF
 The program qmcalc will read a C source code file from its standard
 input and print on its standard output a single line with the following
 numbers separated by a single tab.
+The file
+[header.tab](https://github.com/dspinellis/cqmetrics/blob/master/header.tab)
+contains a tab-separated list of the metric names.
+You can prepend this to the generated numbers so that you can read them
+into named columns for further processing using e.g. R's `read.csv`
+or Python's `csv.reader`.
+The file
+[header.txt](https://github.com/dspinellis/cqmetrics/blob/master/header.txt)
+contains the ordinal number of each field (starting from 1),
+which you can use to quickly access a particular field through its index,
+e.g. from awk.
 
 EOF
 

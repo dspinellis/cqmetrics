@@ -44,7 +44,7 @@ class NestingLevelTest : public CppUnit::TestFixture  {
 public:
 	void testCtor() {
 		NestingLevel n;
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// }}}
@@ -54,16 +54,16 @@ public:
 		n.saw_close_brace();
 		n.saw_close_brace();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) 1;
 	void testSingleIf() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) if (y) 2; 0;
@@ -72,20 +72,20 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// { 0; }
 	void testTrivialBrace() {
 		NestingLevel n;
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// {{ 0; }{
@@ -93,12 +93,12 @@ public:
 		NestingLevel n;
 		n.saw_open_brace();
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_close_brace();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { 1; 1; }
@@ -106,13 +106,13 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) if (y) { 2; 2; }
@@ -121,13 +121,13 @@ public:
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { 1; if (y) { 2; 2; } 1; 1; } 0;
@@ -135,26 +135,26 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { if (y) 2; 1; 1; } 0;
@@ -163,14 +163,14 @@ public:
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { if (y) if (z) 3; 1; } 0;
@@ -180,12 +180,12 @@ public:
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 3);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 3);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { if (y) 2; else 2; 1; } 0;
@@ -194,27 +194,27 @@ public:
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) 1; else 1; 0;
 	void testIfElse() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) { 1; } else { 1; } 0;
@@ -222,15 +222,15 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	/*
@@ -248,15 +248,15 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_open_brace(true);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_open_brace(true);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) if (y) 2; else 2; 1; 0;
@@ -265,15 +265,15 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) 1; else if (y) 1; else 1; 0;
@@ -283,56 +283,56 @@ public:
 	void testElseIf() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) 1; else { if (y) 2; else 2; } 0;
 	void testBracedElseIf() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) 1; else { if (y) 2; else if (z) 2; else 2; } 0;
 	void testBracedElseIfElse() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_open_brace();
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 
@@ -340,34 +340,34 @@ public:
 	void testComplexBracedElseIf() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_close_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do 1; while(z); 0;
 	void testSimpleDo() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::DO);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_nesting_keyword(CKeyword::WHILE);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do { 1; 1; } while(z); 0;
@@ -375,14 +375,14 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::DO);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
 		n.saw_close_brace();
 		n.saw_nesting_keyword(CKeyword::WHILE);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do { 1; while (x) 2; 1; } while(z); 0;
@@ -390,18 +390,18 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::DO);
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_close_brace();
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do while (x) 2; while(z); 0;
@@ -409,13 +409,13 @@ public:
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::DO);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do while (x) while(y) 3; while(z); 0;
@@ -424,36 +424,36 @@ public:
 		n.saw_nesting_keyword(CKeyword::DO);
 		n.saw_nesting_keyword(CKeyword::WHILE);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 3);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 3);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// do do while (x) while(y) 4; while(z); while (w) 0;
 	void testUnbracedNestedDoNestedWhile() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::DO);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::DO);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 3);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 3);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 4);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 4);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 
@@ -461,87 +461,87 @@ public:
 	void testSingleWhile() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) for (;;) switch while (y) do 5; while(z); 0;
 	void testAllStatements() {
 		NestingLevel n;
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::FOR);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_nesting_keyword(CKeyword::SWITCH);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 3);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 3);
 		n.saw_nesting_keyword(CKeyword::WHILE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 4);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 4);
 		n.saw_nesting_keyword(CKeyword::DO);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 5);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 5);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 5);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 5);
 		n.saw_nesting_keyword(CKeyword::WHILE);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// a = { 0 }; 0;
 	void testBracedAssignment() {
 		NestingLevel n;
 		n.saw_open_brace();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_close_brace();
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// if (x) for (;;) 2; else 1;
 	// Added to investigate and verify fixing testElseComment
 	void testIfForElse() {
 		NestingLevel n;
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_nesting_keyword(CKeyword::IF);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_nesting_keyword(CKeyword::FOR);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 2);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 2);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// 0; else 1;
 	// Added to investigate and verify fixing testNoIf
 	void testElse() {
 		NestingLevel n;
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 
 	// 0; else 1; else 1;
 	void testElseElse() {
 		NestingLevel n;
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 		n.saw_nesting_keyword(CKeyword::ELSE);
-		CPPUNIT_ASSERT(n.get_nesting_level() == 1);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 1);
 		n.saw_statement_semicolon();
-		CPPUNIT_ASSERT(n.get_nesting_level() == 0);
+		CPPUNIT_ASSERT_EQUAL(n.get_nesting_level(), 0);
 	}
 };
 #endif /*  NESTINGLEVELTEST_H */

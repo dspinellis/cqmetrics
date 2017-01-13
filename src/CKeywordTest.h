@@ -34,41 +34,41 @@ class CKeywordTest : public CppUnit::TestFixture {
 	CKeyword ck;
 public:
 	void testBranch() {
-		CPPUNIT_ASSERT(ck.identifier_type("if") == CKeyword::IF);
-		CPPUNIT_ASSERT(ck.identifier_type("elif") == CKeyword::ELIF);
-		CPPUNIT_ASSERT(ck.identifier_type("ifdef") == CKeyword::IFDEF);
-		CPPUNIT_ASSERT(ck.identifier_type("for") == CKeyword::FOR);
-		CPPUNIT_ASSERT(ck.identifier_type("while") == CKeyword::WHILE);
-		CPPUNIT_ASSERT(ck.identifier_type("case") == CKeyword::CASE);
-		CPPUNIT_ASSERT(ck.identifier_type("default") == CKeyword::DEFAULT);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("if"), CKeyword::IF);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("elif"), CKeyword::ELIF);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("ifdef"), CKeyword::IFDEF);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("for"), CKeyword::FOR);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("while"), CKeyword::WHILE);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("case"), CKeyword::CASE);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("default"), CKeyword::DEFAULT);
 	}
 
 	void testGoto() {
-		CPPUNIT_ASSERT(ck.identifier_type("goto") == CKeyword::GOTO);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("goto"), CKeyword::GOTO);
 	}
 
 	void testRegister() {
-		CPPUNIT_ASSERT(ck.identifier_type("register") == CKeyword::REGISTER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("register"), CKeyword::REGISTER);
 	}
 
 	void testInclude() {
-		CPPUNIT_ASSERT(ck.identifier_type("include") == CKeyword::INCLUDE);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("include"), CKeyword::INCLUDE);
 	}
 
 	void testTypedef() {
-		CPPUNIT_ASSERT(ck.identifier_type("typedef") == CKeyword::TYPEDEF);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("typedef"), CKeyword::TYPEDEF);
 	}
 
 	void testOther() {
-		CPPUNIT_ASSERT(ck.identifier_type("sizeof") == CKeyword::OTHER);
-		CPPUNIT_ASSERT(ck.identifier_type("int") == CKeyword::OTHER);
-		CPPUNIT_ASSERT(ck.identifier_type("static") == CKeyword::STATIC);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("sizeof"), CKeyword::OTHER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("int"), CKeyword::OTHER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("static"), CKeyword::STATIC);
 	}
 
 	void testId() {
-		CPPUNIT_ASSERT(ck.identifier_type("returning") == CKeyword::IDENTIFIER);
-		CPPUNIT_ASSERT(ck.identifier_type("id") == CKeyword::IDENTIFIER);
-		CPPUNIT_ASSERT(ck.identifier_type("xyzzy") == CKeyword::IDENTIFIER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("returning"), CKeyword::IDENTIFIER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("id"), CKeyword::IDENTIFIER);
+		CPPUNIT_ASSERT_EQUAL(ck.identifier_type("xyzzy"), CKeyword::IDENTIFIER);
 	}
 };
 #endif /*  CKEYWORDTEST_H */

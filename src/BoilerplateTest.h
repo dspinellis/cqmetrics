@@ -39,16 +39,16 @@ private:
 public:
 	void testCtor() {
 		Boilerplate o;
-		CPPUNIT_ASSERT(o.get_boilerplate_chars() == 0);
+		CPPUNIT_ASSERT_EQUAL(o.get_boilerplate_chars(), 0);
 	}
 
 	void testNonBoilerplate() {
 		Boilerplate o;
 
 		process_string(o, "/** This is a test */");
-		CPPUNIT_ASSERT(o.get_boilerplate_chars() == 0);
+		CPPUNIT_ASSERT_EQUAL(o.get_boilerplate_chars(), 0);
 		process_string(o, "not copyrighted code");
-		CPPUNIT_ASSERT(o.get_boilerplate_chars() == 0);
+		CPPUNIT_ASSERT_EQUAL(o.get_boilerplate_chars(), 0);
 	}
 
 	void testBoilerplateWarranties() {
@@ -73,7 +73,7 @@ public:
 
 		process_string(o, "Copyright (c) 1999 Lennart");
 		o.begin_comment();
-		CPPUNIT_ASSERT(o.get_boilerplate_chars() == 0);
+		CPPUNIT_ASSERT_EQUAL(o.get_boilerplate_chars(), 0);
 	}
 };
 #endif /*  BOILERPLATETEST_H */

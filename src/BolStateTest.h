@@ -47,28 +47,28 @@ public:
 	void testIndentation() {
 		BolState b;
 		// Test space
-		CPPUNIT_ASSERT(b.get_indentation() == 0);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 0);
 		b.saw_space(' ');
-		CPPUNIT_ASSERT(b.get_indentation() == 1);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 1);
 		b.saw_space(' ');
-		CPPUNIT_ASSERT(b.get_indentation() == 2);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 2);
 		// Test tab
 		b.saw_space('\t');
-		CPPUNIT_ASSERT(b.get_indentation() == 8);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 8);
 		// Space after tab
 		b.saw_space(' ');
-		CPPUNIT_ASSERT(b.get_indentation() == 9);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 9);
 		// Edge case
 		while (b.get_indentation() != 15)
 			b.saw_space(' ');
 		b.saw_space('\t');
-		CPPUNIT_ASSERT(b.get_indentation() == 16);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 16);
 		// Edge case
 		b.saw_space('\t');
-		CPPUNIT_ASSERT(b.get_indentation() == 24);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 24);
 		// Non-space
 		b.saw_non_space();
-		CPPUNIT_ASSERT(b.get_indentation() == 24);
+		CPPUNIT_ASSERT_EQUAL(b.get_indentation(), 24);
 	}
 };
 #endif /*  BOLSTATETEST_H */

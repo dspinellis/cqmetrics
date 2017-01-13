@@ -36,7 +36,7 @@ public:
 	void testCtor() {
 		Halstead h;
 
-		CPPUNIT_ASSERT(h.complexity() == 0);
+		CPPUNIT_ASSERT_EQUAL(h.complexity(), 0.0);
 	}
 
 	void testReset() {
@@ -45,14 +45,14 @@ public:
 		h.add("a");
 		h.add("b");
 		h.reset();
-		CPPUNIT_ASSERT(h.complexity() == 0);
+		CPPUNIT_ASSERT_EQUAL(h.complexity(), 0.0);
 	}
 
 	void testSimple() {
 		Halstead h;
 
 		h.add("a");
-		CPPUNIT_ASSERT(h.complexity() == 0);
+		CPPUNIT_ASSERT_EQUAL(h.complexity(), 0.0);
 
 		h.add("b");
 		/* 2 * log2(2) == 2 * 1 == 2 */
@@ -83,7 +83,7 @@ public:
 		 * The book performs the multiplication after rounding log2
 		 * to 9 and gives 35.2 as the result.
 		 */
-		CPPUNIT_ASSERT(fabs(h.complexity() - 34.87) < 0.01);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(h.complexity(), 34.87, 0.01);
 	}
 };
 #endif /*  HALSTEADTEST_H */

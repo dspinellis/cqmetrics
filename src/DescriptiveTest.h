@@ -45,8 +45,8 @@ class DescriptiveTest : public CppUnit::TestFixture {
 public:
 	void testCtor() {
 		Descriptive<int> a;
-		CPPUNIT_ASSERT(a.get_count() == 0);
-		CPPUNIT_ASSERT(a.get_sum() == 0);
+		CPPUNIT_ASSERT_EQUAL(a.get_count(), 0);
+		CPPUNIT_ASSERT_EQUAL(a.get_sum(), 0);
 		CPPUNIT_ASSERT(std::isnan(a.get_standard_deviation()));
 		CPPUNIT_ASSERT(std::isnan(a.get_mean()));
 		CPPUNIT_ASSERT(std::isnan(a.get_median()));
@@ -55,18 +55,18 @@ public:
 	void testAdd() {
 		Descriptive<int> a;
 		a.add(12);
-		CPPUNIT_ASSERT(a.get_sum() == 12);
-		CPPUNIT_ASSERT(a.get_count() == 1);
+		CPPUNIT_ASSERT_EQUAL(a.get_sum(), 12);
+		CPPUNIT_ASSERT_EQUAL(a.get_count(), 1);
 		a.add(2);
-		CPPUNIT_ASSERT(a.get_sum() == 14);
-		CPPUNIT_ASSERT(a.get_count() == 2);
+		CPPUNIT_ASSERT_EQUAL(a.get_sum(), 14);
+		CPPUNIT_ASSERT_EQUAL(a.get_count(), 2);
 	}
 
 	void testMean() {
 		Descriptive<int> a;
 		a.add(3);
 		a.add(12);
-		CPPUNIT_ASSERT(a.get_mean() == 7.5);
+		CPPUNIT_ASSERT_EQUAL(a.get_mean(), 7.5);
 	}
 
 	void testMeanDouble() {
@@ -74,7 +74,7 @@ public:
 		a.add(3);
 		a.add(1.5);
 		a.add(1.5);
-		CPPUNIT_ASSERT(a.get_mean() == 2);
+		CPPUNIT_ASSERT_EQUAL(a.get_mean(), 2.);
 	}
 
 	void testMinMax() {
@@ -82,16 +82,16 @@ public:
 		a.add(5);
 		a.add(2);
 		a.add(12);
-		CPPUNIT_ASSERT(a.get_min() == 2);
-		CPPUNIT_ASSERT(a.get_max() == 12);
+		CPPUNIT_ASSERT_EQUAL(a.get_min(), 2);
+		CPPUNIT_ASSERT_EQUAL(a.get_max(), 12);
 	}
 	void testMinMaxDouble() {
 		Descriptive<double> a;
 		a.add(5.1);
 		a.add(2.5);
 		a.add(12.5);
-		CPPUNIT_ASSERT(a.get_min() == 2.5);
-		CPPUNIT_ASSERT(a.get_max() == 12.5);
+		CPPUNIT_ASSERT_EQUAL(a.get_min(), 2.5);
+		CPPUNIT_ASSERT_EQUAL(a.get_max(), 12.5);
 	}
 
 	void testOutput() {
@@ -101,14 +101,14 @@ public:
 		a.add(4);
 		str << a;
 		// Don't forget to update testOutputEmpty
-		CPPUNIT_ASSERT(str.str() == "2\t2\t3\t3\t4\t1");
+		CPPUNIT_ASSERT_EQUAL(str.str(), std::string("2\t2\t3\t3\t4\t1"));
 	}
 
 	void testOutputEmpty() {
 		std::stringstream str;
 		Descriptive<int> a;
 		str << a;
-		CPPUNIT_ASSERT(str.str() == "0\t\t\t\t\t");
+		CPPUNIT_ASSERT_EQUAL(str.str(), std::string("0\t\t\t\t\t"));
 	}
 
 	void testSDZero() {
@@ -116,7 +116,7 @@ public:
 		a.add(1);
 		a.add(1);
 		a.add(1);
-		CPPUNIT_ASSERT(a.get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(a.get_standard_deviation(), 0.);
 	}
 
 	// From https://en.wikipedia.org/wiki/Standard_deviation#Basic_examples
@@ -130,7 +130,7 @@ public:
 		a.add(5);
 		a.add(7);
 		a.add(9);
-		CPPUNIT_ASSERT(a.get_standard_deviation() == 2);
+		CPPUNIT_ASSERT_EQUAL(a.get_standard_deviation(), 2.);
 	}
 
 	// Verified in R with:
@@ -147,14 +147,14 @@ public:
 	void testMedianOne() {
 		Descriptive<int> a;
 		a.add(42);
-		CPPUNIT_ASSERT(a.get_median() == 42);
+		CPPUNIT_ASSERT_EQUAL(a.get_median(), 42.);
 	}
 
 	void testMedianTwo() {
 		Descriptive<int> a;
 		a.add(4);
 		a.add(2);
-		CPPUNIT_ASSERT(a.get_median() == 3);
+		CPPUNIT_ASSERT_EQUAL(a.get_median(), 3.);
 	}
 
 	void testMedianOdd() {
@@ -162,7 +162,7 @@ public:
 		a.add(2);
 		a.add(0);
 		a.add(1);
-		CPPUNIT_ASSERT(a.get_median() == 1);
+		CPPUNIT_ASSERT_EQUAL(a.get_median(), 1.);
 	}
 
 	void testMedianEven() {
@@ -171,7 +171,7 @@ public:
 		a.add(0);
 		a.add(1);
 		a.add(5);
-		CPPUNIT_ASSERT(a.get_median() == 1.5);
+		CPPUNIT_ASSERT_EQUAL(a.get_median(), 1.5);
 	}
 
 	void testMedianPartial() {
@@ -182,7 +182,7 @@ public:
 		a.add(5);
 		a.add(7);
 		a.add(9);
-		CPPUNIT_ASSERT(a.get_median() == 6);
+		CPPUNIT_ASSERT_EQUAL(a.get_median(), 6.);
 	}
 
 };

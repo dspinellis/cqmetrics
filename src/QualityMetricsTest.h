@@ -32,8 +32,8 @@ class QualityMetricsTest : public CppUnit::TestFixture {
 public:
 	void testCtor() {
 		QualityMetrics q;
-		CPPUNIT_ASSERT(q.get_nchar() == 0);
-		CPPUNIT_ASSERT(q.get_ntypedef() == 0);
+		CPPUNIT_ASSERT_EQUAL(q.get_nchar(), 0);
+		CPPUNIT_ASSERT_EQUAL(q.get_ntypedef(), 0);
 	}
 
 	void testNline() {
@@ -41,17 +41,17 @@ public:
 
 		q.add_line(10);
 		q.add_line(12);
-		CPPUNIT_ASSERT(q.get_line_length().get_count() == 2);
+		CPPUNIT_ASSERT_EQUAL(q.get_line_length().get_count(), 2);
 	}
 
 	// Uncovered specification error
 	void testInconsistency() {
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 0) == 0);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(0, 5) == 0);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(5, 5) == 5);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(2, 4) == 2);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(6, 2) == 2);
-		CPPUNIT_ASSERT(QualityMetrics::inconsistency(1, 100) == 1);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(5, 0), 0);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(0, 5), 0);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(5, 5), 5);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(2, 4), 2);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(6, 2), 2);
+		CPPUNIT_ASSERT_EQUAL(QualityMetrics::inconsistency(1, 100), 1);
 	}
 
 	void testInconsistencyAccumulate() {
@@ -67,8 +67,8 @@ public:
 				QualityMetrics::NO_SPACE_AFTER_BINARY_OP,
 				QualityMetrics::SPACE_AFTER_BINARY_OP, ncases,
 				inc_sum);
-		CPPUNIT_ASSERT(ncases == 4);
-		CPPUNIT_ASSERT(inc_sum == 1);
+		CPPUNIT_ASSERT_EQUAL(ncases, 4);
+		CPPUNIT_ASSERT_EQUAL(inc_sum, 1);
 	}
 
 	void testStyleInconsistency() {
@@ -93,7 +93,7 @@ public:
 		q.add_style_hint(QualityMetrics::NO_SPACE_AFTER_COMMA);
 
 		// (1 + 3) inconsistent cases / out of 16 total
-		CPPUNIT_ASSERT(q.get_style_inconsistency() == 0.25);
+		CPPUNIT_ASSERT_EQUAL(q.get_style_inconsistency(), 0.25);
 	}
 
 };

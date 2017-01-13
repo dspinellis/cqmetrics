@@ -29,8 +29,8 @@ class CyclomaticTest : public CppUnit::TestFixture {
 public:
 	void testCtor() {
 		Cyclomatic c;
-		CPPUNIT_ASSERT(c.complexity() == 1);
-		CPPUNIT_ASSERT(c.extended_complexity() == 1);
+		CPPUNIT_ASSERT_EQUAL(c.complexity(), 1);
+		CPPUNIT_ASSERT_EQUAL(c.extended_complexity(), 1);
 	}
 
 	void testAdd() {
@@ -38,8 +38,8 @@ public:
 		c.add_path();
 		c.add_path();
 		c.add_boolean_branch();
-		CPPUNIT_ASSERT(c.complexity() == 3);
-		CPPUNIT_ASSERT(c.extended_complexity() == 4);
+		CPPUNIT_ASSERT_EQUAL(c.complexity(), 3);
+		CPPUNIT_ASSERT_EQUAL(c.extended_complexity(), 4);
 	}
 };
 #endif /*  CYCLOMATICTEST_H */

@@ -77,9 +77,9 @@ public:
 		CMetricsCalculator calc;
 
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nchar() == 0);
-		CPPUNIT_ASSERT(qm.get_line_length().get_count() == 0);
-		CPPUNIT_ASSERT(qm.get_line_length().get_sum() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nchar(), 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_line_length().get_count(), 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_line_length().get_sum(), 0);
 	}
 
 	void testLine() {
@@ -87,8 +87,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nchar() == 8);
-		CPPUNIT_ASSERT(qm.get_line_length().get_count() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nchar(), 8);
+		CPPUNIT_ASSERT_EQUAL(qm.get_line_length().get_count(), 3);
 	}
 
 	void testNFunction() {
@@ -96,7 +96,7 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nfunction() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction(), 1);
 	}
 
 	void testHalsteadOperator() {
@@ -104,8 +104,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 1);
-		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_count(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_mean(), 4.);
 	}
 
 	void testHalsteadOperand() {
@@ -113,8 +113,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 1);
-		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_count(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_mean(), 4.);
 	}
 
 	void testHalsteadOperandTwoFunctions() {
@@ -122,8 +122,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_halstead().get_count() == 2);
-		CPPUNIT_ASSERT(qm.get_halstead().get_mean() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_count(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_halstead().get_mean(), 4.);
 	}
 
 	void testNStatement() {
@@ -131,7 +131,7 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_count(), 3);
 	}
 
 	void testStatementNesting() {
@@ -139,9 +139,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_count(), 3);
 		// (0 + 1 + 2) / 3 == 1
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_mean(), 1.);
 	}
 
 	void testStatementNestingTwoFunction() {
@@ -152,9 +152,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_count() == 6);
+		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_count(), 6);
 		// (0 + 3 + 1 + 2 + 6 + 2)  == 12; 12 / 6 == 2
-		CPPUNIT_ASSERT(qm.get_statement_nesting().get_mean() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_mean(), 2.);
 	}
 
 	void testNBlockComment() {
@@ -163,14 +163,14 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
-		CPPUNIT_ASSERT(qm.get_nfun_comment() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfun_comment(), 1);
 
 		std::stringstream str2("/* hi\n * / */ /**//* */");
 		CMetricsCalculator calc2(str2);
 		calc2.calculate_metrics();
 		const QualityMetrics& qm2(calc2.get_metrics());
-		CPPUNIT_ASSERT(qm2.get_ncomment() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm2.get_ncomment(), 3);
 	}
 
 	void testDoxComment() {
@@ -178,20 +178,20 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ndox_comment() == 2);
-		CPPUNIT_ASSERT(qm.get_ncomment() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ndox_comment(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 4);
 
 		std::stringstream str2("///Hi\n");
 		CMetricsCalculator calc2(str2);
 		calc2.calculate_metrics();
 		const QualityMetrics& qm2(calc2.get_metrics());
-		CPPUNIT_ASSERT(qm2.get_ndox_comment_char() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm2.get_ndox_comment_char(), 3);
 
 		std::stringstream str3("/**hi*/\n");
 		CMetricsCalculator calc3(str3);
 		calc3.calculate_metrics();
 		const QualityMetrics& qm3(calc3.get_metrics());
-		CPPUNIT_ASSERT(qm3.get_ndox_comment_char() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm3.get_ndox_comment_char(), 2);
 	}
 
 	void testNLineComment() {
@@ -200,14 +200,14 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
-		CPPUNIT_ASSERT(qm.get_nfun_comment() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfun_comment(), 1);
 
 		std::stringstream str2(" // hi\n //\n");
 		CMetricsCalculator calc2(str2);
 		calc2.calculate_metrics();
 		const QualityMetrics& qm2(calc2.get_metrics());
-		CPPUNIT_ASSERT(qm2.get_ncomment() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm2.get_ncomment(), 2);
 	}
 
 	void testNBlockCommentChar() {
@@ -216,8 +216,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
-		CPPUNIT_ASSERT(qm.get_ncomment_char() == 9);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment_char(), 9);
 	}
 
 	void testNLineCommentChar() {
@@ -226,8 +226,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 1);
-		CPPUNIT_ASSERT(qm.get_ncomment_char() == 18);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment_char(), 18);
 	}
 
 	void testNCommentChar() {
@@ -236,8 +236,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncomment() == 2);
-		CPPUNIT_ASSERT(qm.get_ncomment_char() == 18);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncomment_char(), 18);
 	}
 
 	void testCyclomaticBoolean() {
@@ -245,9 +245,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_count(), 1);
 		// One path plus four additional ones
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 5);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_mean(), 5.);
 	}
 
 	void testCyclomaticLogical() {
@@ -256,7 +256,7 @@ public:
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		// One path plus five additional ones
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 6);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_mean(), 6.);
 	}
 
 	void testCyclomaticLogicalTwoFunctions() {
@@ -266,8 +266,8 @@ public:
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
 		// ((1 + 5) + (1 + 1))
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 2);
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_count(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_mean(), 4.);
 	}
 
 
@@ -277,9 +277,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_count() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_count(), 2);
 		// ((4 + 1) + (2 + 1)) / 2
-		CPPUNIT_ASSERT(qm.get_cyclomatic().get_mean() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_cyclomatic().get_mean(), 4.);
 	}
 
 	void testCppDirective() {
@@ -288,11 +288,11 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ncpp_directive() == 8);
-		CPPUNIT_ASSERT(qm.get_nfun_cpp_directive() == 2);
-		CPPUNIT_ASSERT(qm.get_ncpp_conditional() == 4);
-		CPPUNIT_ASSERT(qm.get_nfun_cpp_conditional() == 1);
-		CPPUNIT_ASSERT(qm.get_ncpp_include() == 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncpp_directive(), 8);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfun_cpp_directive(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncpp_conditional(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfun_cpp_conditional(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ncpp_include(), 1);
 	}
 
 	void testInternal() {
@@ -300,7 +300,7 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ninternal() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ninternal(), 2);
 	}
 
 	void testCKeyword() {
@@ -308,10 +308,10 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_ngoto() == 2);
-		CPPUNIT_ASSERT(qm.get_ntypedef() == 3);
-		CPPUNIT_ASSERT(qm.get_nregister() == 1);
-		CPPUNIT_ASSERT(qm.get_nvoid() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ngoto(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ntypedef(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nregister(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nvoid(), 4);
 	}
 
 	void testCKeyword2() {
@@ -319,11 +319,11 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nsigned() == 1);
-		CPPUNIT_ASSERT(qm.get_nunsigned() == 2);
-		CPPUNIT_ASSERT(qm.get_nconst() == 3);
-		CPPUNIT_ASSERT(qm.get_nvolatile() == 4);
-		CPPUNIT_ASSERT(qm.get_nnoalias() == 5);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nsigned(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nunsigned(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nconst(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nvolatile(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nnoalias(), 5);
 	}
 
 	void testCKeyword3() {
@@ -331,9 +331,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nstruct() == 1);
-		CPPUNIT_ASSERT(qm.get_nunion() == 2);
-		CPPUNIT_ASSERT(qm.get_nenum() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nstruct(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nunion(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nenum(), 3);
 	}
 
 	void testCKeyword4() {
@@ -341,8 +341,8 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_nrestrict() == 1);
-		CPPUNIT_ASSERT(qm.get_ninline() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nrestrict(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_ninline(), 2);
 	}
 
 	void testIdentifierLength() {
@@ -350,12 +350,12 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_identifier_length().get_count() == 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_identifier_length().get_count(), 4);
 		// 2 + 3 + 2 + 1 == 8; 8 / 4 = 2
-		CPPUNIT_ASSERT(qm.get_identifier_length().get_mean() == 2);
-		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_count() == 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_identifier_length().get_mean(), 2.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_unique_identifier_length().get_count(), 3);
 		// 2 + 3 + 1 == 6; 6 / 3 = 2
-		CPPUNIT_ASSERT(qm.get_unique_identifier_length().get_mean() == 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_unique_identifier_length().get_mean(), 2.);
 	}
 
 	struct PSTest {
@@ -620,9 +620,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 1);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	void testIndentationIf() {
@@ -630,9 +630,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	void testIndentationBrace() {
@@ -640,9 +640,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	void testIndentationGnuBrace() {
@@ -650,9 +650,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 2);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 2.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Written to find implementation error
@@ -661,9 +661,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Written to investigate implementation error
@@ -672,9 +672,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Written to investigate implementation error
@@ -683,9 +683,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Written to investigate implementation error
@@ -694,9 +694,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Written to investigate implementation error
@@ -705,9 +705,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 6);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 6);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	void testBlockCommentIndent() {
@@ -715,9 +715,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Added after problem that set indentation level to -1
@@ -726,9 +726,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 5);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 5);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Added after problem that set indentation level to -1
@@ -737,9 +737,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 2);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Added after problem that set indentation level to -1
@@ -748,9 +748,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 4);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 4);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	// Added after problem that set indentation level to -1
@@ -759,9 +759,9 @@ public:
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_count() == 3);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_mean() == 8);
-		CPPUNIT_ASSERT(qm.get_indentation_spacing().get_standard_deviation() == 0);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_count(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_mean(), 8.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_indentation_spacing().get_standard_deviation(), 0.);
 	}
 
 	void testInconsistency() {
@@ -780,7 +780,7 @@ public:
 		 * (NO)SPACE_BEFORE_SEMICOLON 6 (1 inconsistent)
 		 * Total=16
 		 */
-		CPPUNIT_ASSERT(qm.get_style_inconsistency() == 2 / 16.);
+		CPPUNIT_ASSERT_EQUAL(qm.get_style_inconsistency(), 2 / 16.);
 	}
 };
 #endif /*  CMETRICSCALCULATORTEST_H */

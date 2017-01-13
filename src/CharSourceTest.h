@@ -31,8 +31,8 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.get(c) && c == 'i');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'i');
 	}
 
 	void testPush() {
@@ -40,22 +40,22 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
 		// Push one
 		s.push('o');
-		CPPUNIT_ASSERT(s.get(c) && c == 'o');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'o');
 		// Again
 		s.push('p');
-		CPPUNIT_ASSERT(s.get(c) && c == 'p');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'p');
 		// Two
 		s.push('q');
 		s.push('r');
-		CPPUNIT_ASSERT(s.get(c) && c == 'r');
-		CPPUNIT_ASSERT(s.get(c) && c == 'q');
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'r');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'q');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
 		// Push at EOF
 		s.push('s');
-		CPPUNIT_ASSERT(s.get(c) && c == 's');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 's');
 	}
 
 	struct StateHandler {
@@ -74,10 +74,10 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.get_nchar() == 2);
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 2);
 	}
 
 	void testNcharPush() {
@@ -85,14 +85,14 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.get_nchar() == 1);
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 1);
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
 		s.push('e');
-		CPPUNIT_ASSERT(s.get_nchar() == 1);
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 1);
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.get_nchar() == 2);
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 2);
 	}
 
 	void testCharAfter() {
@@ -100,17 +100,17 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.char_after() == 'h');
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_after() == 'e');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'e');
 		s.push('p');
-		CPPUNIT_ASSERT(s.char_after() == 'p');
-		CPPUNIT_ASSERT(s.get(c) && c == 'p');
-		CPPUNIT_ASSERT(s.char_after() == 'e');
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'p');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'p');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.char_after() == 0);
-		CPPUNIT_ASSERT(s.get_nchar() == 2);
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 2);
 	}
 
 	void testCharBefore() {
@@ -118,18 +118,18 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'e');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
-		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), 'h');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.char_after() == 0);
-		CPPUNIT_ASSERT(s.get_nchar() == 2);
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 2);
 	}
 
 	void testCharBeforeNewline() {
@@ -137,14 +137,14 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
 
-		CPPUNIT_ASSERT(s.get(c) && c == '\n');
-		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), '\n');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), 'h');
 	}
 
 	void testCharBeforePush() {
@@ -152,24 +152,24 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'e');
 		s.push('h');
-		CPPUNIT_ASSERT(s.char_after() == 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'e');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'e');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'e');
-		CPPUNIT_ASSERT(s.char_before() == 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'e');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), 'h');
 		CPPUNIT_ASSERT(!s.get(c));
-		CPPUNIT_ASSERT(s.char_after() == 0);
-		CPPUNIT_ASSERT(s.get_nchar() == 2);
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.get_nchar(), 2);
 	}
 
 	void testCharBeforeN() {
@@ -177,19 +177,19 @@ public:
 
 		CharSource s(str);
 		char c;
-		CPPUNIT_ASSERT(s.char_before() == 0);
-		CPPUNIT_ASSERT(s.char_after() == 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
+		CPPUNIT_ASSERT_EQUAL(s.char_after(), 'h');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'h');
-		CPPUNIT_ASSERT(s.char_before() == 0);
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), '\0');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'a');
-		CPPUNIT_ASSERT(s.char_before() == 'h');
-		CPPUNIT_ASSERT(s.char_before(2) == 0);
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'a');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), 'h');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(2), '\0');
 
-		CPPUNIT_ASSERT(s.get(c) && c == 't');
-		CPPUNIT_ASSERT(s.char_before() == 'a');
-		CPPUNIT_ASSERT(s.char_before(2) == 'h');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 't');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(), 'a');
+		CPPUNIT_ASSERT_EQUAL(s.char_before(2), 'h');
 	}
 
 
@@ -199,11 +199,11 @@ public:
 		CharSource s(str);
 		char c;
 
-		CPPUNIT_ASSERT(s.get(c) && c == 'a');
+		CPPUNIT_ASSERT_EQUAL((s.get(c), c), 'a');
 		for (char i = 'b'; i < 'z'; i++) {
-			CPPUNIT_ASSERT(s.char_after() == i);
-			CPPUNIT_ASSERT(s.get(c) && c == i);
-			CPPUNIT_ASSERT(s.char_before() == i - 1);
+			CPPUNIT_ASSERT_EQUAL(s.char_after(), i);
+			CPPUNIT_ASSERT_EQUAL((s.get(c), c), i);
+			CPPUNIT_ASSERT_EQUAL(s.char_before(), (char)(i - 1));
 		}
 	}
 };

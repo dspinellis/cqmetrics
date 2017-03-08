@@ -27,6 +27,7 @@
 class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(CMetricsCalculatorTest);
 	CPPUNIT_TEST(testCtor);
+	CPPUNIT_TEST(testNEmptyLine);
 	CPPUNIT_TEST(testNFunction);
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testStatementNesting);
@@ -89,6 +90,14 @@ public:
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT_EQUAL(qm.get_nchar(), 8);
 		CPPUNIT_ASSERT_EQUAL(qm.get_line_length().get_count(), 3);
+	}
+
+	void testNEmptyLine() {
+		std::stringstream str("foo()\n{int bar;\n\n\r\n}\n}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT_EQUAL(qm.get_nempty_line(), 2);
 	}
 
 	void testNFunction() {

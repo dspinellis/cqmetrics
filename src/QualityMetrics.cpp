@@ -100,6 +100,10 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" line len: " <<)
 		q.get_line_length() << '\t' <<
 
+		// VAL: Number of empty lines (Lines which contain only whitespace characters).
+		ANNOTATE(" empty: " <<)
+		q.get_nempty_line() << '\t' <<
+
 		// VAL: Number of functions (A function is considered to start with `{` at column 1)
 		ANNOTATE(" fun: " <<)
 		q.get_nfunction() << '\t' <<

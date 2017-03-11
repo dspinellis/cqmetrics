@@ -105,6 +105,9 @@ CMetricsCalculator::newline(bool in_non_code_block)
 		previous_indentation = bol.get_indentation();
 	}
 
+	if (bol.at_bol_space())
+		qm.add_empty_line();
+
 	int eol_ptr;
 	char c = src.char_before(eol_ptr = 1);
 	// Skip over \r in \r\n
@@ -577,6 +580,8 @@ CMetricsCalculator::calculate_metrics_switch()
 			}
 			for (;;) {
 				while (c0 != '*') {
+					if (!isspace(c0) && bol.at_bol_space())
+						bol.saw_non_space();
 					qm.add_comment_char();
 					if (in_dox_comment)
 						qm.add_dox_comment_char();
@@ -585,6 +590,8 @@ CMetricsCalculator::calculate_metrics_switch()
 					if (c0 == '\n')
 						newline(true);
 				}
+				if (!isspace(c0) && bol.at_bol_space())
+					bol.saw_non_space();
 				GET(c0);
 				bp.process_char(c0);
 				if (c0 == '/') {

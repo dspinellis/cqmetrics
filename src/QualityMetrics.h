@@ -33,6 +33,7 @@ public:
 	typedef std::vector <int> StyleHintContainer;
 private:
 	Descriptive<int> line_length;	// Line lengths
+	int nempty_line;		// Number of whitespace lines.
 	int ncomment;			// Number of comments
 	int ncomment_char;		// Number of comment characters
 	int nboilerplate_comment_char;	// Number of boilerplate (license) comment characters
@@ -127,7 +128,7 @@ public:
 	static const char *metric_name[];
 
 	QualityMetrics() :
-		ncomment(0), ncomment_char(0), nboilerplate_comment_char(0),
+		nempty_line(0), ncomment(0), ncomment_char(0), nboilerplate_comment_char(0),
 		ndox_comment(0), ndox_comment_char(0), nfunction(0),
 		ncpp_directive(0), ncpp_include(0), ninternal(0), nconst(0),
 		nenum(0), ngoto(0), ninline(0), nnoalias(0), nregister(0),
@@ -136,6 +137,7 @@ public:
 		nfun_cpp_directive(0), ncpp_conditional(0),
 		nfun_cpp_conditional(0), nstyle_hint(STYLE_HINT_SIZE, 0) {}
 
+	void add_empty_line() { nempty_line++; }
 	void add_line(int length) { line_length.add(length); }
 	void add_statement(int nesting) { statement_nesting.add(nesting); }
 	void add_internal() { ninternal++; }
@@ -218,6 +220,9 @@ public:
 	const Descriptive<int>& get_line_length() const { return line_length; }
 	int get_nchar() const {
 		return line_length.get_sum() + line_length.get_count();
+	}
+	int get_nempty_line() const {
+		return nempty_line;
 	}
 	int get_nfunction() const { return nfunction; }
 	const Descriptive<int> &get_statement_nesting() const {

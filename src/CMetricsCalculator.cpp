@@ -144,7 +144,9 @@ CMetricsCalculator::newline(bool in_non_code_block)
 	saw_non_semicolon_keyword = false;
 	saw_unindent = false;
 	saw_comment = false;
-	saw_cpp_directive = false;
+	// Reset C preprocessor directive if line does not end with a backslash.
+	if (c != '\\' && saw_cpp_directive)
+		saw_cpp_directive = false;
 	line_nesting = nesting.get_nesting_level();
 }
 

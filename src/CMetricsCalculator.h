@@ -45,6 +45,7 @@ private:
 	/** Bracket balance for control statememts. */
 	int stmt_bracket_balance;
 	int line_bracket_balance;	// Bracket balance for each line
+	int func_bracket_balance;	// Bracket balance for functions
 	int line_nesting;		// Nesting of current line
 	/** Indentation of preceding indented line. */
 	int previous_indentation;
@@ -64,14 +65,16 @@ private:
 	void keyword_style_left_space(char before);
 	/** Called at every encountered newline */
 	void newline(bool in_non_code_block = false);
+	/** Get last non space char until the terminated char. */
+	char get_first_pre_non_space_char(char terminated_c);
 public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0),
 	scan_cpp_directive(false), scan_cpp_line(false),
 	in_function(false), identifier_func(false), in_dox_comment(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
-	line_nesting(0), previous_indentation(0), continuation(false),
-	saw_non_semicolon_keyword(false), saw_unindent(false),
+	func_bracket_balance(0), line_nesting(0), previous_indentation(0),
+	continuation(false), saw_non_semicolon_keyword(false), saw_unindent(false),
 	saw_comment(false), saw_cpp_directive(false), indentation_list(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();

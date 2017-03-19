@@ -23,10 +23,11 @@ do
 done |
 # Convert _count metrics to the value measured
 sed '
+s/function_params_count/nfunction/
 s/line_length_count/nline/
 s/statement_nesting_count/nstatement/
-s/halstead_count/nfunction/
-s/cyclomatic_count/nfunction2/
+s/halstead_count/nfunction_def/
+s/cyclomatic_count/nfunction_def2/
 s/identifier_length_count/nidentifier/
 s/unique_identifier_length_count/nunique_identifier/
 '

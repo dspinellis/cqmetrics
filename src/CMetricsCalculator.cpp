@@ -34,6 +34,17 @@ is_eol_char(char c) {
 	return (c == '\r' || c == '\n');
 }
 
+char
+CMetricsCalculator::get_first_pre_non_space_char(char terminated_c)
+{
+	int eol_ptr;
+	char c = src.char_before(eol_ptr = 1);
+	while (c && c != terminated_c && isspace(c))
+		c = src.char_before(++eol_ptr);
+	return c;
+}
+
+
 void
 CMetricsCalculator::binary_style(char before)
 {
@@ -221,6 +232,12 @@ CMetricsCalculator::calculate_metrics_switch()
 			STYLE_HINT(SPACE_AFTER_COMMA);
 		else
 			STYLE_HINT(NO_SPACE_AFTER_COMMA);
+		if (func_bracket_balance == stmt_bracket_balance && identifier_func) {
+			// Case: int foo(int x, int z);
+			if (qm.get_function_params() == 0)
+				qm.add_function_param();
+			qm.add_function_param();
+		}
 		bol.saw_non_space();
 		qm.add_operator(c0);
 		break;
@@ -236,6 +253,20 @@ CMetricsCalculator::calculate_metrics_switch()
 			STYLE_HINT(SPACE_BEFORE_CLOSING_BRACKET);
 		else
 			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACKET);
+		if (stmt_bracket_balance == func_bracket_balance && identifier_func
+				&& qm.get_function_params() == 0) {
+			char c;
+			/*
+			 * Heuristic: In case of a non whitespace char
+			 * between brackets, then assume that the function
+			 * has one parameter.
+			 *
+			 * int foo(); and int foo(int bar);
+			 */
+			c = get_first_pre_non_space_char('(');
+			if (c != '(')
+				qm.add_function_param();
+		}
 		bol.saw_non_space();
 		stmt_bracket_balance--;
 		line_bracket_balance--;
@@ -311,8 +342,9 @@ CMetricsCalculator::calculate_metrics_switch()
 		}
 		// A function declaration.
 		if (identifier_func) {
-			identifier_func = false;
 			qm.add_function_decl();
+			qm.end_function_decl();
+			identifier_func = false;
 		}
 		break;
 	/*
@@ -862,6 +894,8 @@ CMetricsCalculator::calculate_metrics_switch()
 				if (src.char_after() == '(' && current_depth == top_level_depth
 					    && !saw_cpp_directive) {
 					identifier_func = true;
+					qm.begin_function_decl();
+					func_bracket_balance = stmt_bracket_balance + 1;
 				}
 			}
 			break;

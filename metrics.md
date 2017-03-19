@@ -17,6 +17,7 @@ e.g. from awk.
 * Number of empty lines (Lines which contain only whitespace characters).
 * Number of function declarations (prototypes).
 * Number of function definitons (A function with a body).
+* Number of functions, minimum, mean, maximum, standard deviation of function parameters.
 * Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 * Number of declarations with internal linkage (`static`) visibility
 * Number of `const` keywords

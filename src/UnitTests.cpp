@@ -23,6 +23,7 @@
 #include "CMetricsCalculatorTest.h"
 #include "CyclomaticTest.h"
 #include "DescriptiveTest.h"
+#include "FunctionSignatureTest.h"
 #include "HalsteadTest.h"
 #include "NestingLevelTest.h"
 #include "QualityMetricsTest.h"
@@ -39,6 +40,7 @@ main(int argc, char *argv[])
 	runner.addTest(CMetricsCalculatorTest::suite());
 	runner.addTest(CyclomaticTest::suite());
 	runner.addTest(DescriptiveTest::suite());
+	runner.addTest(FunctionSignatureTest::suite());
 	runner.addTest(HalsteadTest::suite());
 	runner.addTest(NestingLevelTest::suite());
 	runner.addTest(QualityMetricsTest::suite());

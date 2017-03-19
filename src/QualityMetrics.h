@@ -25,6 +25,7 @@
 
 #include "Cyclomatic.h"
 #include "Descriptive.h"
+#include "FunctionSignature.h"
 #include "Halstead.h"
 
 /** Keep taly of quality metrics */
@@ -71,6 +72,9 @@ private:
 	Descriptive<int> identifier_length;
 	Descriptive<int> unique_identifier_length;
 
+	/** Holds information about the signature of a function. */
+	FunctionSignature function_tracker;
+	Descriptive<int> function_params;  // Number of parameters per function
 	Descriptive<int> statement_nesting;	// Statement nesting
 	Descriptive<double> halstead;		// Halstead complexity
 	Halstead halstead_tracker;
@@ -180,10 +184,18 @@ public:
 	void add_style_hint(enum StyleHint num) { nstyle_hint[num]++; }
 #endif
 	void add_function_decl() { nfunction_decl++; }
+	void add_function_param() {
+		function_tracker.add_param();
+	}
+	void begin_function_decl() { function_tracker.reset(); }
 	void begin_function_def() {
+		end_function_decl();
 		halstead_tracker.reset();
 		cyclomatic_tracker.reset();
 		nfunction_def++;
+	}
+	void end_function_decl() {
+		function_params.add(function_tracker.get_nparams());
 	}
 	void end_function_def() {
 		halstead.add(halstead_tracker.complexity());
@@ -231,6 +243,9 @@ public:
 	const Descriptive<int> &get_statement_nesting() const {
 		return statement_nesting;
 	}
+	int get_function_params() {
+		return function_tracker.get_nparams();
+	}
 	int get_ninternal() const { return ninternal; }
 	int get_nconst() const { return nconst; }
 	int get_nenum() const { return nenum; }
@@ -265,6 +280,7 @@ public:
 	int get_nfun_cpp_directive() const { return nfun_cpp_directive; }
 	int get_nfun_cpp_conditional() const { return nfun_cpp_conditional; }
 
+	const Descriptive<int>& get_function_params() const { return function_params; }
 	const Descriptive<double>& get_halstead() const { return halstead; }
 	const Descriptive<double>& get_cyclomatic() const { return cyclomatic; }
 	const Descriptive<double>& get_indentation_spacing() const {

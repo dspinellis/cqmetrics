@@ -112,6 +112,10 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" func def: " <<)
 		q.get_nfunction_def() << '\t' <<
 
+		// VAL: Number of functions, minimum, mean, maximum, standard deviation of function parameters.
+		ANNOTATE(" func params " <<)
+		q.get_function_params() << '\t' <<
+
 		// VAL: Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 		ANNOTATE(" nest: " <<)
 		q.get_statement_nesting() << '\t' <<

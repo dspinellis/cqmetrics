@@ -30,6 +30,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNEmptyLine);
 	CPPUNIT_TEST(testNFunctionDefinition);
 	CPPUNIT_TEST(testNFunctionDefinitionAndDeclaration);
+	CPPUNIT_TEST(testFunctionNParams);
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testStatementNesting);
 	CPPUNIT_TEST(testStatementNestingTwoFunction);
@@ -118,6 +119,16 @@ public:
 		const QualityMetrics& qm(calc.get_metrics());
 		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_def(), 1);
 		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_decl(), 1);
+	}
+
+	void testFunctionNParams() {
+		std::stringstream str("int foo();\nvoid bar(int b) {}\n"
+				"int blah(int x, int a);");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT_EQUAL(qm.get_function_params().get_count(), 3);
+		CPPUNIT_ASSERT_EQUAL(qm.get_function_params().get_mean(), 1.0);
 	}
 
 	void testHalsteadOperator() {

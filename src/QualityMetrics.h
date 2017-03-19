@@ -39,7 +39,8 @@ private:
 	int nboilerplate_comment_char;	// Number of boilerplate (license) comment characters
 	int ndox_comment;		// Number of DOxygen comments
 	int ndox_comment_char;		// Number of DOxygen comment characters
-	int nfunction;			// Number of functions
+	int nfunction_decl;		// Number of function declarations
+	int nfunction_def;		// Number of function defintions
 	int ncpp_directive;		// Number of C preprocessor directives
 
 	int ncpp_include;		// Number of include directives
@@ -129,7 +130,7 @@ public:
 
 	QualityMetrics() :
 		nempty_line(0), ncomment(0), ncomment_char(0), nboilerplate_comment_char(0),
-		ndox_comment(0), ndox_comment_char(0), nfunction(0),
+		ndox_comment(0), ndox_comment_char(0), nfunction_decl(0), nfunction_def(0),
 		ncpp_directive(0), ncpp_include(0), ninternal(0), nconst(0),
 		nenum(0), ngoto(0), ninline(0), nnoalias(0), nregister(0),
 		nrestrict(0), nsigned(0), nstruct(0), ntypedef(0), nunion(0),
@@ -178,12 +179,13 @@ public:
 #else
 	void add_style_hint(enum StyleHint num) { nstyle_hint[num]++; }
 #endif
-	void begin_function() {
+	void add_function_decl() { nfunction_decl++; }
+	void begin_function_def() {
 		halstead_tracker.reset();
 		cyclomatic_tracker.reset();
-		nfunction++;
+		nfunction_def++;
 	}
-	void end_function() {
+	void end_function_def() {
 		halstead.add(halstead_tracker.complexity());
 		cyclomatic.add(cyclomatic_tracker.extended_complexity());
 	}
@@ -224,7 +226,8 @@ public:
 	int get_nempty_line() const {
 		return nempty_line;
 	}
-	int get_nfunction() const { return nfunction; }
+	int get_nfunction_decl() const { return nfunction_decl; }
+	int get_nfunction_def() const { return nfunction_def; }
 	const Descriptive<int> &get_statement_nesting() const {
 		return statement_nesting;
 	}

@@ -254,10 +254,11 @@ CMetricsCalculator::calculate_metrics_switch()
 					bol.get_indentation() >
 					previous_indentation);
 		}
-		// Heuristic: functions begin with { at first column
-		if (bol.at_bol()) {
+		// A function declaration which is followed by its definition.
+		if (identifier_func) {
 			current_depth = 0;
-			qm.begin_function();
+			identifier_func = false;
+			qm.begin_function_def();
 			in_function = true;
 			nesting.reset();
 		}
@@ -280,7 +281,7 @@ CMetricsCalculator::calculate_metrics_switch()
 				STYLE_HINT(NO_SPACE_AFTER_CLOSING_BRACE);
 			nesting.saw_close_brace();
 			if (current_depth == top_level_depth) {
-				qm.end_function();
+				qm.end_function_def();
 				in_function = false;
 			}
 		}
@@ -307,6 +308,11 @@ CMetricsCalculator::calculate_metrics_switch()
 		if (in_function && stmt_bracket_balance == 0) {
 			qm.add_statement(nesting.get_nesting_level());
 			nesting.saw_statement_semicolon();
+		}
+		// A function declaration.
+		if (identifier_func) {
+			identifier_func = false;
+			qm.add_function_decl();
 		}
 		break;
 	/*
@@ -846,6 +852,17 @@ CMetricsCalculator::calculate_metrics_switch()
 			if (!scan_cpp_directive) {
 				qm.add_operand(val);
 				qm.add_identifier(val);
+				/*
+				 * Heuristic: An identifier which is followed by `(` at the
+				 * top level is considered a function. This is also handles the
+				 * case of a macro with parameters (which is not considered a
+				 * function). Function can have or not an implementation
+				 * body (i.e. function declarations and definitions).
+				 */
+				if (src.char_after() == '(' && current_depth == top_level_depth
+					    && !saw_cpp_directive) {
+					identifier_func = true;
+				}
 			}
 			break;
 		}

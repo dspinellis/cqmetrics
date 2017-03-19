@@ -104,9 +104,13 @@ operator <<(std::ostream& o, const QualityMetrics &q) {
 		ANNOTATE(" empty: " <<)
 		q.get_nempty_line() << '\t' <<
 
-		// VAL: Number of functions (A function is considered to start with `{` at column 1)
-		ANNOTATE(" fun: " <<)
-		q.get_nfunction() << '\t' <<
+		// VAL: Number of function declarations (prototypes).
+		ANNOTATE(" func decl: " <<)
+		q.get_nfunction_decl() << '\t' <<
+
+		// VAL: Number of function definitons (A function with a body).
+		ANNOTATE(" func def: " <<)
+		q.get_nfunction_def() << '\t' <<
 
 		// VAL: Number of statements, minimum, mean, maximum, standard deviation of statement nesting
 		ANNOTATE(" nest: " <<)

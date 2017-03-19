@@ -28,7 +28,8 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(CMetricsCalculatorTest);
 	CPPUNIT_TEST(testCtor);
 	CPPUNIT_TEST(testNEmptyLine);
-	CPPUNIT_TEST(testNFunction);
+	CPPUNIT_TEST(testNFunctionDefinition);
+	CPPUNIT_TEST(testNFunctionDefinitionAndDeclaration);
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testStatementNesting);
 	CPPUNIT_TEST(testStatementNestingTwoFunction);
@@ -100,12 +101,23 @@ public:
 		CPPUNIT_ASSERT_EQUAL(qm.get_nempty_line(), 2);
 	}
 
-	void testNFunction() {
-		std::stringstream str("foo()\n{((??}\nstruct bar {}");
+	void testNFunctionDefinition() {
+		std::stringstream str("foo()\n{((??}\nstruct bar {}\n bar_func() {}");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());
-		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_def(), 2);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_decl(), 0);
+	}
+
+	void testNFunctionDefinitionAndDeclaration() {
+		std::stringstream str("#define FOO(x) blah(x);\n int foo();\n"
+				"int bar(int x, int z) {}");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_def(), 1);
+		CPPUNIT_ASSERT_EQUAL(qm.get_nfunction_decl(), 1);
 	}
 
 	void testHalsteadOperator() {

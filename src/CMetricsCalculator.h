@@ -36,7 +36,9 @@ private:
 	bool scan_cpp_line;		// Line after a C preprocessor #
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
-	bool in_function;		// True when scanning functions
+	bool in_function;		// True when scanning body of functions.
+	/** True if processing an identifier which describes a function. */
+	bool identifier_func;
 	bool in_dox_comment;		// True if processing a DOxygen comment
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
@@ -66,7 +68,7 @@ public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0),
 	scan_cpp_directive(false), scan_cpp_line(false),
-	in_function(false), in_dox_comment(false),
+	in_function(false), identifier_func(false), in_dox_comment(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
 	line_nesting(0), previous_indentation(0), continuation(false),
 	saw_non_semicolon_keyword(false), saw_unindent(false),

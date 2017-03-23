@@ -155,8 +155,9 @@ public:
 		CPPUNIT_ASSERT_EQUAL(2, qm.get_statement_nesting().get_max());
 	}
 
+	// Used to test error found in use (Issue 8)
 	void testStatementNestingCase() {
-		std::stringstream str("f()\n{\nf:\n {\n ;\n }\n}\n");
+		std::stringstream str("f()\n{\nf:\n {\n ;\n }\nf:\n {\n ;\n }\n}\n");
 		CMetricsCalculator calc(str);
 		calc.calculate_metrics();
 		const QualityMetrics& qm(calc.get_metrics());

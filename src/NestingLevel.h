@@ -18,21 +18,46 @@
 #define NESTINGLEVEL_H
 
 #include <list>
+#include <vector>
+#include <iostream>
 
 #include "CKeyword.h"
 
 /** Track the details of a single nesting */
 class NestingDetails {
 public:
-	int brace_balance;		// Matching {} pairs
+	int brace_balance() const {	// Number of matching {} pairs
+		return brace_indentation.size() - 1;
+	}
+
 	CKeyword::IdentifierType key;	// Keyword that introduced the nesting
 	bool saw_statement;		// True after seeing a statement
-	int indent;			// How much to indent at this level
 
-	NestingDetails() : brace_balance(0), key(CKeyword::OTHER),
-			saw_statement(false), indent(1) {}
-	NestingDetails(CKeyword::IdentifierType k) : brace_balance(0), key(k),
-			saw_statement(false), indent(1) {}
+	int indent() const {		// How much to indent at this level
+		int level = 0;
+		for (std::vector <bool>::const_iterator i =
+				brace_indentation.begin();
+				i != brace_indentation.end(); i++)
+			level += *i;
+		return level;
+	}
+
+	/*
+	 * One element for each brace.
+	 * True if that level was indented, false if not.
+	 */
+	std::vector <bool> brace_indentation;
+
+
+	NestingDetails() : key(CKeyword::OTHER), saw_statement(false) {
+			brace_indentation.push_back(true);
+			// indent() = 1; brace_balance() == 0
+	}
+	NestingDetails(CKeyword::IdentifierType k) : key(k),
+			saw_statement(false) {
+			brace_indentation.push_back(true);
+			// indent() = 1; brace_balance() == 0
+	}
 };
 
 /** Track nesting level */
@@ -49,7 +74,7 @@ private:
 	void pop() {
 		bool saved_backtrack = false;
 
-		while (!nd.empty() && nd.back().brace_balance == 0 &&
+		while (!nd.empty() && nd.back().brace_balance() == 0 &&
 				nd.back().key != CKeyword::DO) {
 			// Save if stack for possible else
 			if ((nd.back().key == CKeyword::IF ||
@@ -69,7 +94,7 @@ private:
 	 * or a closing brace.
 	 */
 	void saw_statement() {
-		if (nd.back().brace_balance == 0) {
+		if (nd.back().brace_balance() == 0) {
 			pop();
 			nd.back().saw_statement = true;
 		}
@@ -83,7 +108,6 @@ public:
 	void reset() {
 		nd = NDList();
 		nd.push_back(NestingDetails());
-		nd.back().brace_balance++;
 	}
 
 	/**
@@ -92,14 +116,13 @@ public:
 	 * of indentation associated with a standalone brace.
 	 */
 	void saw_open_brace(bool indented=false) {
-		nd.back().brace_balance++;
-		if (indented)
-			nd.back().indent++;
+		nd.back().brace_indentation.push_back(indented);
 	}
 
 	/** To be called after encountering a closing brace */
 	void saw_close_brace() {
-		nd.back().brace_balance--;
+		if (nd.back().brace_balance() > 0)
+			nd.back().brace_indentation.pop_back();
 		saw_statement();
 	}
 
@@ -115,7 +138,7 @@ public:
 			// Handle while of do while
 			nd.pop_back();
 		else if (t == CKeyword::IF && nd.back().key == CKeyword::ELSE &&
-				nd.back().brace_balance == 0)
+				nd.back().brace_balance() == 0)
 			// else if -> elif
 			nd.back().key = CKeyword::ELIF;
 		else {
@@ -139,7 +162,7 @@ public:
 		// One day: for (auto& level : nd)
 		for (NDList::const_iterator level = nd.begin();
 				level != nd.end(); level++)
-			nesting += level->indent;
+			nesting += level->indent();
 		return nesting - 1;
 	}
 };

@@ -31,6 +31,7 @@ class CMetricsCalculatorTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testNFunction);
 	CPPUNIT_TEST(testNStatement);
 	CPPUNIT_TEST(testStatementNesting);
+	CPPUNIT_TEST(testStatementNestingCase);
 	CPPUNIT_TEST(testStatementNestingTwoFunction);
 	CPPUNIT_TEST(testHalsteadOperator);
 	CPPUNIT_TEST(testHalsteadOperand);
@@ -151,6 +152,15 @@ public:
 		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_count(), 3);
 		// (0 + 1 + 2) / 3 == 1
 		CPPUNIT_ASSERT_EQUAL(qm.get_statement_nesting().get_mean(), 1.);
+		CPPUNIT_ASSERT_EQUAL(2, qm.get_statement_nesting().get_max());
+	}
+
+	void testStatementNestingCase() {
+		std::stringstream str("f()\n{\nf:\n {\n ;\n }\n}\n");
+		CMetricsCalculator calc(str);
+		calc.calculate_metrics();
+		const QualityMetrics& qm(calc.get_metrics());
+		CPPUNIT_ASSERT_EQUAL(0, qm.get_statement_nesting().get_max());
 	}
 
 	void testStatementNestingTwoFunction() {

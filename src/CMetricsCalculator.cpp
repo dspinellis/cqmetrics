@@ -253,7 +253,8 @@ CMetricsCalculator::calculate_metrics_switch()
 					previous_indentation);
 		}
 		// Heuristic: functions begin with { at first column
-		if (bol.at_bol() && current_depth == top_level_depth) {
+		if (bol.at_bol()) {
+			current_depth = 0;
 			qm.begin_function();
 			in_function = true;
 			nesting.reset();

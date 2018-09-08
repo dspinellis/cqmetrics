@@ -57,6 +57,22 @@ public:
 	}
 
 	/**
+	 * Return the 2nd next character from source without removing it
+	 * Return 0 on EOF.
+	 */
+	char char_after2() {
+		char c;
+		if (get(c)) {
+			push(c);
+            if (get(c)) {
+                push(c);
+			    return c;
+            } else
+                return 0;
+		} else
+			return 0;
+	}
+	/**
 	 * Return the nth character before the one returned
 	 * Return 0 if no such character is available.
 	 */

@@ -37,6 +37,9 @@ private:
 	void calculate_metrics_loop();
 	bool calculate_metrics_switch();
 	bool in_function;		// True when scanning functions
+	bool in_struct;		// True when in struct definition
+	bool in_union;		// True when in union definition
+	bool in_toplevel_assignment;		// True when in struct definition
 	bool in_dox_comment;		// True if processing a DOxygen comment
 	int chars_read_at_bol;		// Characters that were read
 					// at the beginning of a line
@@ -51,6 +54,8 @@ private:
 	bool saw_non_semicolon_keyword;
 	bool saw_unindent;		// True if line is unindented
 	bool saw_comment;		// True after a comment
+    bool saw_struct;        // True after struct keyword
+    bool saw_union;        // True after union keyword
 	bool saw_cpp_directive;		// True after c preprocessor directive
 	bool indentation_list;		// List indentation for each line
 	NestingLevel nesting;		// Track nesting level
@@ -66,11 +71,13 @@ public:
 	CMetricsCalculator(std::istream &s = std::cin) : src(s),
 	top_level_depth(0), current_depth(0),
 	scan_cpp_directive(false), scan_cpp_line(false),
-	in_function(false), in_dox_comment(false),
+	in_function(false), in_struct(false), in_union(false),
+	in_toplevel_assignment(false), in_dox_comment(false),
 	chars_read_at_bol(0), stmt_bracket_balance(0), line_bracket_balance(0),
 	line_nesting(0), previous_indentation(0), continuation(false),
 	saw_non_semicolon_keyword(false), saw_unindent(false),
-	saw_comment(false), saw_cpp_directive(false), indentation_list(false) {}
+	saw_comment(false), saw_struct(false), saw_union(false),
+    saw_cpp_directive(false), indentation_list(false) {}
 	void calculate_metrics() {
 		calculate_metrics_loop();
 		// No newline at EOF

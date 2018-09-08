@@ -16,6 +16,7 @@
 
 #include <cctype>
 #include <string>
+#include <string.h>
 
 #include "Boilerplate.h"
 #include "BolState.h"
@@ -148,6 +149,12 @@ CMetricsCalculator::newline(bool in_non_code_block)
 	line_nesting = nesting.get_nesting_level();
 }
 
+#ifdef DEBUG
+static char so_far[1000000];
+static unsigned int so_pos = 0;
+static unsigned int n_debug_chars = 100;
+#endif
+
 inline bool
 CMetricsCalculator::calculate_metrics_switch()
 {
@@ -157,10 +164,21 @@ CMetricsCalculator::calculate_metrics_switch()
 	CKeyword::IdentifierType key;
 	Boilerplate bp;
 
+#ifdef DEBUG
+#define GET(x) do { \
+	if (src.get(x)) { \
+		so_far[so_pos] = x; \
+		so_pos++; \
+	} else { \
+		return false; \
+	} \
+} while (0)
+#else
 #define GET(x) do { \
 	if (!src.get(x)) \
 		return false; \
 } while (0)
+#endif
 
 	GET(c0);
 	switch (c0) {
@@ -195,6 +213,8 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '(':
 		bol.saw_non_space();
 		qm.add_operator(c0);
+		saw_struct = false; // struct was part of function declaration
+		saw_union = false; // union was part of function declaration
 		stmt_bracket_balance++;
 		line_bracket_balance++;
 		break;
@@ -235,10 +255,21 @@ CMetricsCalculator::calculate_metrics_switch()
 		else
 			STYLE_HINT(NO_SPACE_BEFORE_CLOSING_BRACKET);
 		bol.saw_non_space();
+		saw_struct = false; // struct was part of function declaration
+		saw_union = false; // union was part of function declaration
 		stmt_bracket_balance--;
 		line_bracket_balance--;
 		break;
 	case '{':
+		if (saw_struct && current_depth == top_level_depth) {
+                in_struct = true;
+		}
+		if (saw_union && current_depth == top_level_depth) {
+                in_union = true;
+		}
+		/* if (saw_union && current_depth == top_level_depth) { */
+                /* in_union = true; */
+		/* } */
 		if (in_function) {
 			if (isspace(src.char_before()))
 				STYLE_HINT(SPACE_BEFORE_OPENING_BRACE);
@@ -252,8 +283,22 @@ CMetricsCalculator::calculate_metrics_switch()
 					bol.get_indentation() >
 					previous_indentation);
 		}
-		// Heuristic: functions begin with { at first column
-		if (bol.at_bol()) {
+		// Heuristic: functions begin if we're not already
+		// in a function, struct, or global variable definition
+		// and encounter a { as the first non-space character.
+		// if (current_depth == top_level_depth)
+#ifdef DEBUG
+		if (strlen(so_far) > n_debug_chars)
+			std::cout << so_far + strlen(so_far) - n_debug_chars << "\n";
+		std::cout << "### Brace: in_function=" << in_function << "; in_struct=" << in_struct << "; in_union=" << in_union << "; in_top_assign=" << in_toplevel_assignment << "\n";
+#endif
+		if (! in_function && ! in_struct && ! in_union && 
+				! in_toplevel_assignment) {
+#ifdef DEBUG
+			std::cout << "### NEW FUNCTION\n";
+#endif
+		/* if (bol.at_bol_space() && ! in_function && */ 
+                /* ! in_struct && ! in_toplevel_assignment) { */
 			current_depth = 0;
 			qm.begin_function();
 			in_function = true;
@@ -300,7 +345,13 @@ CMetricsCalculator::calculate_metrics_switch()
 			} else
 				STYLE_HINT(NO_SPACE_AFTER_SEMICOLON);
 		}
+		in_struct = false;
+		saw_struct = false;
+		in_union = false;
+		saw_union = false;
 		bol.saw_non_space();
+        /* if (!in_function) */
+            in_toplevel_assignment = false;
 		// Do not add statements in for (x;y;z)
 		if (in_function && stmt_bracket_balance == 0) {
 			qm.add_statement(nesting.get_nesting_level());
@@ -465,6 +516,12 @@ CMetricsCalculator::calculate_metrics_switch()
 	case '=':
 		bol.saw_non_space();
 		before = src.char_before();
+		if (current_depth == top_level_depth) {
+			in_toplevel_assignment = true;
+#ifdef DEBUG
+			std::cout << "In top level assignment\n";
+#endif
+		}
 		GET(c0);
 		if (c0 == '=') {
 			binary_style(before);
@@ -766,10 +823,12 @@ CMetricsCalculator::calculate_metrics_switch()
 			break;
 		case CKeyword::STRUCT:
 			qm.add_struct();
+            saw_struct = true;
 			keyword_style(before, '(');
 			break;
 		case CKeyword::UNION:
 			qm.add_union();
+			saw_union = true;
 			keyword_style(before, '(');
 			break;
 		case CKeyword::UNSIGNED:

@@ -149,12 +149,6 @@ CMetricsCalculator::newline(bool in_non_code_block)
 	line_nesting = nesting.get_nesting_level();
 }
 
-#ifdef DEBUG
-static char so_far[1000000];
-static unsigned int so_pos = 0;
-static unsigned int n_debug_chars = 100;
-#endif
-
 inline bool
 CMetricsCalculator::calculate_metrics_switch()
 {
@@ -164,21 +158,10 @@ CMetricsCalculator::calculate_metrics_switch()
 	CKeyword::IdentifierType key;
 	Boilerplate bp;
 
-#ifdef DEBUG
-#define GET(x) do { \
-	if (src.get(x)) { \
-		so_far[so_pos] = x; \
-		so_pos++; \
-	} else { \
-		return false; \
-	} \
-} while (0)
-#else
 #define GET(x) do { \
 	if (!src.get(x)) \
 		return false; \
 } while (0)
-#endif
 
 	GET(c0);
 	switch (c0) {
@@ -287,18 +270,8 @@ CMetricsCalculator::calculate_metrics_switch()
 		// in a function, struct, or global variable definition
 		// and encounter a { as the first non-space character.
 		// if (current_depth == top_level_depth)
-#ifdef DEBUG
-		if (strlen(so_far) > n_debug_chars)
-			std::cout << so_far + strlen(so_far) - n_debug_chars << "\n";
-		std::cout << "### Brace: in_function=" << in_function << "; in_struct=" << in_struct << "; in_union=" << in_union << "; in_top_assign=" << in_toplevel_assignment << "\n";
-#endif
 		if (! in_function && ! in_struct && ! in_union && 
 				! in_toplevel_assignment) {
-#ifdef DEBUG
-			std::cout << "### NEW FUNCTION\n";
-#endif
-		/* if (bol.at_bol_space() && ! in_function && */ 
-                /* ! in_struct && ! in_toplevel_assignment) { */
 			current_depth = 0;
 			qm.begin_function();
 			in_function = true;
@@ -518,9 +491,6 @@ CMetricsCalculator::calculate_metrics_switch()
 		before = src.char_before();
 		if (current_depth == top_level_depth) {
 			in_toplevel_assignment = true;
-#ifdef DEBUG
-			std::cout << "In top level assignment\n";
-#endif
 		}
 		GET(c0);
 		if (c0 == '=') {

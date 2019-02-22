@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/dspinellis/cqmetrics.svg?branch=master)](https://travis-ci.org/dspinellis/cqmetrics)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/8464/badge.svg)](https://scan.coverity.com/projects/dspinellis-cqmetrics)
+[![DOI](https://zenodo.org/badge/22557991.svg)](https://zenodo.org/badge/latestdoi/22557991)
+
 
 The program qmcalc will read a C source code file from its standard
 input and print on its standard output a single line containing

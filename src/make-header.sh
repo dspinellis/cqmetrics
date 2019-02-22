@@ -25,8 +25,8 @@ done |
 sed '
 s/line_length_count/nline/
 s/statement_nesting_count/nstatement/
-s/halstead_count/nfunction/
-s/cyclomatic_count/nfunction2/
+s/halstead_count/nfunction2/
+s/cyclomatic_count/nfunction3/
 s/identifier_length_count/nidentifier/
 s/unique_identifier_length_count/nunique_identifier/
 '

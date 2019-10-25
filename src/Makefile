@@ -31,11 +31,11 @@ QualityMetricNames.h: QualityMetrics.h metric-names.sed
 	sh make-metrics-list.sh >$@
 
 # Tab-separated, ending with a newline
-header.tab: make-header.sh QualityMetrics.cpp
+header.tab: make-header.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-header.sh | tr ' \n' '\t\t' | sed 's/\t$$/\n/' >$@
 
 # Numbered lines
-header.txt: make-header.sh QualityMetrics.cpp
+header.txt: make-header.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-header.sh | tr ' \t' '\n\n' | cat -n >$@
 
 clean:

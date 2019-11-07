@@ -44,3 +44,4 @@ clean:
 
 # Pull-in dependencies generated with -MD
 -include $(OBJS:.o=.d)
+-include qmcalc.d

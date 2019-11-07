@@ -11,16 +11,16 @@ endif
 all: qmcalc ../metrics.md header.tab header.txt
 
 HFILES=$(wildcard *.h)
-OBJS=CMetricsCalculator.o QualityMetrics.o
+OBJS=CMetricsCalculator.o QualityMetrics.o qmcalc.o
 
 UnitTests: UnitTests.o $(OBJS)
-	$(CXX) $(LDFLAGS) UnitTests.o $(OBJS) -lcppunit -o $@
+	$(CXX) $(LDFLAGS) UnitTests.o $(filter-out qmcalc.o,$(OBJS)) -lcppunit -o $@
 
 test: UnitTests
 	./UnitTests
 
-qmcalc: $(OBJS) qmcalc.o
-	$(CXX) $(LDFLAGS) qmcalc.o $(OBJS) -o $@
+qmcalc: $(OBJS)
+	$(CXX) $(LDFLAGS) $(OBJS) -o $@
 
 QualityMetrics.o: QualityMetricNames.h
 
@@ -44,4 +44,3 @@ clean:
 
 # Pull-in dependencies generated with -MD
 -include $(OBJS:.o=.d)
--include qmcalc.d

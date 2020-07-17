@@ -40,6 +40,15 @@ This will also generate the files `header.tab` and `header.txt`,
 which can be used for loading the output into other programs
 for further processing.
 
+## Running
+* The  *cmcalc* program can process its standard input or report metrics on each of the specified files
+* The *showstyle* wrapper takes as a single argument a directory, and reports the metrics for each C file in the directory
+* The *sumstyle* wrapper  takes as a single argument a directory, processes all C files in the directory,
+  and for each metric from `ncpp_directive` and onward it reports
+    * the metric's ordinal number,
+    * the sum of the metric's values over all files, and
+    * the percentage of files for which the metric is non-zero.
+    
 ## Further reading
 The style checks performed are based on the following guidelines.
 * [Google](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml)

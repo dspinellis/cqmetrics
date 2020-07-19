@@ -2,12 +2,12 @@
 #
 # Print the formatting style metrics for the specified directory
 #
-if ! [ -x "$(command -v qmcalc)" ]; then
+if ! type "qmcalc" > /dev/null; then
   echo 'Error: qmcalc is not installed.' >&2
   exit 1
 fi
 if [ "$1" = "-h" ] || [ $# -eq 0 ]; then
-  echo "Usage: `basename $0` <target directory> -- reports the metrics for each C file in the directory"
+  echo "Usage: `basename $0` [-h] <target directory> -- reports the metrics for each C file in the directory"
   exit 0
 fi
 if [ ! -d "$1" ]; then

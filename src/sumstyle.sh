@@ -2,12 +2,12 @@
 #
 # Summarize the formatting style metrics for the specified directory
 #
-if ! [ -x "$(command -v qmcalc)" ]; then
+if  ! type "qmcalc" > /dev/null ; then
   echo 'Error: qmcalc is not installed.' >&2
   exit 1
 fi
 if [ "$1" = "-h" ] || [ $# -eq 0 ]; then
-  echo "Usage: `basename $0` <target directory> -- processes all C files in the directory
+  echo "Usage: `basename $0` [-h] <target directory> -- processes all C files in the directory
 	 and for each metric from ncpp_directive and onward reports:
 	 - the metric's ordinal number,
 	 - the sum of the metric's values over all files, and

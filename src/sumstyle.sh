@@ -2,7 +2,7 @@
 #
 # Summarize the formatting style metrics for the specified directory
 #
-if  ! type "qmcalc" > /dev/null ; then
+if  ! qmcalc </dev/null >/dev/null 2>&1; then
   echo 'Error: qmcalc is not installed.' >&2
   exit 1
 fi

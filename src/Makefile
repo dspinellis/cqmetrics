@@ -8,6 +8,8 @@ else
 CXXFLAGS+=-O2
 endif
 
+INSTALL_PREFIX?=/usr/local
+
 all: qmcalc ../metrics.md header.tab header.txt
 
 HFILES=$(wildcard *.h)
@@ -37,6 +39,9 @@ header.tab: make-header.sh QualityMetrics.h QualityMetrics.cpp
 # Numbered lines
 header.txt: make-header.sh QualityMetrics.h QualityMetrics.cpp
 	sh make-header.sh | tr ' \t' '\n\n' | cat -n >$@
+
+install: qmcalc
+	install qmcalc "$(INSTALL_PREFIX)/bin/qmcalc"
 
 clean:
 	rm -f *.o *.d *.exe qmcalc UnitTests QualityMetricNames.h \

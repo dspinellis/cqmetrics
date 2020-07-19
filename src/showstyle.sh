@@ -2,6 +2,18 @@
 #
 # Print the formatting style metrics for the specified directory
 #
+if ! [ -x "$(command -v qmcalc)" ]; then
+  echo 'Error: qmcalc is not installed.' >&2
+  exit 1
+fi
+if [ "$1" = "-h" ] || [ $# -eq 0 ]; then
+  echo "Usage: `basename $0` <target directory> -- reports the metrics for each C file in the directory"
+  exit 0
+fi
+if [ ! -d "$1" ]; then
+	echo 'Error: '$1' directory does not exist' >&2
+  exit 1
+fi
 find "$1" -type f -name \*.c |
 while read f
 do

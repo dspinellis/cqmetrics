@@ -72,3 +72,4 @@ Please report any other bugs you find to the issue tracking system in Github rep
 <https://github.com/dspinellis/cqmetrics> of the project.
 More information about how to get in contact with developers and getting help
 can be found there.
+EOF

@@ -13,11 +13,11 @@ cat <<\EOF
 .SH NAME
 qmcalc \- process its standard input or report metrics on each of the specified files
 .SH SYNOPSIS
-.B qmcalc [ file .. ]
+.B qmcalc [ file ... ]
 .br
-.B ./sumstyle.sh [ directory ... ]
+.B qmcalc-sumstyle directory
 .br
-.B .showstyle.sh [ directory ... ]
+.B qmcalc-showstyle directory
 .SH DESCRIPTION
 The program
 .I qmcalc
@@ -28,12 +28,12 @@ and documentation, use of the C preprocessor, and observed formatting style.
 The full set of the metrics is documented in the file metrics.md.
 .PP
 The
-.BR showstyle
+.BR qmcalc-showstyle
 wrapper takes as a single argument a directory,
 and reports the metrics for each C file in the directory
 .PP
 The
-.BR sumstyle
+.BR qmcalc-sumstyle
 wrapper takes as a single argument a directory,
 processes all C files in the directory,
 and for each metric from ncpp_directive and onward it reports:

@@ -46,14 +46,14 @@ qmcalc.1: make-metrics-list-man.sh QualityMetrics.h QualityMetrics.cpp
 		sh make-metrics-list-man.sh >$@
 
 install-bin: qmcalc
-	install qmcalc "$(INSTALL_PREFIX)/bin/qmcalc"
-	install showstyle.sh "$(INSTALL_PREFIX)/bin/qmcalc-showstyle"
-	install sumstyle.sh "$(INSTALL_PREFIX)/bin/qmcalc-sumstyle"
+	install -D qmcalc "$(INSTALL_PREFIX)/bin/qmcalc"
+	install -D showstyle.sh "$(INSTALL_PREFIX)/bin/qmcalc-showstyle"
+	install -D sumstyle.sh "$(INSTALL_PREFIX)/bin/qmcalc-sumstyle"
 
 install-man: qmcalc.1
-	install qmcalc.1 "$(MAN_PREFIX)/qmcalc.1"
-	ln -s "$(MAN_PREFIX)/qmcalc.1" qmcalc-showstyle.1
-	ln -s "$(MAN_PREFIX)/qmcalc.1" qmcalc-sumstyle.1
+	install -D qmcalc.1 "$(MAN_PREFIX)/qmcalc.1"
+	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/qmcalc-showstyle.1"
+	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/qmcalc-sumstyle.1"
 
 install: install-bin install-man
 

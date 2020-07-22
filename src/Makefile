@@ -51,9 +51,9 @@ install-bin: qmcalc
 	install -D sumstyle.sh "$(INSTALL_PREFIX)/bin/qmcalc-sumstyle"
 
 install-man: qmcalc.1
-	install -D qmcalc.1 "$(MAN_PREFIX)/qmcalc.1"
-	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/qmcalc-showstyle.1"
-	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/qmcalc-sumstyle.1"
+	install -D qmcalc.1 "$(MAN_PREFIX)/man1/qmcalc.1"
+	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/man1/qmcalc-showstyle.1"
+	ln -srf "$(MAN_PREFIX)/qmcalc.1" "$(MAN_PREFIX)/man1/qmcalc-sumstyle.1"
 
 install: install-bin install-man
 

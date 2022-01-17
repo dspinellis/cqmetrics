@@ -19,6 +19,9 @@ Furthermore, the file `header.txt`
 contains the ordinal number of each field (starting from 1),
 which you can use to quickly access a particular field through its index,
 e.g. from awk.
+Note that the fields of descriptive statistics
+(minimum, mean, maximum, standard deviation) are left empty to signify
+non-applicable (N/A) values, when the number of underlying values is zero.
 
 EOF
 

@@ -45,7 +45,7 @@ for further processing.
 `cd src && make install`
 
 ## Running
-* The  *cmcalc* program can process its standard input or report metrics on each of the specified files
+* The  *qmcalc* program can process its standard input or report metrics on each of the specified files
 * The *qmcalc-showstyle* wrapper takes as a single argument a directory, and reports the metrics for each C file in the directory
 * The *qmcalc-sumstyle* wrapper  takes as a single argument a directory, processes all C files in the directory,
   and for each metric from `ncpp_directive` and onward it reports
